@@ -39,12 +39,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/shubham-dashboard', (req, res) => {
-    // Send the admin.html file explicitly when someone visits /system-login
-    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+    res.sendFile(path.join(__dirname, '../public/admin.html'));
 });
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+
 
 
 
