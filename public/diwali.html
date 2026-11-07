@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diwali - A Little World Of Happiness</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-void: #0a0401;
+            --gold-light: #ffea99;
+            --gold-deep: #ffb703;
+            --fire-orange: #fb8500;
+            --glass-bg: rgba(20, 10, 5, 0.6);
+            --glass-border: rgba(255, 215, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 50% 10%, rgba(251, 133, 0, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 50% 90%, rgba(255, 183, 3, 0.1) 0%, transparent 60%);
+        }
+
+        /* === 1. 3D MULTIPLE CRACKERS INTRO === */
+        #grand-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #020105;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-in-out, visibility 1s;
+        }
+
+        #intro-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .intro-text {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2rem, 6vw, 4rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 40px var(--fire-orange);
+            z-index: 2;
+            opacity: 0;
+            animation: fadeInOut 3.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            70% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.1);
+            }
+        }
+
+        /* === 2. BACKGROUND & DIVINE DEITIES (BLENDED) === */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+        }
+
+        .deity-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .deity {
+            height: clamp(400px, 80vh, 1000px);
+            opacity: 0.85;
+            -webkit-mask-image: radial-gradient(ellipse 60% 80% at 50% 50%, black 40%, transparent 80%);
+            mask-image: radial-gradient(ellipse 60% 80% at 50% 50%, black 40%, transparent 80%);
+            filter: drop-shadow(0 0 40px rgba(255, 183, 3, 0.7)) brightness(1.2) contrast(1.1);
+            mix-blend-mode: lighten;
+        }
+
+        @media (max-width: 768px) {
+            .deity {
+                height: 60vh;
+                opacity: 0.4;
+                filter: blur(1px) drop-shadow(0 0 20px rgba(255, 183, 3, 0.5));
+            }
+
+            .deity-left {
+                transform: translateX(-30%);
+            }
+
+            .deity-right {
+                transform: translateX(30%);
+            }
+        }
+
+        /* === 3. HEADER (Updated with Special) === */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(15px, 3vw, 25px) clamp(20px, 5vw, 50px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: clamp(12px, 3vw, 30px);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-light);
+        }
+
+        /* === 4. HERO SECTION === */
+        .hero-section {
+            position: relative;
+            text-align: center;
+            padding: clamp(30px, 8vw, 60px) 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+            z-index: 2;
+        }
+
+        .subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--gold-light);
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .hero-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
+            background: linear-gradient(to bottom, #ffffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.5));
+            line-height: 1.2;
+        }
+
+        .dynamic-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: #fff;
+            text-transform: capitalize;
+        }
+
+        .wish-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .hero-message {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+            font-style: italic;
+            transition: 0.5s;
+        }
+
+        .random-btn {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid var(--gold-deep);
+            color: #fff;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .random-btn:hover {
+            background: var(--gold-deep);
+            box-shadow: 0 0 15px var(--gold-deep);
+            transform: rotate(180deg);
+        }
+
+        /* === 5. AESTHETIC CARDS === */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(240px, 30vw, 280px), 1fr));
+            gap: clamp(20px, 4vw, 35px);
+            padding: 20px clamp(20px, 5vw, 60px);
+            max-width: 1400px;
+            margin: 0 auto 120px;
+            perspective: 1000px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, rgba(25, 15, 10, 0.7), rgba(10, 5, 5, 0.9));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.6);
+            text-decoration: none;
+            /* Important since these can act as links */
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px) translateZ(20px);
+            border-color: var(--gold-light);
+            box-shadow: 0 20px 40px rgba(255, 183, 3, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .card-icon {
+            width: clamp(60px, 15vw, 80px);
+            height: clamp(60px, 15vw, 80px);
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            border: 1px dashed var(--gold-deep);
+            transition: 0.5s;
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.1);
+        }
+
+        .feature-card:hover .card-icon {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.1);
+            border-style: solid;
+        }
+
+        .feature-card h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .card-btn {
+            background: transparent;
+            border: 1px solid var(--gold-deep);
+            color: var(--gold-light);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            transition: 0.4s;
+            text-transform: uppercase;
+        }
+
+        .feature-card:hover .card-btn {
+            background: linear-gradient(45deg, var(--gold-deep), var(--fire-orange));
+            color: #000;
+            border-color: transparent;
+            font-weight: 600;
+        }
+
+        /* === 6. CONSTANT FOOTER (Fixed for all devices) === */
+        .creator-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 5px;
+        }
+
+        .creator-badge svg {
+            width: clamp(14px, 3vw, 16px);
+            height: clamp(14px, 3vw, 16px);
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 5px;
+        }
+
+        .creator-badge:hover svg {
+            fill: #E1306C;
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        /* === MAGICAL SHARE SECTION STYLES === */
+        .share-section {
+            width: 100%;
+            padding: 80px 20px 120px;
+            /* Extra bottom padding for footer */
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+        }
+
+        .share-glass-box {
+            background: rgba(20, 10, 35, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 234, 153, 0.05);
+            position: relative;
+            transition: 0.5s ease;
+        }
+
+        .share-glass-box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 234, 153, 0.1);
+        }
+
+        .share-sparkle {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            animation: floatIcon 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatIcon {
+            0% {
+                transform: translate(-50%, 0);
+            }
+
+            100% {
+                transform: translate(-50%, -10px);
+            }
+        }
+
+        .share-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 20px rgba(255, 183, 3, 0.5);
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        .share-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--gold-mid);
+            color: var(--gold-light);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Button Hover Effects */
+        .share-btn:hover {
+            transform: scale(1.15) translateY(-5px);
+        }
+
+        .share-btn.btn-wa:hover {
+            background: #25D366;
+            color: #fff;
+            border-color: #25D366;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+        }
+
+        .share-btn.btn-sys:hover {
+            background: linear-gradient(45deg, #d4af37, #ffea99);
+            color: #000;
+            border-color: var(--gold-light);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .share-btn.btn-copy:hover {
+            background: #00f5d4;
+            color: #000;
+            border-color: #00f5d4;
+            box-shadow: 0 10px 30px rgba(0, 245, 212, 0.4);
+        }
+
+        /* Toast Message */
+        #toast-msg {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 245, 212, 0.2);
+            border: 1px solid #00f5d4;
+            color: #00f5d4;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s ease;
+        }
+
+        #toast-msg.show {
+            opacity: 1;
+            bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. MULTIPLE CRACKERS INTRO -->
+    <div id="grand-intro">
+        <canvas id="intro-canvas"></canvas>
+        <div class="intro-text">Some nights are meant to be remembered...</div>
+    </div>
+
+    <!-- DIVINE DEITIES BLENDED IN BACKGROUND -->
+    <div class="deity-container">
+        <img src="../public/assets/images/Mata_laxmi.jpeg" alt="Laxmi Mata" class="deity deity-left">
+        <img src="../public/assets/images/Ganesh_ji.jpeg" alt="Ganesh Ji" class="deity deity-right">
+    </div>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- HEADER (Added Special) -->
+    <header>
+        <div class="logo-text">The Diwali Edit</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#">Wishes</a>
+            <a href="special.html">Just for You ✨</a>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION WITH RANDOM WISH -->
+    <main class="hero-section">
+        <h2 class="subtitle">A Festival of Lights</h2>
+        <h1 class="hero-title">A very Happy Diwali,<br><span id="user-display-name" class="dynamic-name">✨✨</span></h1>
+
+        <div class="wish-container">
+            <p class="hero-message" id="dynamic-wish">"May your home be filled with the warmth of familiar faces, your heart with quiet happiness, and your days ahead with little reasons to smile."</p>
+            <button class="random-btn" onclick="generateRandomWish()" title="New Wish">🎲</button>
+        </div>
+    </main>
+
+    <!-- FEATURES GRID (Linked to dedicated HTML pages) -->
+    <section class="features-grid">
+
+        <div class="feature-card" onclick="window.location.href='light-diya.html'">
+            <div class="card-icon">🪔</div>
+            <h3>Light a Diya</h3>
+            <p>One little flame, a moment of peace. Light a diya and make this evening yours.</p>
+            <span class="card-btn">Light a Diya →</span>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='mystery-box.html'">
+            <div class="card-icon">🌌</div>
+            <h3>Mystery Wish Box</h3>
+            <p>Send a secret wish directly to the universe...</p>
+            <span class="card-btn">Open Box →</span>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='special-star.html'">
+            <div class="card-icon">⭐</div>
+            <h3>Your Special Star</h3>
+            <p>Among all the lights in the sky, there's one with a little story of its own.</p>
+            <span class="card-btn">Find Your Star →</span>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='interactive-rangoli.html'">
+            <div class="card-icon">🎨</div>
+            <h3>Interactive Rangoli</h3>
+            <p>Pick your colours, create your pattern, and leave a little piece of your creativity here.</p>
+            <span class="card-btn">Make a Rangoli →</span>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='scrapbook.html'">
+            <div class="card-icon">📖</div>
+            <h3>A Little Festive Scrapbook</h3>
+            <p>Some moments are too lovely to leave behind. Keep a few of yours here.</p>
+            <span class="card-btn">Turn the Page →</span>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='wish-tree.html'">
+            <div class="card-icon">🌳</div>
+            <h3>The Wish Tree</h3>
+            <p>Every wish has a place. Leave yours on a branch and let it become part of this little celebration.</p>
+            <span class="card-btn">Leave a Wish →</span>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='universe-message.html'">
+            <div class="card-icon">✨</div>
+            <h3>A Message from the Universe</h3>
+            <p>A small message, picked just for this moment. Maybe it's exactly what you need to hear.</p>
+            <span class="card-btn">Read Your Message →</span>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='admin-note.html'">
+            <div class="card-icon">🔐</div>
+            <h3>A Special Note For...</h3>
+            <p>“You don't have to write something special. Sometimes, the simplest words become the most memorable ones.”
+            <br>I'll be happy to read whatever you leave here. ❤️</p>
+            <span class="card-btn">Leave a Note →</span>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='create-card.html'">
+            <div class="card-icon">💌</div>
+            <h3>Create Your Own Card</h3>
+            <p>Put your feelings into a card and send someone a little Diwali warmth.</p>
+            <span class="card-btn">Make a Card →</span>
+        </div>
+
+    </section>
+    <!-- === MAGICAL SHARE SECTION === -->
+    <section class="share-section" id="share-section">
+        <div class="share-glass-box">
+            <div class="share-sparkle">✨</div>
+            <h2 class="share-title">Pass a Little Light Along</h2>
+            <p class="share-subtitle">Enjoyed your little visit? Share it with someone you'd love to have here. Some happiness is better when it's shared.</p>
+
+            <div class="share-buttons">
+                <!-- WhatsApp Share -->
+                <button class="share-btn btn-wa" onclick="shareToWhatsApp()" title="Share on WhatsApp">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                </button>
+
+                <!-- Native System Share (Mobiles me bhot aacha kaam karta hai) -->
+                <button class="share-btn btn-sys" onclick="shareSystem()" title="More Options">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                        <path
+                            d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z" />
+                    </svg>
+                </button>
+
+                <!-- Copy Link -->
+                <button class="share-btn btn-copy" onclick="copyWebsiteLink()" title="Copy Link">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                        <path
+                            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Toast Notification for Copy -->
+            <div id="toast-msg" class="toast-hidden">The link is yours. Pass it along ✨</div>
+        </div>
+    </section>
+
+    <!-- CONSTANT FIXED FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with magic by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <!-- SCRIPTS -->
+    <script>
+        const API_BASE = 'http://localhost:1307/api/v1'; // Active backend port
+
+        // --- TRACK METRIC HELPER ---
+        async function trackMetric(key) {
+            try {
+                await fetch(`${API_BASE}/metrics/increment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: key })
+                });
+            } catch (err) {
+                console.error("Metric tracking error:", err);
+            }
+        }
+
+        // --- NAME INJECTION ---
+        let globalVisitorName = "Friend";
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedName = localStorage.getItem("visitor_name") || sessionStorage.getItem("visitorName");
+            if (savedName && savedName.trim() !== "") {
+                globalVisitorName = savedName;
+                document.getElementById('user-display-name').textContent = `✨${savedName}✨`;
+            } else {
+                document.getElementById('user-display-name').textContent = "";
+            }
+        });
+
+        // --- RANDOM WISH GENERATOR (15 Wishes) ---
+        const wishes = [
+    "May life always find little ways to make you smile — a lovely morning, an unexpected good news, a warm hug, or simply a day that feels right.",
+    "May the future be kinder than you imagined, fuller than you expected, and filled with beautiful things you haven't even dreamt of yet.",
+    "I hope every dream you carry close to your heart finds its way into your reality, one little step at a time.",
+    "May you keep growing into someone you're proud of, without ever feeling that you have to rush your journey.",
+    "May your heart find the peace it deserves, your mind get the rest it needs, and your days feel a little lighter.",
+    "I hope you find happiness in the life you're living right now, not just in the life you're working so hard to build.",
+    "May every new beginning bring fresh hope, every ending make room for something better, and every little change lead you somewhere beautiful.",
+    "May you learn to see yourself with the same kindness you so easily give to everyone else.",
+    "May life surround you with people who celebrate your happiness, understand your silence, and stay even on your ordinary days.",
+    "May your hard work find its recognition, your efforts bring results, and your success feel even sweeter because you know what it took.",
+    "May you always have reasons to smile at random, songs that feel like home, and moments you wish you could pause.",
+    "And when life feels a little too much, may you find the strength to keep going and someone who reminds you that you don't have to do it all alone.",
+    "May your home always have laughter in its corners, love around its table, and the people who make it feel like home.",
+    "May you be blessed with good health, peaceful sleep, a cheerful heart, and the energy to enjoy all that life has waiting for you.",
+    "May the right doors open at the right time, and may you always have the courage to walk through them.",
+    "May the coming years give you countless little moments that one day become your favourite memories.",
+    "May you never underestimate how far you can go, how much you can learn, or how many beautiful things you are capable of.",
+    "May the love you give return to you in the most genuine ways, through thoughtful words, little gestures, and people who truly care.",
+    "May even your ordinary days surprise you with something wonderful — because you deserve happiness on regular Tuesdays too.",
+    "May you have the courage to try again, the patience to keep learning, and the faith to believe that good things take time.",
+    "May you always have enough to be grateful for, enough to look forward to, and enough love to share.",
+    "I hope you never stop believing in yourself, especially on the days when your progress feels invisible.",
+    "May life surprise you with opportunities you never expected and happiness you didn't even know you were waiting for.",
+    "Here's wishing you years filled with meaningful work, genuine friendships, unforgettable experiences, and a heart that stays young.",
+    "If there's one thing I wish for you, it's this: may life be as gentle with you as you are with the people you love."
+];
+        function generateRandomWish() {
+            const wishEl = document.getElementById('dynamic-wish');
+            wishEl.style.opacity = 0;
+            setTimeout(() => {
+                const rand = wishes[Math.floor(Math.random() * wishes.length)];
+                wishEl.textContent = `"${rand}"`;
+                wishEl.style.opacity = 1;
+            }, 300);
+        }
+
+        // --- MULTIPLE CRACKERS INTRO ANIMATION (WITH SESSION CHECK) ---
+        const introOverlay = document.getElementById('grand-intro');
+        const hasSeenIntro = sessionStorage.getItem('diwaliIntroSeen');
+
+        if (hasSeenIntro) {
+            introOverlay.style.display = 'none';
+        } else {
+            const introCanvas = document.getElementById('intro-canvas');
+            const ictx = introCanvas.getContext('2d');
+            let iw = introCanvas.width = window.innerWidth;
+            let ih = introCanvas.height = window.innerHeight;
+
+            let introParticles = [];
+            let rockets = [];
+
+            for (let i = 0; i < 6; i++) {
+                rockets.push({
+                    x: Math.random() * (iw * 0.8) + (iw * 0.1),
+                    y: ih,
+                    vy: -(Math.random() * 8 + 10),
+                    exploded: false,
+                    delay: Math.random() * 800
+                });
+            }
+
+            let startTime = Date.now();
+
+            class IntroParticle {
+                constructor(x, y, colorCode) {
+                    this.x = x; this.y = y;
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 8 + 2;
+                    this.vx = Math.cos(angle) * speed; this.vy = Math.sin(angle) * speed;
+                    this.size = Math.random() * 3 + 1; this.life = 1;
+                    this.decay = Math.random() * 0.02 + 0.01;
+                    const colors = ['#ffd700', '#ff8c00', '#fff', '#ff40a6', '#4073ff'];
+                    this.color = colors[colorCode % colors.length];
+                }
+                update() {
+                    this.x += this.vx; this.y += this.vy;
+                    this.vy += 0.15; this.vx *= 0.95; this.vy *= 0.95;
+                    this.life -= this.decay;
+                }
+                draw() {
+                    ictx.globalAlpha = Math.max(0, this.life);
+                    ictx.fillStyle = this.color;
+                    ictx.beginPath(); ictx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ictx.fill();
+                    ictx.globalAlpha = 1;
+                }
+            }
+
+            function animateIntro() {
+                ictx.clearRect(0, 0, iw, ih);
+                let now = Date.now();
+
+                rockets.forEach((r, idx) => {
+                    if (!r.exploded && (now - startTime > r.delay)) {
+                        r.y += r.vy;
+                        ictx.fillStyle = '#fff';
+                        ictx.beginPath(); ictx.arc(r.x, r.y, 3, 0, Math.PI * 2); ictx.fill();
+
+                        if (r.y < ih * (Math.random() * 0.3 + 0.1) || r.vy >= -1) {
+                            r.exploded = true;
+                            for (let i = 0; i < 80; i++) introParticles.push(new IntroParticle(r.x, r.y, idx));
+                        }
+                    }
+                });
+
+                for (let i = introParticles.length - 1; i >= 0; i--) {
+                    introParticles[i].update(); introParticles[i].draw();
+                    if (introParticles[i].life <= 0) introParticles.splice(i, 1);
+                }
+
+                if (introOverlay.style.display !== 'none') {
+                    requestAnimationFrame(animateIntro);
+                }
+            }
+
+            animateIntro();
+
+            window.addEventListener('resize', () => {
+                if (introOverlay.style.display !== 'none') {
+                    iw = introCanvas.width = window.innerWidth;
+                    ih = introCanvas.height = window.innerHeight;
+                }
+            });
+
+            setTimeout(() => {
+                introOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    introOverlay.style.display = 'none';
+                    sessionStorage.setItem('diwaliIntroSeen', 'true');
+                }, 1000);
+            }, 3500);
+        }
+
+        // === SHARE SECTION LOGIC (Connected to Backend Metrics) === //
+        const siteLink = window.location.href;
+        const shareMessage = "Step into a magical world of lights! ✨ Experience the most beautiful Diwali journey here: ";
+
+        async function shareToWhatsApp() {
+            await trackMetric('whatsapp_shares');
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage + siteLink)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        async function shareSystem() {
+            await trackMetric('system_shares');
+            if (navigator.share) {
+                navigator.share({
+                    title: 'A Little World Of Happiness ✨',
+                    text: shareMessage,
+                    url: siteLink
+                }).catch((error) => console.log('Error sharing', error));
+            } else {
+                alert("System share is not supported on this browser. Use the Copy Link button!");
+            }
+        }
+
+        async function copyWebsiteLink() {
+            await trackMetric('system_shares');
+            navigator.clipboard.writeText(siteLink).then(() => {
+                const toast = document.getElementById('toast-msg');
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2500);
+            });
+        }
+    </script>
+    <script src="scripts/background-fx.js"></script>
+</body>
+
+</html>

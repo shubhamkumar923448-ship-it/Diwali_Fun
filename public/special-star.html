@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Special Star - A Little World Of Happiness</title>
+
+    <!-- Ultra-Aesthetic Premium Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #010205;
+            --bg-space: #060a14;
+            --gold-light: #ffea99;
+            --gold-deep: #d4af37;
+            --glow-color: rgba(255, 234, 153, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--bg-space) 0%, var(--bg-deep) 100%);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* === 1. TOP NAV === */
+        .top-nav {
+            position: absolute;
+            top: clamp(20px, 4vw, 40px);
+            left: clamp(20px, 4vw, 40px);
+            z-index: 100;
+            transition: opacity 1s;
+        }
+
+        .back-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: var(--gold-light);
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 25px);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            transform: translateX(-5px);
+            border-color: var(--gold-light);
+        }
+
+        /* === 2. CANVAS NIGHT SKY === */
+        #cosmic-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            cursor: crosshair;
+            /* Hardware Accelerated Glow for entire canvas */
+            filter: drop-shadow(0 0 4px var(--glow-color));
+        }
+
+        #warp-flash {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.2s ease-out;
+        }
+
+        #warp-flash.flash {
+            opacity: 1;
+        }
+
+        /* === 3. UI LAYERS === */
+        .ui-layer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+            z-index: 10;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .ui-layer.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .cinematic-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: var(--gold-light);
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-shadow: 0 0 40px rgba(255, 234, 153, 0.6);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .cinematic-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.85rem, 2vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* === 4. ENVELOPE & LETTER UI (FIXED 3D OPENING) === */
+        .envelope-container {
+            position: relative;
+            width: clamp(280px, 60vw, 400px);
+            height: clamp(180px, 40vw, 250px);
+            margin: 0 auto 30px;
+            transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: scale(0.8);
+            perspective: 1500px;
+            /* REQUIRED FOR 3D FLAP */
+        }
+
+        .envelope-container.active {
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .envelope-body {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #b8860b, #d4af37, #8a6300);
+            border-radius: 10px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.3);
+            z-index: 4;
+        }
+
+        /* The back of the envelope */
+        .envelope-back {
+            position: absolute;
+            inset: 0;
+            background: #6b4c00;
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 65%;
+            background: linear-gradient(135deg, #ffea99, #d4af37);
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
+            filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.6));
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle, #a00, #500);
+            border-radius: 50%;
+            z-index: 6;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            border: 2px solid #300;
+            transition: opacity 0.5s;
+        }
+
+        .the-letter {
+            position: absolute;
+            bottom: 10px;
+            left: 5%;
+            width: 90%;
+            height: 95%;
+            background: #fffdf2;
+            border-radius: 5px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        /* FIX: Opening Actions */
+        .envelope-container.open .wax-seal {
+            opacity: 0;
+        }
+
+        .envelope-container.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+            /* Pushes flap behind the letter */
+        }
+
+        .envelope-container.open .the-letter {
+            transform: translateY(0);
+            z-index: 7;
+            /* Puts letter in front of back, behind front body */
+            height: 140%;
+            animation: letterReveal 2s ease-in-out forwards;
+        }
+
+        @keyframes letterReveal {
+            0% {
+                transform: translateY(-65%);
+            }
+
+            45% {
+                transform: translateY(-20%);
+            }
+
+            75% {
+                transform: translateY(5%);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+
+        .letter-content {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: #2a1a05;
+            line-height: 1.6;
+            font-style: italic;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 1.5s;
+            transition-delay: 1s;
+        }
+
+        .envelope-container.open .letter-content {
+            opacity: 1;
+        }
+
+        .btn-aesthetic {
+            margin-top: 40px;
+            background: transparent;
+            border: 1px solid var(--gold-deep);
+            color: var(--gold-light);
+            padding: clamp(12px, 3vw, 15px) clamp(30px, 6vw, 40px);
+            border-radius: 40px;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.5s;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .btn-aesthetic:hover {
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* === 5. THE ULTIMATE NAME REVEAL === */
+        #final-reveal {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            text-align: center;
+            z-index: 20;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 3s ease-in;
+        }
+
+        #final-reveal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .celestial-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(4rem, 10vw, 8rem);
+            background: linear-gradient(to bottom, #ffffff, #ffea99, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 234, 153, 0.8)) drop-shadow(0 0 50px rgba(212, 175, 55, 0.8));
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .universe-note {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+            line-height: 1.6;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
+        }
+
+        /* === 6. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 5px;
+        }
+
+        .creator-badge svg {
+            width: clamp(14px, 3vw, 16px);
+            height: clamp(14px, 3vw, 16px);
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 5px;
+        }
+
+        .creator-badge:hover svg {
+            fill: #E1306C;
+            transform: scale(1.2) rotate(10deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="warp-flash"></div>
+    <canvas id="cosmic-canvas"></canvas>
+
+    <div class="top-nav" id="nav-bar">
+        <button class="back-btn" onclick="window.location.href='diwali.html'">← Return to Sky</button>
+    </div>
+
+    <!-- Phase 1: Search Prompt -->
+    <div id="ui-prompt" class="ui-layer active">
+        <h1 class="cinematic-title">Look Up at the Stars...<br>Six little stars are waiting to be found..</h1>
+        <p class="cinematic-subtitle">One of them has a message written just for you. Can you find it?</p>
+    </div>
+
+    <!-- Phase 2: The Envelope -->
+    <div id="ui-envelope" class="ui-layer">
+        <div class="envelope-container" id="the-envelope">
+            <div class="envelope-back"></div>
+            <div class="the-letter">
+                <p class="letter-content" id="dynamic-message">"Loading universe..."</p>
+            </div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-body"></div>
+            <div class="wax-seal"></div>
+        </div>
+        <button class="btn-aesthetic" id="open-btn" onclick="openEnvelope()">Open Your Little Secret ✨</button>
+    </div>
+
+    <!-- Phase 3: Ultimate Name Reveal -->
+    <div id="final-reveal">
+        <h1 class="celestial-name" id="user-name">You Were Always a Little Star...</h1>
+        <p class="universe-note">
+            "In a sky full of countless stars, this little moment was meant to find you.<br>
+            May you never lose the light within you, may your dreams always feel close, and may life give you a thousand
+            little reasons to smile."
+        </p>
+    </div>
+
+    <!-- CONSTANT FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with magic by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <script>
+        let visitorName = "Beautiful Soul";
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const savedName = localStorage.getItem("visitor_name");
+
+            if (savedName && savedName.trim() !== "") {
+                visitorName = savedName;
+            }
+            document.getElementById('user-name').textContent = visitorName;
+            setTimeout(() => {
+                document.getElementById('ui-prompt').style.opacity = 0;
+            }, 5000);
+        });
+
+        const encouragements = [
+            "I hope you never become so busy surviving life that you forget to enjoy the little things that make it beautiful.",
+            "On the days when you feel like you're not doing enough, remember that simply making it through the day is sometimes enough.",
+            "May you always find a little peace in the middle of a difficult day, and a reason to smile when you least expect it.",
+            "You don't need to be someone extraordinary every single day. Being yourself, with all your little imperfections, is already something beautiful.",
+            "I hope you meet people who make you feel safe enough to be yourself, laugh without thinking, and speak without fear of being misunderstood.",
+            "One day, you'll look back at the things that once felt impossible and realise how quietly, how bravely, you made it through.",
+            "Please don't be too hard on yourself. You're allowed to grow slowly, change your mind, take breaks, and begin again.",
+            "May life be gentle with the parts of you that you rarely show, and may happiness find you even when you're not looking for it.",
+            "Some of the most beautiful moments in life are still ahead of you. Conversations you haven't had, places you haven't seen, and memories you haven't made.",
+            "If nobody has told you lately, I hope you know that your presence matters. The world is a little different, simply because you're in it."
+        ];
+
+        // ==========================================
+        // CANVAS ENGINE: THE STAR GAME & WARP
+        // ==========================================
+        const canvas = document.getElementById('cosmic-canvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        let bgStars = [];
+        let specialStars = [];
+        let clickSparks = [];
+        let isWarping = false;
+        let warpSpeed = 1;
+        let trueStarFound = false;
+
+        // 1. Create Normal Background Stars (These keep shining later)
+        const starCount = w < 768 ? 200 : 400;
+        for (let i = 0; i < starCount; i++) {
+            bgStars.push({
+                x: Math.random() * w, y: Math.random() * h,
+                z: Math.random() * w,
+                size: Math.random() * 1.2 + 0.2,
+                color: Math.random() > 0.8 ? '#ffea99' : '#fff'
+            });
+        }
+
+        // 2. Create the 6 Special Stars (The Game)
+        let trueStarIndex = Math.floor(Math.random() * 6);
+        for (let i = 0; i < 6; i++) {
+            specialStars.push({
+                x: Math.random() * (w * 0.8) + (w * 0.1),
+                y: Math.random() * (h * 0.7) + (h * 0.15),
+                size: Math.random() * 1.5 + 2,
+                pulse: Math.random() * Math.PI,
+                angle: Math.random() * Math.PI,
+                isTrue: (i === trueStarIndex),
+                isDestroyed: false
+            });
+        }
+
+        // Spark Particle for Decoys
+        class Spark {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                let angle = Math.random() * Math.PI * 2;
+                let speed = Math.random() * 5 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.life = 1;
+            }
+            update() { this.x += this.vx; this.y += this.vy; this.life -= 0.05; }
+            draw() {
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.fillStyle = '#ffea99';
+                ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI * 2); ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // --- RENDER LOOP ---
+        function renderSky() {
+            // Draw Deep Space (Dark tail for warp)
+            ctx.fillStyle = isWarping ? 'rgba(1, 2, 5, 0.4)' : '#010205';
+            ctx.fillRect(0, 0, w, h);
+
+            // 1. Draw Normal Background Stars
+            bgStars.forEach(s => {
+                let sx, sy;
+                if (isWarping) {
+                    s.z -= warpSpeed;
+                    if (s.z <= 0) { s.z = w; s.x = Math.random() * w; s.y = Math.random() * h; }
+                    sx = (s.x - w / 2) * (w / s.z) + w / 2;
+                    sy = (s.y - h / 2) * (w / s.z) + h / 2;
+
+                    ctx.beginPath();
+                    ctx.moveTo(s.x, s.y); ctx.lineTo(sx, sy);
+                    ctx.lineWidth = s.size; ctx.strokeStyle = s.color; ctx.stroke();
+                    s.x = sx; s.y = sy;
+                } else {
+                    s.x -= 0.1; // Gentle drift
+                    if (s.x < 0) s.x = w;
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                    ctx.fillStyle = s.color; ctx.fill();
+                }
+            });
+
+            // 2. Draw Sparks (if a decoy was hit)
+            for (let i = clickSparks.length - 1; i >= 0; i--) {
+                clickSparks[i].update(); clickSparks[i].draw();
+                if (clickSparks[i].life <= 0) clickSparks.splice(i, 1);
+            }
+
+            // 3. Draw The 6 Special Stars (Optical Flares)
+            if (!trueStarFound) {
+                specialStars.forEach(star => {
+                    if (star.isDestroyed) return;
+
+                    star.pulse += 0.05;
+                    star.angle += 0.01;
+                    let glowRadius = 10 + Math.sin(star.pulse) * 5;
+
+                    // Core
+                    ctx.beginPath(); ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fillStyle = '#fff'; ctx.fill();
+
+                    // Cross Flares (Sirius effect)
+                    ctx.save();
+                    ctx.translate(star.x, star.y);
+                    ctx.rotate(star.angle);
+
+                    let grad = ctx.createLinearGradient(-30, 0, 30, 0);
+                    grad.addColorStop(0, 'rgba(255,234,153,0)');
+                    grad.addColorStop(0.5, 'rgba(255,255,255,0.9)');
+                    grad.addColorStop(1, 'rgba(255,234,153,0)');
+
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(-35, -1, 70, 2); // Horizontal
+                    ctx.rotate(Math.PI / 2);
+                    ctx.fillRect(-35, -1, 70, 2); // Vertical
+
+                    ctx.restore();
+                });
+            }
+
+            requestAnimationFrame(renderSky);
+        }
+        renderSky();
+
+        // --- INTERACTION LOGIC (The Game) ---
+        canvas.addEventListener('mousedown', (e) => checkClick(e.clientX, e.clientY));
+        canvas.addEventListener('touchstart', (e) => checkClick(e.touches[0].clientX, e.touches[0].clientY));
+
+        function checkClick(cx, cy) {
+            if (trueStarFound) return;
+
+            for (const star of specialStars) {
+                if (star.isDestroyed) continue;
+
+                const dist = Math.hypot(cx - star.x, cy - star.y);
+
+                // Bigger and easier click area
+                if (dist < 75) {
+
+                    if (star.isTrue) {
+                        trueStarFound = true;
+
+                        document.getElementById('ui-prompt').style.display = 'none';
+
+                        isWarping = true;
+
+                        let accel = setInterval(() => {
+                            warpSpeed += 2;
+
+                            if (warpSpeed > 40) {
+                                clearInterval(accel);
+                            }
+                        }, 30);
+
+                        setTimeout(() => {
+                            const flash = document.getElementById('warp-flash');
+                            flash.classList.add('flash');
+
+                            setTimeout(() => {
+                                isWarping = false;
+                                warpSpeed = 1;
+
+                                document.getElementById('ui-envelope').classList.add('active');
+                                flash.classList.remove('flash');
+                            }, 500);
+
+                        }, 2000);
+
+                    } else {
+                        star.isDestroyed = true;
+
+                        for (let i = 0; i < 30; i++) {
+                            clickSparks.push(new Spark(star.x, star.y));
+                        }
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        const API_BASE = 'http://localhost:1307/api/v1';
+
+        // --- ENVELOPE OPENING & DATABASE LOGGING ---
+        async function openEnvelope() {
+            const selectedMessage = encouragements[Math.floor(Math.random() * encouragements.length)];
+
+            document.getElementById('dynamic-message').innerHTML =
+                `"${selectedMessage}"<br><br><span style="font-size:0.8em; color: #b8860b;">- The Universe</span>`;
+
+            document.getElementById('open-btn').style.opacity = 0;
+            document.getElementById('the-envelope').classList.add('open');
+
+            // Save Oracle Transmission to MongoDB Backend
+            try {
+                await fetch(`${API_BASE}/oracle-log`, { // Ensure this matches your backend route
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: visitorName,
+                        oracle: selectedMessage
+                    })
+                });
+            } catch (err) {
+                console.error("Failed to log oracle transmission:", err);
+            }
+
+            // Trigger the ultimate name reveal
+            setTimeout(() => {
+                document.getElementById('ui-envelope').classList.remove('active');
+                setTimeout(() => {
+                    document.getElementById('final-reveal').classList.add('active');
+                }, 1000);
+            }, 4500);
+        }
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+
+</html>

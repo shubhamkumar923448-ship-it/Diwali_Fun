@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Little Card of Happiness - A Little World of Happiness</title>
+
+    <!-- Premium Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Caveat:wght@500;700&family=Amita:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- HQ Export Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        :root {
+            --bg-void: #05020f;
+            --gold-light: #ffea99;
+            --gold-mid: #d4af37;
+            --card-navy: #090e2b;
+            --card-purple: #1f0b2e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-void);
+            background-image: radial-gradient(circle at top right, #1a0b2e, transparent 50%), radial-gradient(circle at bottom left, #0a1128, transparent 50%);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* === TOP NAV === */
+        .top-nav {
+            position: absolute;
+            top: clamp(15px, 3vw, 30px);
+            left: clamp(15px, 3vw, 30px);
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-ghost {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: var(--gold-light);
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        /* === MOBILE-FRIENDLY STUDIO LAYOUT === */
+        .studio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 120px 20px;
+            /* Safe padding for fixed footer */
+            gap: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (min-width: 900px) {
+            .studio-container {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: space-between;
+            }
+
+            .editor-panel {
+                flex: 1;
+                max-width: 450px;
+                position: sticky;
+                top: 100px;
+            }
+
+            .preview-panel {
+                flex: 1;
+                max-width: 600px;
+            }
+        }
+
+        /* --- LEFT: EDITOR PANEL --- */
+        .editor-panel {
+            background: rgba(20, 10, 38, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 24px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .mode-switch {
+            display: flex;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 30px;
+            padding: 5px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+
+        .mode-btn.active {
+            color: #000;
+            background: linear-gradient(45deg, var(--gold-mid), var(--gold-light));
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shuffle-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .studio-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .studio-input:focus {
+            border-color: var(--gold-light);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        textarea.studio-input {
+            resize: none;
+            height: 100px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .row-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+
+        /* Photo Uploader */
+        .photo-uploader {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-uploader img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .photo-uploader img.loaded {
+            opacity: 1;
+        }
+
+        .btn-remove-photo {
+            display: none;
+            background: rgba(255, 0, 85, 0.1);
+            border: 1px solid #ff0055;
+            color: #ff0055;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            align-self: center;
+            text-transform: uppercase;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* --- RIGHT: LIVE CARD PREVIEW --- */
+        .preview-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            perspective: 1500px;
+        }
+
+        .card-3d-container {
+            width: 100%;
+            max-width: 420px;
+            aspect-ratio: 4/5.5;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: floatCard 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatCard {
+            0% {
+                transform: translateY(0px) rotateY(-3deg);
+            }
+
+            100% {
+                transform: translateY(-10px) rotateY(3deg);
+            }
+        }
+
+        .the-card {
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--card-navy) 0%, var(--card-purple) 100%);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9), inset 0 0 0 2px rgba(255, 215, 0, 0.3);
+            border: 4px solid var(--gold-mid);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+        }
+
+        /* 1. ENORMOUS DIVINE WATERMARK OM */
+        .live-om {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Amita', serif;
+            font-size: 20rem;
+            color: rgba(255, 215, 0, 0.08);
+            /* Faint gold */
+            text-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+            z-index: 1;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        /* 2. FLAWLESS CUSTOM IMAGE ASSETS (No blend-mode bugs) */
+        /* Use Transparent PNGs for these to look amazing! */
+        .asset-moon {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+
+            width: 145px;
+            height: 145px;
+            object-fit: cover;
+
+            z-index: 2;
+            opacity: 0.9;
+
+            mix-blend-mode: lighten;
+
+            -webkit-mask-image: radial-gradient(ellipse 70% 70% at center,
+                    black 40%,
+                    rgba(0, 0, 0, 0.8) 60%,
+                    rgba(0, 0, 0, 0.3) 82%,
+                    transparent 100%);
+
+            mask-image: radial-gradient(ellipse 70% 70% at center,
+                    black 40%,
+                    rgba(0, 0, 0, 0.8) 60%,
+                    rgba(0, 0, 0, 0.3) 82%,
+                    transparent 100%);
+
+            filter:
+                brightness(1.1) contrast(1.08) drop-shadow(0 0 25px rgba(255, 210, 120, 0.45));
+
+            pointer-events: none;
+        }
+
+        .asset-diya {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+
+            z-index: 1;
+            opacity: 0.92;
+
+            mix-blend-mode: lighten;
+
+            -webkit-mask-image: radial-gradient(ellipse 72% 72% at center,
+                    black 35%,
+                    rgba(0, 0, 0, 0.85) 58%,
+                    rgba(0, 0, 0, 0.35) 80%,
+                    transparent 100%);
+
+            mask-image: radial-gradient(ellipse 72% 72% at center,
+                    black 35%,
+                    rgba(0, 0, 0, 0.85) 58%,
+                    rgba(0, 0, 0, 0.35) 80%,
+                    transparent 100%);
+
+            filter:
+                brightness(1.15) saturate(1.2) drop-shadow(0 0 25px rgba(255, 183, 3, 0.5));
+
+            pointer-events: none;
+        }
+
+        /* Scattered Emojis */
+        .decor-emojis {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .decor-emojis span:nth-child(1) {
+            position: absolute;
+            top: 15%;
+            right: 42%;
+        }
+
+        .decor-emojis span:nth-child(2) {
+            position: absolute;
+            top: 45%;
+            left: 12%;
+            font-size: 0.8rem;
+        }
+
+        .decor-emojis span:nth-child(3) {
+            position: absolute;
+            bottom: 30%;
+            right: 12%;
+            font-size: 1.4rem;
+        }
+
+        .decor-emojis span:nth-child(4) {
+            position: absolute;
+            bottom: 45%;
+            right: 25%;
+            font-size: 0.9rem;
+        }
+
+        /* Hanging Tag */
+        .hanging-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            background: #f4ecd8;
+            border: 2px dashed #d4af37;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            transform: rotate(8deg);
+            z-index: 10;
+        }
+
+        .hanging-tag::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 25px;
+            background: #fff;
+        }
+
+        .hanging-tag::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        .tag-to {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6rem;
+            color: #333;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .tag-name {
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            color: #8a0000;
+            line-height: 1;
+            word-break: break-word;
+            overflow: hidden;
+            max-height: 40px;
+        }
+
+        .card-title {
+            margin-top: 30px;
+            width: 100%;
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: var(--gold-light);
+            text-shadow: 0 0 20px rgba(255, 183, 3, 0.6);
+            line-height: 0.9;
+            text-align: center;
+            z-index: 5;
+        }
+
+        /* Polaroid Frame */
+        .polaroid-frame {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            width: 120px;
+            height: 140px;
+            background: #fff;
+            padding: 6px 6px 25px 6px;
+            border-radius: 3px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            transform: rotate(-4deg);
+            z-index: 10;
+            display: none;
+        }
+
+        .polaroid-frame.active {
+            display: block;
+        }
+
+        .polaroid-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .polaroid-heart {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff0055;
+            font-size: 1rem;
+        }
+
+        /* Message Area */
+        .card-message-area {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+            width: 60%;
+            text-align: right;
+            z-index: 5;
+        }
+
+        .card-msg {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: #fff;
+            font-style: italic;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px #000;
+        }
+
+        .card-sign-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            color: var(--gold-mid);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card-from {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: var(--gold-light);
+            line-height: 1;
+            word-break: break-word;
+            overflow: hidden;
+            max-height: 60px;
+        }
+
+        .btn-download {
+            margin-top: 30px;
+            background: linear-gradient(45deg, #ffb703, #fb8500);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 183, 3, 0.4);
+            transition: 0.4s;
+            font-family: 'Montserrat', sans-serif;
+            z-index: 20;
+        }
+
+        /* === 3. BULLETPROOF HIDDEN EXPORT CANVAS FOR PDF === */
+        #export-container {
+            position: fixed;
+            top: 0;
+            left: 100vw;
+            z-index: -1000;
+            opacity: 0;
+            pointer-events: none;
+            width: 1080px;
+            height: 1350px;
+            background-color: #0b071a;
+            background-image: linear-gradient(135deg, #090e2b 0%, #1f0b2e 100%);
+            display: flex;
+            flex-direction: column;
+            padding: 60px;
+            border: 15px solid #000;
+        }
+
+        /* Huge Export OM */
+        .ex-om {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Amita', serif;
+            font-size: 550px;
+            color: rgba(255, 215, 0, 0.08);
+            text-shadow: 0 0 100px rgba(255, 215, 0, 0.2);
+            z-index: 1;
+            line-height: 1;
+        }
+
+        /* Export Images (crossorigin enabled to fix PDF bugs) */
+        .ex-asset-moon {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+
+            width: 145px;
+            height: 145px;
+            object-fit: cover;
+
+            z-index: 2;
+            opacity: 0.9;
+
+            mix-blend-mode: lighten;
+
+            -webkit-mask-image: radial-gradient(ellipse 70% 70% at center,
+                    black 40%,
+                    rgba(0, 0, 0, 0.8) 60%,
+                    rgba(0, 0, 0, 0.3) 82%,
+                    transparent 100%);
+
+            mask-image: radial-gradient(ellipse 70% 70% at center,
+                    black 40%,
+                    rgba(0, 0, 0, 0.8) 60%,
+                    rgba(0, 0, 0, 0.3) 82%,
+                    transparent 100%);
+
+            filter:
+                brightness(1.1) contrast(1.08) drop-shadow(0 0 25px rgba(255, 210, 120, 0.45));
+
+            pointer-events: none;
+        }
+
+        .ex-asset-diya {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+
+            z-index: 1;
+            opacity: 0.92;
+
+            mix-blend-mode: lighten;
+
+            -webkit-mask-image: radial-gradient(ellipse 72% 72% at center,
+                    black 35%,
+                    rgba(0, 0, 0, 0.85) 58%,
+                    rgba(0, 0, 0, 0.35) 80%,
+                    transparent 100%);
+
+            mask-image: radial-gradient(ellipse 72% 72% at center,
+                    black 35%,
+                    rgba(0, 0, 0, 0.85) 58%,
+                    rgba(0, 0, 0, 0.35) 80%,
+                    transparent 100%);
+
+            filter:
+                brightness(1.15) saturate(1.2) drop-shadow(0 0 25px rgba(255, 183, 3, 0.5));
+
+            pointer-events: none;
+        }
+
+        .ex-emojis {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            font-size: 50px;
+            opacity: 0.8;
+        }
+
+        .ex-emojis span:nth-child(1) {
+            position: absolute;
+            top: 15%;
+            right: 40%;
+            font-size: 45px;
+        }
+
+        .ex-emojis span:nth-child(2) {
+            position: absolute;
+            top: 45%;
+            left: 12%;
+            font-size: 35px;
+        }
+
+        .ex-emojis span:nth-child(3) {
+            position: absolute;
+            bottom: 30%;
+            right: 12%;
+            font-size: 70px;
+        }
+
+        .ex-emojis span:nth-child(4) {
+            position: absolute;
+            bottom: 45%;
+            right: 25%;
+            font-size: 40px;
+        }
+
+        .ex-tag {
+            position: absolute;
+            top: 80px;
+            right: 60px;
+            width: 250px;
+            background: #f4ecd8;
+            border: 4px dashed #d4af37;
+            border-radius: 10px;
+            padding: 30px 15px;
+            text-align: center;
+            box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.6);
+            transform: rotate(8deg);
+            z-index: 10;
+        }
+
+        .ex-tag::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 40px;
+            background: #fff;
+        }
+
+        .ex-tag::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        .ex-title {
+            margin-top: 80px;
+            width: 100%;
+            font-family: 'Great Vibes', cursive;
+            font-size: 200px;
+            color: var(--gold-light);
+            text-shadow: 0 0 40px rgba(255, 183, 3, 0.6);
+            line-height: 0.9;
+            text-align: center;
+            z-index: 5;
+        }
+
+        .ex-polaroid {
+            position: absolute;
+            bottom: 100px;
+            left: 60px;
+            width: 380px;
+            height: 430px;
+            background: #fff;
+            padding: 20px 20px 70px 20px;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            transform: rotate(-4deg);
+            z-index: 10;
+            display: none;
+        }
+
+        .ex-polaroid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .ex-polaroid-heart {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff0055;
+            font-size: 40px;
+        }
+
+        .ex-msg-area {
+            position: absolute;
+            bottom: 120px;
+            right: 60px;
+            width: 55%;
+            text-align: right;
+            z-index: 5;
+        }
+
+        .ex-msg-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 45px;
+            color: #fff;
+            font-style: italic;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            text-shadow: 0 5px 10px #000;
+        }
+
+        .ex-sign-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+
+        .ex-from-text {
+            font-family: 'Caveat', cursive;
+            font-size: 90px;
+            color: #ffea99;
+            line-height: 1.1;
+            word-wrap: break-word;
+            overflow: hidden;
+            max-height: 250px;
+        }
+
+        /* === 4. BACKGROUND MAGIC CANVAS === */
+        #particle-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* === 5. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 5px;
+        }
+
+        .creator-badge svg {
+            width: clamp(14px, 3vw, 16px);
+            height: clamp(14px, 3vw, 16px);
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 5px;
+        }
+
+        .creator-badge:hover svg {
+            fill: #E1306C;
+            transform: scale(1.2) rotate(10deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="top-nav">
+        <button class="btn-ghost" onclick="window.location.href='diwali.html'">← Home</button>
+        <button class="btn-ghost" onclick="clearSession()">↻ Start a New Card</button>
+    </div>
+
+    <div class="studio-container">
+
+        <!-- LEFT: STUDIO EDITOR -->
+        <div class="editor-panel">
+            <div class="mode-switch">
+                <button class="mode-btn active" id="btn-gift" onclick="setMode('gift')">🎁 A Little Gift for
+                    You</button>
+                <button class="mode-btn" id="btn-craft" onclick="setMode('craft')">✨ Make It Your Own</button>
+            </div>
+
+            <div class="row-inputs">
+                <div class="input-group">
+                    <label> Made For</label>
+                    <input type="text" id="inp-to" class="studio-input" oninput="updateCard()" placeholder="Recipient">
+                </div>
+                <div class="input-group">
+                    <label>With Love, From</label>
+                    <input type="text" id="inp-from" class="studio-input" oninput="updateCard()"
+                        placeholder="Your Name">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>A Few Words from the Heart<button class="shuffle-btn" onclick="randomizeWish()"
+                        title="Find Another Wish">🎲</button></label>
+                <textarea id="inp-msg" class="studio-input" oninput="updateCard()"></textarea>
+            </div>
+
+            <div class="input-group" id="photo-group">
+                <label>Add a Little Memory</label>
+                <div class="photo-uploader" onclick="document.getElementById('file-upload').click()">
+                    <img id="thumb-preview">
+                    <div style="font-size: 2rem; color: var(--gold-light);">+</div>
+                    <div class="upload-hint">Add a Photo You Love</div>
+                </div>
+                <input type="file" id="file-upload" accept="image/*" onchange="handleImage(event)">
+                <button class="btn-remove-photo" id="btn-remove-photo" onclick="removePhoto()">✕ Remove Photo</button>
+            </div>
+        </div>
+
+        <!-- RIGHT: LIVE CARD PREVIEW -->
+        <div class="preview-panel">
+            <div class="card-3d-container" id="3d-wrap">
+                <div class="the-card" id="live-card">
+
+                    <!-- HUGE GLOWING OM WATERMARK -->
+                    <div class="live-om">ॐ</div>
+
+                    <!-- CUSTOM ASSETS (Added crossorigin for PDF safety) -->
+                    <!-- USE TRANSPARENT PNGs FOR BEST RESULTS -->
+                    <img class="asset-moon" crossorigin="anonymous" src="../public/assets/images/moon.jpeg" alt="Moon">
+                    <img class="asset-diya" crossorigin="anonymous" src="../public/assets/images/Diya.jpeg" alt="Diya">
+
+                    <div class="decor-emojis">
+                        <span>✨</span><span>🌟</span><span>🪔</span><span>💖</span><span>✨</span>
+                    </div>
+
+                    <div class="hanging-tag">
+                        <div
+                            style="font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: #333; text-transform: uppercase; font-weight: 700; margin-top: 5px;">
+                            Made For:</div>
+                        <div class="tag-name" id="card-to">Beautiful Soul</div>
+                    </div>
+
+                    <div class="card-title">Happy<br>Diwali <span style="font-size: 2rem; color: #ff0055;">♥</span>
+                    </div>
+
+                    <div class="polaroid-frame" id="card-polaroid">
+                        <img id="card-img" src="">
+                        <div class="polaroid-heart">♥</div>
+                    </div>
+
+                    <div class="card-message-area">
+                        <div class="card-msg" id="card-msg"> May this Diwali bring a little more peace to your heart,
+                            a little more light to your days, and countless reasons
+                            to smile. Wishing you happiness in every little moment. ✨</div>
+                        <div class="card-sign-label">With love, always</div>
+                        <div class="card-from" id="card-from">Shubham</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-download" onclick="downloadPDF()">Save Your Card ✨</button>
+        </div>
+    </div>
+
+    <!-- HIDDEN EXPORT CANVAS FOR FLAWLESS PDF -->
+    <div id="export-container">
+
+        <div class="ex-om">ॐ</div>
+
+        <!-- EXPORT ASSETS (crossorigin added) -->
+        <img class="ex-asset-moon" crossorigin="anonymous" src="../public/assets/images/moon.jpeg" alt="Moon">
+        <img class="ex-asset-diya" crossorigin="anonymous" src="../public/assets/images/diya.jpeg" alt="Diya">
+
+        <div class="ex-emojis">
+            <span>✨</span><span>🌟</span><span>🪔</span><span>💖</span><span>✨</span>
+        </div>
+
+        <div class="ex-tag">
+            <div
+                style="font-family: 'Montserrat', sans-serif; font-size: 22px; color: #333; text-transform: uppercase; font-weight: 700; margin-top: 15px;">
+                Made For:</div>
+            <div id="ex-to"
+                style="font-family: 'Caveat', cursive; font-size: 55px; color: #8a0000; line-height: 1; margin-top: 10px; word-wrap: break-word;">
+                Beautiful Soul</div>
+        </div>
+
+        <div class="ex-title">Happy<br>Diwali <span style="font-size: 80px; color: #ff0055;">♥</span></div>
+
+        <div class="ex-polaroid" id="ex-polaroid-container">
+            <img id="ex-img" src="">
+            <div class="ex-polaroid-heart">♥</div>
+        </div>
+
+        <div class="ex-msg-area">
+            <div class="ex-msg-text" id="ex-msg">May your life be filled with happiness, light and endless joy. ✨</div>
+            <div
+                style="font-family: 'Montserrat', sans-serif; font-size: 22px; color: #d4af37; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 15px;">
+                With lots of love,</div>
+            <div class="ex-from-text" id="ex-from">Shubham</div>
+        </div>
+    </div>
+
+    <!-- CONSTANT FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with magic by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <script>
+        const wishesArray = [
+            "May your heart always find peace, your days find meaning, and your life find beautiful reasons to smile. Happy Diwali. ✨",
+            "I hope this Diwali brings you closer to everything your heart has been quietly wishing for. 💛",
+            "May you never run out of hope, courage, or little moments that make life worth celebrating. 🪔",
+            "Some of life's greatest gifts are not things, but people, memories, and moments. May you always have plenty of them. 🌸",
+            "May every little light remind you that even the darkest nights cannot keep brightness away forever. ✨",
+            "Here's wishing you a life filled with peaceful mornings, genuine smiles, warm memories, and dreams that come true. 💫",
+            "May happiness find its way to your home, peace stay in your heart, and love surround you wherever you go. ❤️",
+            "Whatever this year has brought you, may the days ahead hold something beautiful. You deserve that too. 🌟",
+            "May this festival be a gentle reminder to keep believing in beautiful beginnings and brighter tomorrows. 🕊️"
+        ];
+
+        let visitorName = sessionStorage.getItem("visitorName") || "Beautiful Soul";
+        let currentMode = 'gift';
+        let uploadedImage = null;
+
+        const inpTo = document.getElementById('inp-to');
+        const inpFrom = document.getElementById('inp-from');
+        const inpMsg = document.getElementById('inp-msg');
+
+        const cardTo = document.getElementById('card-to');
+        const cardFrom = document.getElementById('card-from');
+        const cardMsg = document.getElementById('card-msg');
+        const cardPolaroid = document.getElementById('card-polaroid');
+
+        const exTo = document.getElementById('ex-to');
+        const exFrom = document.getElementById('ex-from');
+        const exMsg = document.getElementById('ex-msg');
+        const exPolaroid = document.getElementById('ex-polaroid-container');
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedPhoto = sessionStorage.getItem("cardPhoto");
+            if (savedPhoto) {
+                uploadedImage = savedPhoto;
+                applyPhotoToUI();
+            }
+            setMode('gift');
+        });
+
+        function clearSession() {
+            if (confirm("Are you sure you want to clear your card data?")) {
+                sessionStorage.removeItem("cardPhoto");
+                removePhoto();
+                setMode('craft');
+            }
+        }
+
+        function randomizeWish() {
+            const randomWish = wishesArray[Math.floor(Math.random() * wishesArray.length)];
+            inpMsg.value = randomWish;
+            updateCard();
+
+            const cardWrap = document.getElementById('3d-wrap');
+            cardWrap.style.transform = "scale(1.05)";
+            setTimeout(() => cardWrap.style.transform = "scale(1)", 200);
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('btn-gift').classList.toggle('active', mode === 'gift');
+            document.getElementById('btn-craft').classList.toggle('active', mode === 'craft');
+
+            if (mode === 'gift') {
+                inpTo.value = visitorName; inpTo.disabled = true;
+                inpFrom.value = "Shubham"; inpFrom.disabled = true;
+                randomizeWish();
+            } else {
+                inpTo.value = ""; inpTo.disabled = false;
+                inpFrom.value = visitorName; inpFrom.disabled = false;
+                inpMsg.value = "";
+            }
+            updateCard();
+        }
+
+        function updateCard() {
+            let toVal = inpTo.value.trim() || (currentMode === 'gift' ? visitorName : "Someone Special");
+            let fromVal = inpFrom.value.trim() || "Your Name";
+            let msgVal = inpMsg.value.trim() || "Write a beautiful message here...";
+
+            cardTo.innerText = toVal; cardFrom.innerText = fromVal; cardMsg.innerText = msgVal;
+            exTo.innerText = toVal; exFrom.innerText = fromVal; exMsg.innerText = msgVal;
+        }
+
+        function handleImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const MAX = 600;
+                    let scale = Math.min(MAX / img.width, MAX / img.height);
+                    if (scale > 1) scale = 1;
+                    canvas.width = img.width * scale; canvas.height = img.height * scale;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    uploadedImage = canvas.toDataURL('image/jpeg', 0.85);
+                    sessionStorage.setItem("cardPhoto", uploadedImage);
+
+                    applyPhotoToUI();
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function applyPhotoToUI() {
+            if (!uploadedImage) return;
+
+            document.getElementById('thumb-preview').src = uploadedImage;
+            document.getElementById('thumb-preview').classList.add('loaded');
+            document.getElementById('btn-remove-photo').style.display = 'block';
+
+            document.getElementById('card-img').src = uploadedImage;
+            cardPolaroid.style.display = 'block';
+
+            document.getElementById('ex-img').src = uploadedImage;
+            exPolaroid.style.display = 'block';
+        }
+
+        function removePhoto() {
+            uploadedImage = null;
+            sessionStorage.removeItem("cardPhoto");
+
+            document.getElementById('thumb-preview').src = "";
+            document.getElementById('thumb-preview').classList.remove('loaded');
+            document.getElementById('btn-remove-photo').style.display = 'none';
+
+            cardPolaroid.style.display = 'none';
+            exPolaroid.style.display = 'none';
+        }
+
+        // PERFECTED PDF EXPORT
+
+        // Setup API endpoint URL
+        const API_BASE = 'http://localhost:1307/api/v1'; // Active backend port
+
+        // PERFECTED PDF EXPORT & DATABASE TRACKING
+        async function downloadPDF() {
+            const card = document.getElementById('live-card');
+            const btn = document.querySelector('.btn-download');
+            const originalText = btn.innerText;
+
+            btn.innerText = "⏳ Creating Your Card...";
+            btn.disabled = true;
+
+            try {
+                await document.fonts.ready;
+
+                // Wait for images inside the actual live card
+                const images = Array.from(card.querySelectorAll('img'));
+
+                await Promise.all(images.map(async img => {
+                    if (img.decode) {
+                        await img.decode();
+                    } else if (!img.complete) {
+                        await new Promise((resolve, reject) => {
+                            img.onload = resolve;
+                            img.onerror = reject;
+                        });
+                    }
+                }));
+
+                // Capture the visible live card itself
+                const dataUrl = await htmlToImage.toPng(card, {
+                    pixelRatio: 3,
+                    cacheBust: true,
+                    width: card.offsetWidth,
+                    height: card.offsetHeight
+                });
+
+                const { jsPDF } = window.jspdf;
+
+                const pdf = new jsPDF({
+                    orientation: card.offsetWidth > card.offsetHeight ? 'landscape' : 'portrait',
+                    unit: 'px',
+                    format: [card.offsetWidth * 3, card.offsetHeight * 3]
+                });
+
+                pdf.addImage(
+                    dataUrl,
+                    'PNG',
+                    0,
+                    0,
+                    card.offsetWidth * 3,
+                    card.offsetHeight * 3
+                );
+
+                const name = inpTo.value.trim() || 'Friend';
+
+                pdf.save(`Diwali_Card_For_${name.replace(/\s+/g, '_')}.pdf`);
+
+                // 🚀 FIXED: LOG METRIC TO DATABASE BASED ON CURRENT MODE
+                try {
+                    const metricKey = currentMode === 'gift' ? 'gift_downloads' : 'craft_downloads';
+                    await fetch(`${API_BASE}/metrics/increment`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ key: metricKey })
+                    });
+                } catch (err) {
+                    console.error("Failed to track card download metric:", err);
+                }
+
+                btn.innerText = "✅ 	Your Card Is Ready!";
+
+            } catch (error) {
+                console.error("Card Export Error:", error);
+                alert("Export failed: " + error.message);
+                btn.innerText = originalText;
+
+            } finally {
+                btn.disabled = false;
+
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                }, 2000);
+            }
+        }
+
+
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        let particles = [];
+        for (let i = 0; i < 150; i++) {
+            particles.push({
+                x: Math.random() * w, y: Math.random() * h,
+                s: Math.random() * 2 + 0.2,
+                vx: (Math.random() - 0.5) * 0.4, vy: -(Math.random() * 0.5 + 0.1),
+                c: Math.random() > 0.5 ? '#ffea99' : '#ffffff',
+                alpha: Math.random(),
+                pulse: Math.random() * 0.05
+            });
+        }
+
+        function animateBg() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                p.alpha += p.pulse;
+                if (p.alpha > 1 || p.alpha < 0.1) p.pulse *= -1;
+
+                if (p.y < 0) { p.y = h + 10; p.x = Math.random() * w; }
+                if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+
+                ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
+                ctx.fillStyle = p.c; ctx.shadowBlur = 8; ctx.shadowColor = p.c; ctx.fill(); ctx.shadowBlur = 0;
+            });
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
+
+        const card3D = document.getElementById('3d-wrap');
+        document.addEventListener('mousemove', (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            xAxis = Math.max(-10, Math.min(10, xAxis));
+            yAxis = Math.max(-10, Math.min(10, yAxis));
+            card3D.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+
+    </script>
+</body>
+
+</html>

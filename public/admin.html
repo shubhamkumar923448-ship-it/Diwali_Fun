@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supreme Nexus - Admin Dashboard</title>
+
+    <!-- Premium Fonts & Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cinzel+Decorative:wght@700&family=Caveat:wght@500;700&family=Space+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js for Premium Live Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-void: #030108;
+            --panel-bg: rgba(15, 8, 25, 0.7);
+            --border-glow: rgba(0, 245, 212, 0.15);
+            --accent-cyan: #00f5d4;
+            --accent-gold: #ffea99;
+            --accent-pink: #ff0055;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --danger: #ff3366;
+            --success: #00e676;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-void);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-void);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-cyan);
+            border-radius: 10px;
+        }
+
+        /* === 1. AUTH GATEWAY === */
+        #auth-gateway {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, #0f051c 0%, var(--bg-void) 100%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .auth-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-glow);
+            padding: 50px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 245, 212, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .auth-icon {
+            font-size: 3.5rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px var(--accent-cyan));
+        }
+
+        .auth-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Space Mono', monospace;
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 25px;
+            margin-top: 20px;
+        }
+
+        .auth-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.2);
+        }
+
+        .auth-input.error {
+            border-color: var(--danger);
+            animation: shake 0.4s;
+        }
+
+        .btn-login {
+            background: linear-gradient(45deg, #00f5d4, #02c3a9);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+
+            75% {
+                transform: translateX(-10px);
+            }
+        }
+
+        .auth-loader {
+            display: none;
+            margin-top: 20px;
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: pulse 1s infinite alternate;
+            font-family: 'Space Mono', monospace;
+        }
+
+        @keyframes pulse {
+            from {
+                opacity: 0.5;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* === 2. DASHBOARD LAYOUT === */
+        #dashboard {
+            display: none;
+            opacity: 0;
+            min-height: 100vh;
+            transition: opacity 1s;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 100vh;
+        }
+
+        /* --- NAVIGATION --- */
+        .sidebar {
+            background: rgba(10, 5, 20, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(15px);
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            margin-bottom: 40px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .brand span {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: 0.3s;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(0, 245, 212, 0.1);
+            color: var(--accent-cyan);
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        /* Mobile Bottom Nav (Optimized for 5 items) */
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                border-right: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 5px;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+                height: 75px;
+                box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+            }
+
+            .brand {
+                display: none;
+            }
+
+            .nav-item {
+                flex-direction: column;
+                gap: 5px;
+                padding: 8px 0;
+                margin: 0;
+                font-size: 0.6rem;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                border-radius: 0;
+                flex: 1;
+                text-align: center;
+            }
+
+            .nav-item.active {
+                border-left: none;
+                border-bottom: 3px solid var(--accent-cyan);
+                background: transparent;
+            }
+
+            .nav-item i {
+                font-size: 1.3rem;
+            }
+
+            .nav-logout {
+                display: none;
+            }
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            padding: 40px;
+            position: relative;
+            height: 100vh;
+            overflow-y: auto;
+            padding-bottom: 120px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+                padding-bottom: 100px;
+            }
+        }
+
+        .admin-section {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 300;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.5);
+        }
+
+        /* STAT CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-cyan);
+        }
+
+        .stat-card.gold::before {
+            background: var(--accent-gold);
+        }
+
+        .stat-card.pink::before {
+            background: var(--accent-pink);
+        }
+
+        .stat-title {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .stat-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* CHARTS */
+        .chart-container {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            height: 350px;
+        }
+
+        .section-header {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: var(--accent-gold);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* DATA TABLES (Fully Mobile Responsive) */
+        .table-container {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            /* Smooth scroll on mobile */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            min-width: 700px;
+        }
+
+        th,
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        td {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .name-tag {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .cursive-msg {
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        /* Time Badge */
+        .time-badge {
+            background: rgba(0, 245, 212, 0.1);
+            color: var(--accent-cyan);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            border: 1px solid rgba(0, 245, 212, 0.3);
+        }
+
+        .action-btn {
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .action-btn:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        /* Toast */
+        #admin-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 245, 212, 0.2);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s ease;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        #admin-toast.show {
+            opacity: 1;
+            transform: translateY(10px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- === AUTH GATEWAY === -->
+    <div id="auth-gateway">
+        <div class="auth-box">
+            <i class="fa-solid fa-fingerprint auth-icon"></i>
+            <h1 class="auth-title">System Nexus</h1>
+            <input type="password" id="auth-pwd" class="auth-input" placeholder="ACCESS KEY" autocomplete="off">
+            <button class="btn-login" onclick="handleAuth()">Authenticate</button>
+            <div class="auth-loader" id="auth-loader">Authenticating Identity...</div>
+        </div>
+    </div>
+
+    <!-- === ADMIN DASHBOARD === -->
+    <div id="dashboard">
+        <div class="dashboard-grid">
+
+            <!-- Navigation Sidebar / Mobile Bottom Nav -->
+            <nav class="sidebar">
+                <div class="brand">Creator's Space<span>System v4.0</span></div>
+
+                <a class="nav-item active" onclick="switchSection('sec-overview', this)">
+                    <i class="fa-solid fa-chart-pie"></i> <span>Overview</span>
+                </a>
+                <a class="nav-item" onclick="switchSection('sec-wishtree', this)">
+                    <i class="fa-solid fa-leaf"></i> <span>Wish Tree</span>
+                </a>
+                <!-- Renamed & Updated Icons for Clarity -->
+                <a class="nav-item" onclick="switchSection('sec-universe-to-user', this)">
+                    <i class="fa-solid fa-meteor"></i> <span>Oracle Logs</span>
+                </a>
+                <a class="nav-item" onclick="switchSection('sec-user-to-universe', this)">
+                    <i class="fa-solid fa-bahai"></i> <span>Cosmic Whispers</span>
+                </a>
+                <a class="nav-item" onclick="switchSection('sec-metrics', this)">
+                    <i class="fa-solid fa-share-nodes"></i> <span>Cards/Shares</span>
+                </a>
+                <a class="nav-item" onclick="switchSection('sec-visitors', this)">
+                    <i class="fa-solid fa-users-viewfinder"></i> <span>Visitors Log</span>
+                </a>
+                <!-- NEW: ADMIN NOTES TAB -->
+                <a class="nav-item" onclick="switchSection('sec-admin-notes', this)">
+                    <i class="fa-solid fa-envelope-open-text"></i> <span>Admin Notes</span>
+                </a>
+
+                <a href="admin.html" class="nav-item nav-logout" style="margin-top: auto; color: var(--danger);">
+                    <i class="fa-solid fa-power-off"></i> <span>Exit</span>
+                </a>
+            </nav>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+
+                <div class="header">
+                    <h2 class="page-title" id="active-title">Nexus Analytics</h2>
+                    <div class="admin-profile">
+                        <div style="text-align: right; display: none; @media(min-width: 600px){ display: block; }">
+                            <div style="font-weight: 600; font-size: 0.8rem;">Shubham</div>
+                            <div style="font-size: 0.65rem; color: var(--accent-cyan); letter-spacing: 1px;">CREATOR
+                            </div>
+                        </div>
+                        <div class="admin-avatar">S</div>
+                    </div>
+                </div>
+
+                <!-- SECTION 1: OVERVIEW -->
+                <div id="sec-overview" class="admin-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fa-solid fa-users stat-icon"></i>
+                            <div class="stat-title">Total Visitors</div>
+                            <div class="stat-value" id="val-visitors">0</div>
+                        </div>
+                        <div class="stat-card gold">
+                            <i class="fa-solid fa-leaf stat-icon"></i>
+                            <div class="stat-title">Wishes on Tree</div>
+                            <div class="stat-value" id="val-tree">0</div>
+                        </div>
+                        <div class="stat-card pink">
+                            <i class="fa-solid fa-bahai stat-icon"></i>
+                            <div class="stat-title">Cosmic Whispers</div>
+                            <div class="stat-value" id="val-whispers">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-book-open stat-icon"></i>
+                        <div class="stat-title">Scrapbook Downloads</div>
+                        <div class="stat-value" id="val-scrapbook-downloads">0</div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="section-header">
+                            <span>Ecosystem Activity Trajectory</span>
+                            <span
+                                style="font-size: 0.7rem; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 10px;">LIVE
+                                SYNC</span>
+                        </div>
+                        <canvas id="premiumChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: WISH TREE LOGS -->
+                <div id="sec-wishtree" class="admin-section">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                        <i class="fa-solid fa-tree"></i> Public wishes planted on the tree. You can remove inappropriate
+                        content here.
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Visitor Name</th>
+                                    <th>Planted Wish</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wishtree-body">
+                                <!-- JS Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: ORACLE LOGS (Universe -> User) -->
+                <div id="sec-universe-to-user" class="admin-section">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                        <i class="fa-solid fa-meteor"></i> Track which Destiny Message (Oracle) was given to which
+                        visitor by the Universe.
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Visitor Name</th>
+                                    <th>Oracle Message Received</th>
+                                </tr>
+                            </thead>
+                            <tbody id="universe-body">
+                                <!-- JS Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: COSMIC WHISPERS (User -> Universe/Admin) -->
+                <div id="sec-user-to-universe" class="admin-section">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                        <i class="fa-solid fa-user-secret"></i> Extremely personal wishes and notes whispered to the
+                        Universe/Admin via the Cosmic Orb.
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Sender Name</th>
+                                    <th>Whisper / Manifestation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="whispers-body">
+                                <!-- JS Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- SECTION 4.5: ADMIN NOTES (Visitor -> Admin) -->
+                <div id="sec-admin-notes" class="admin-section">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                        <i class="fa-solid fa-envelope"></i> Direct messages, feedback, and special notes left
+                        exclusively for the Creator.
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Sender Name</th>
+                                    <th>Direct Note</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-notes-body">
+                                <!-- JS Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECTION 5: CARD & SHARE METRICS -->
+                <div id="sec-metrics" class="admin-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fa-solid fa-gift stat-icon"></i>
+                            <div class="stat-title">"My Gift" Downloads</div>
+                            <div class="stat-value" id="val-gift-downloads">0</div>
+                        </div>
+                        <div class="stat-card gold">
+                            <i class="fa-solid fa-wand-magic-sparkles stat-icon"></i>
+                            <div class="stat-title">"Craft Your Own" Downloads</div>
+                            <div class="stat-value" id="val-craft-downloads">0</div>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card pink">
+                            <i class="fa-brands fa-whatsapp stat-icon"></i>
+                            <div class="stat-title">WhatsApp Shares</div>
+                            <div class="stat-value" id="val-whatsapp-shares">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-link stat-icon"></i>
+                            <div class="stat-title">System Share / Copied</div>
+                            <div class="stat-value" id="val-system-shares">0</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- SECTION: VISITORS LOG -->
+                <div id="sec-visitors" class="admin-section">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                        <i class="fa-solid fa-users"></i> Complete directory of every visitor who entered A Little World
+                        Of Happiness.
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Visitor Name</th>
+                                    <th>Festival Choice</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="visitors-body">
+                                <!-- JS Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="admin-toast">Action completed.</div>
+
+    <script>
+        const API_BASE = 'http://localhost:1307/api/v1/admin';
+        let authToken = localStorage.getItem('nexus_token') || '';
+
+        // === 1. AUTHENTICATION ===
+        async function handleAuth() {
+            const pwd = document.getElementById('auth-pwd').value;
+            const loader = document.getElementById('auth-loader');
+            const input = document.getElementById('auth-pwd');
+
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pwd })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    authToken = data.token;
+                    localStorage.setItem('nexus_token', authToken);
+
+                    input.style.display = 'none';
+                    document.querySelector('.btn-login').style.display = 'none';
+                    loader.style.display = 'block';
+
+                    setTimeout(() => {
+                        const gateway = document.getElementById('auth-gateway');
+                        gateway.style.opacity = '0';
+                        setTimeout(() => {
+                            gateway.style.display = 'none';
+                            document.getElementById('dashboard').style.display = 'block';
+                            setTimeout(() => {
+                                document.getElementById('dashboard').style.opacity = '1';
+                                fetchDashboardData(); // FIXED: Properly triggered on login success
+                            }, 50);
+                        }, 1000);
+                    }, 1200);
+                } else {
+                    triggerAuthError(input);
+                }
+            } catch (err) {
+                console.error("Auth error:", err);
+                triggerAuthError(input);
+            }
+        }
+
+        function triggerAuthError(input) {
+            input.classList.add('error');
+            input.value = '';
+            input.placeholder = "DENIED";
+            setTimeout(() => { input.classList.remove('error'); }, 400);
+        }
+
+        document.getElementById('auth-pwd').addEventListener('keypress', function (e) { if (e.key === 'Enter') handleAuth(); });
+
+        // === 2. NAVIGATION LOGIC ===
+        const sectionTitles = {
+            'sec-overview': 'Nexus Analytics',
+            'sec-visitors': 'Visitors Directory',
+            'sec-wishtree': 'Wish Tree Logs',
+            'sec-universe-to-user': 'Oracle Transmissions',
+            'sec-user-to-universe': 'Cosmic Whispers',
+            'sec-admin-notes': 'Direct Admin Notes',
+            'sec-metrics': 'Engagement Metrics'
+        };
+
+        function switchSection(secId, navElement) {
+            document.querySelectorAll('.admin-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+
+            document.getElementById(secId).classList.add('active');
+            navElement.classList.add('active');
+            document.getElementById('active-title').innerText = sectionTitles[secId];
+        }
+
+        // === 3. FETCH LIVE DATA FROM MONGODB ===
+        let chartInstance = null;
+
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch(`${API_BASE}/dashboard-data`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const result = await response.json();
+
+                console.log("📥 Dashboard API Response:", result);
+
+                if (result.success) {
+                    // Update Stats Cards
+                    animateValue("val-visitors", 0, result.stats.visitors, 1200);
+                    animateValue("val-tree", 0, result.stats.treeWishes, 1200);
+                    animateValue("val-whispers", 0, result.stats.whispers, 1200);
+
+                    // Populate Tables
+                    populateVisitors(result.visitors);
+                    populateWishTree(result.wishes);
+                    populateUniverseLogs(result.oracleLogs);
+                    populateWhispers(result.whispers);
+                    populateAdminNotes(result.adminNotes);
+
+
+                    renderPremiumChart(result.chartData || { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'], visitors: [0, 0, 0, 0, 0, 0, 0], interactions: [0, 0, 0, 0, 0, 0, 0] });
+                }
+
+                if (result.metrics) {
+                    document.getElementById('val-gift-downloads').innerText = (result.metrics.gift_downloads || 0).toLocaleString();
+                    document.getElementById('val-craft-downloads').innerText = (result.metrics.craft_downloads || 0).toLocaleString();
+                    document.getElementById('val-whatsapp-shares').innerText = (result.metrics.whatsapp_shares || 0).toLocaleString();
+                    document.getElementById('val-system-shares').innerText = (result.metrics.system_shares || 0).toLocaleString();
+                    document.getElementById('val-scrapbook-downloads').innerText = (result.metrics.scrapbook_downloads || 0).toLocaleString();
+                }
+            } catch (err) {
+                console.error("Failed to fetch dashboard live data:", err);
+                showToast("Error syncing with Nexus core.");
+            }
+        }
+        function populateAdminNotes(notes) {
+            const tbody = document.getElementById('admin-notes-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (!notes || notes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No special notes received yet.</td></tr>`;
+                return;
+            }
+            notes.forEach(note => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="time-badge" style="border-color: rgba(255, 234, 153, 0.4); color: var(--accent-gold); background: rgba(255, 234, 153, 0.1);">${formatLocalDate(note.createdAt)}</span></td>
+                    <td class="name-tag" style="color: var(--magic-cyan);">${note.sender}</td>
+                    <td style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; color: #fff; line-height: 1.5; font-style: italic;">"${note.message}"</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        function animateValue(id, start, end, duration) {
+            let obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const easeOut = progress * (2 - progress);
+                obj.innerHTML = Math.floor(easeOut * (end - start) + start).toLocaleString();
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // === 4. PREMIUM CHART ===
+        function renderPremiumChart(chartData) {
+            const canvasEl = document.getElementById('premiumChart');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
+
+            if (chartInstance) chartInstance.destroy();
+
+            let gradCyan = ctx.createLinearGradient(0, 0, 0, 300);
+            gradCyan.addColorStop(0, 'rgba(0, 245, 212, 0.4)');
+            gradCyan.addColorStop(1, 'rgba(0, 245, 212, 0)');
+
+            let gradGold = ctx.createLinearGradient(0, 0, 0, 300);
+            gradGold.addColorStop(0, 'rgba(255, 234, 153, 0.4)');
+            gradGold.addColorStop(1, 'rgba(255, 234, 153, 0)');
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.labels || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'],
+                    datasets: [
+                        {
+                            label: 'Daily Visitors (Real)',
+                            data: chartData.visitors || [0, 0, 0, 0, 0, 0, 0],
+                            borderColor: '#00f5d4',
+                            backgroundColor: gradCyan,
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#fff',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Daily Wishes (Real)',
+                            data: chartData.interactions || [0, 0, 0, 0, 0, 0, 0],
+                            borderColor: '#ffea99',
+                            backgroundColor: gradGold,
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 3,
+                            pointBackgroundColor: '#d4af37',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'top', labels: { color: 'rgba(255,255,255,0.7)', usePointStyle: true } } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false }, ticks: { color: 'rgba(255,255,255,0.5)', precision: 0 } },
+                        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)' } }
+                    }
+                }
+            });
+        }
+
+        // === 5. POPULATING TABLES FROM DB ===
+        function formatLocalDate(isoString) {
+            const d = new Date(isoString);
+            return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }) + ', ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function populateVisitors(visitors) {
+            const tbody = document.getElementById('visitors-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (!visitors || visitors.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No visitors recorded yet.</td></tr>`;
+                return;
+            }
+
+            visitors.forEach(v => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="time-badge">${v.createdAt ? formatLocalDate(v.createdAt) : 'Just now'}</span></td>
+                    <td class="name-tag">${v.name || 'Anonymous'}</td>
+                    <td><span style="color: var(--accent-gold); text-transform: uppercase; font-size: 0.8rem;">${v.festival || 'Diwali'}</span></td>
+                    <td style="font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">${v.ipAddress || 'Local'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function populateWishTree(wishes) {
+            const tbody = document.getElementById('wishtree-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (!wishes || wishes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No wishes planted yet.</td></tr>`;
+                return;
+            }
+            wishes.forEach((wish) => {
+                let tr = document.createElement('tr');
+                tr.id = `wishrow-${wish._id}`;
+                tr.innerHTML = `
+                    <td><span class="time-badge">${formatLocalDate(wish.createdAt)}</span></td>
+                    <td class="name-tag">${wish.name}</td>
+                    <td style="font-style: italic; color: rgba(255,255,255,0.8);">"${wish.text}"</td>
+                    <td><button class="action-btn" onclick="deleteWish('${wish._id}')"><i class="fa-solid fa-trash"></i> Drop</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function deleteWish(id) {
+            if (confirm("Permanently erase this wish from database?")) {
+                try {
+                    const res = await fetch(`${API_BASE}/wish/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const row = document.getElementById(`wishrow-${id}`);
+                        if (row) {
+                            row.style.opacity = '0';
+                            setTimeout(() => { row.remove(); showToast(`Wish erased.`); }, 300);
+                        }
+                    }
+                } catch (e) {
+                    showToast("Failed to delete wish.");
+                }
+            }
+        }
+
+        function populateUniverseLogs(logs) {
+            const tbody = document.getElementById('universe-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No oracle logs recorded.</td></tr>`;
+                return;
+            }
+            // FIXED: logs is an array directly
+            logs.forEach(log => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="time-badge">${formatLocalDate(log.createdAt)}</span></td>
+                    <td class="name-tag" style="color: var(--accent-cyan);">${log.name}</td>
+                    <td style="font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: #fff;">"${log.oracle}"</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function populateWhispers(whispers) {
+            const tbody = document.getElementById('whispers-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (!whispers || whispers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No cosmic whispers recorded.</td></tr>`;
+                return;
+            }
+            whispers.forEach(whisper => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="time-badge" style="border-color: rgba(255, 51, 102, 0.4); color: var(--accent-pink); background: rgba(255, 51, 102, 0.1);">${formatLocalDate(whisper.createdAt)}</span></td>
+                    <td class="name-tag">${whisper.sender}</td>
+                    <td class="cursive-msg">"${whisper.msg}"</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('admin-toast');
+            if (!toast) return;
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+    </script>
+</body>
+
+</html>

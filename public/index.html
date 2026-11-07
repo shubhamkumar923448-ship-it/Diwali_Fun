@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Little World Of Happiness</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Great+Vibes&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-void: #030308;
+            --gold-light: #ffea99;
+            --gold-deep: #b8860b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            /* Changed to 100dvh for perfect mobile browser fitting */
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            /* Allowed Y-scroll for very small landscape screens, hid X-scroll */
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Ambient Glow */
+        .ambient-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100dvh;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, transparent 70%);
+            filter: blur(60px);
+            z-index: -1;
+            pointer-events: none;
+            animation: pulseGlow 5s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                opacity: 0.7;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        #bg-canvas {
+            position: fixed;
+            /* Fixed so it covers background even on scroll */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        /* Main Container */
+        .intro-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1;
+            width: 100%;
+            min-height: 100dvh;
+            padding-bottom: 80px;
+            /* Space for footer */
+        }
+
+        .screen-state {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            max-width: 700px;
+            padding: 20px;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* === FLUID TYPOGRAPHY (Perfect for All Devices) === */
+        .cursive-whisper {
+            font-family: 'Great Vibes', cursive;
+            color: var(--gold-light);
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            /* Scales smoothly */
+            opacity: 0.9;
+            margin-bottom: -10px;
+            text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .grand-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            letter-spacing: clamp(2px, 1vw, 4px);
+            text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #ffd700, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+            line-height: 1.2;
+        }
+
+        .aesthetic-subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            color: rgba(255, 234, 153, 0.8);
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Fluid Input */
+        .ethereal-input {
+            width: 90%;
+            max-width: 400px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.4);
+            color: var(--gold-light);
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            font-family: 'Cinzel Decorative', serif;
+            text-align: center;
+            padding: 10px;
+            outline: none;
+            transition: 0.5s;
+            margin-bottom: 30px;
+        }
+
+        .ethereal-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            letter-spacing: 1px;
+        }
+
+        .ethereal-input:focus {
+            border-bottom: 1px solid var(--gold-light);
+            box-shadow: 0 15px 25px -10px rgba(255, 215, 0, 0.6);
+        }
+
+        .ghost-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: var(--gold-light);
+            padding: clamp(10px, 3vw, 15px) clamp(25px, 6vw, 45px);
+            border-radius: 40px;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.5s;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+
+        .ghost-btn:hover {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: #fff;
+            color: #fff;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* === RESPONSIVE PORTALS === */
+        .portal-grid {
+            display: flex;
+            gap: clamp(20px, 4vw, 50px);
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            /* Allows stacking on mobile */
+        }
+
+        .portal {
+            position: relative;
+            /* Fluid sizes for portals */
+            width: clamp(200px, 40vw, 260px);
+            height: clamp(280px, 50vw, 380px);
+            border-radius: 130px 130px 15px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: clamp(15px, 3vw, 25px);
+            cursor: pointer;
+            overflow: hidden;
+            transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+        }
+
+        .portal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
+            z-index: 1;
+        }
+
+        .portal-gif {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            transition: 0.8s;
+            z-index: 0;
+            background-image: repeating-linear-gradient(45deg, #111 0, #111 1px, transparent 1px, transparent 10px);
+        }
+
+        .portal-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .portal:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold-light);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .portal:hover .portal-gif {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .portal.locked {
+            pointer-events: none;
+            filter: grayscale(80%);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .timer-text {
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: #ff8c00;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .portal h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+        }
+
+        .portal p {
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        /* === RESPONSIVE CREATOR BADGE === */
+        .creator-badge {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 5px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            transition: 0.4s;
+        }
+
+        .creator-badge:hover .signature {
+            color: #fff;
+            text-shadow: 0 0 20px #fff;
+        }
+
+        .creator-badge svg {
+            width: clamp(14px, 3vw, 16px);
+            height: clamp(14px, 3vw, 16px);
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 5px;
+        }
+
+        .creator-badge:hover svg {
+            fill: #E1306C;
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95) translateY(20px);
+            filter: blur(10px);
+        }
+
+        .active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+    <div class="ambient-glow"></div>
+
+    <main class="intro-container">
+
+        <!-- STATE 1: Welcome -->
+        <div id="state-name" class="screen-state active">
+            <h2 class="cursive-whisper">A little place to pause…</h2>
+            <h1 class="grand-title">A Little World<br>Of Happiness</h1>
+            <p class="aesthetic-subtitle">Every little celebration feels warmer when we know who's here. What should we call you?</p>
+
+            <form id="name-form">
+                <input type="text" id="visitor-name" class="ethereal-input" placeholder="Your name goes here…" required
+                    autocomplete="off">
+                <br>
+                <button type="submit" class="ghost-btn">Take me inside ✨</button>
+            </form>
+        </div>
+
+        <!-- STATE 2: Portals -->
+        <div id="state-festival" class="screen-state hidden">
+            <h2 class="cursive-whisper">Well, hello <span id="display-name" style="color:#fff;"> — we're glad you found your way here.</span></h2>
+            <p class="aesthetic-subtitle" style="font-size: clamp(1.2rem, 3.5vw, 1.8rem);">Two celebrations, countless little feelings. Where shall we begin?</p>
+
+            <div class="portal-grid">
+
+                <div class="portal" onclick="selectFestival('diwali')">
+                    <div class="portal-gif">
+                        <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
+                            <source src="../public/assets/videos/Diwali.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="portal-content">
+                        <h3>Diwali</h3>
+                        <p>Where every little light feels like a new beginning.</p>
+                    </div>
+                </div>
+
+                <div class="portal locked" id="chhath-portal" onclick="selectFestival('chhath')">
+                    <div class="portal-gif">
+                        <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
+                            <source src="../public/assets/videos/Chhath.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="portal-content">
+                        <span class="timer-text" id="chhath-timer">OPENS IN: 24:00:00</span>
+                        <h3>Chhath</h3>
+                        <p>Where faith meets the first light of a new day.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- PERFECTED CONSTANT FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with magic by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <script>
+        const API_BASE = 'http://localhost:1307/api/v1'; // Ensure your active backend port
+
+        document.getElementById("name-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const name = document.getElementById("visitor-name").value.trim();
+            if (!name) return;
+
+            // 1. Save visitor name locally for next pages
+            localStorage.setItem('visitor_name', name);
+
+            // 2. Log visitor to MongoDB Backend real-time
+            try {
+                await fetch(`${API_BASE}/visitor`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, festival: 'diwali' })
+                });
+            } catch (err) {
+                console.error("Failed to log visitor:", err);
+            }
+
+            document.getElementById("display-name").textContent = name;
+
+            const stateName = document.getElementById("state-name");
+            const stateFest = document.getElementById("state-festival");
+
+            stateName.classList.remove("active");
+            stateName.classList.add("hidden");
+
+            setTimeout(() => {
+                stateName.style.display = "none";
+                stateFest.classList.remove("hidden");
+                setTimeout(() => stateFest.classList.add("active"), 50);
+            }, 800);
+        });
+
+        async function selectFestival(festival) {
+            // Update festival choice in backend if needed or just navigate
+            const name = localStorage.getItem('visitor_name') || 'Anonymous';
+            try {
+                await fetch(`${API_BASE}/visitor`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, festival: festival })
+                });
+            } catch (e) {
+                console.error("Festival selection log error:", e);
+            }
+            window.location.href = festival + ".html";
+        }
+
+        const chhathDate = new Date(2026, 10, 15, 0, 0, 0);
+
+        function updateChhathCountdown() {
+            const now = new Date();
+            const timer = document.getElementById("chhath-timer");
+            const portal = document.getElementById("chhath-portal");
+
+            const difference = chhathDate.getTime() - now.getTime();
+
+            if (difference <= 0) {
+                timer.textContent = "✨ OPEN NOW";
+                portal.classList.remove("locked");
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((difference / (1000 * 60)) % 60);
+            const seconds = Math.floor((difference / 1000) % 60);
+
+            timer.textContent =
+                `OPENS IN: ${days}d ${String(hours).padStart(2, '0')}:` +
+                `${String(minutes).padStart(2, '0')}:` +
+                `${String(seconds).padStart(2, '0')}`;
+        }
+
+        updateChhathCountdown();
+        setInterval(updateChhathCountdown, 1000);
+    </script>
+    <script src="scripts/background-fx.js"></script>
+</body>
+
+</html>

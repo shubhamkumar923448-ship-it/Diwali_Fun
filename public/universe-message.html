@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message from the Universe - A Little World Of Happiness</title>
+
+    <!-- Premium Cinematic Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #020108;
+            --bg-space: #0b041a;
+            --gold-light: #ffea99;
+            --gold-deep: #d4af37;
+            --cosmic-cyan: #00f5d4;
+            --cosmic-purple: #9d4edd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-deep);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* === 1. TOP NAV === */
+        .top-nav {
+            position: absolute;
+            top: clamp(15px, 4vw, 30px);
+            left: clamp(15px, 4vw, 30px);
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: var(--gold-light);
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 25px);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        /* === 2. 3D GALAXY CANVAS === */
+        #galaxy-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            /* Filter for intense cosmic glow */
+            filter: drop-shadow(0 0 10px rgba(0, 245, 212, 0.2)) drop-shadow(0 0 20px rgba(157, 78, 221, 0.2));
+        }
+
+        /* The Blinding Transmission Flash */
+        #transmission-flash {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-out;
+        }
+
+        #transmission-flash.flash {
+            opacity: 1;
+            transition: opacity 0.1s ease-in;
+        }
+
+        /* === 3. UI LAYERS === */
+        .ui-layer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            z-index: 10;
+            transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .ui-layer.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ui-layer.hidden {
+            opacity: 0;
+            transform: translate(-50%, -40%);
+        }
+
+        /* --- STATE 1: INITIAL PROMPT --- */
+        .cosmic-title {
+            font-family: 'Cinzel Decorative', 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5), 0 0 60px var(--cosmic-cyan);
+            margin-bottom: 15px;
+            line-height: 1.1;
+            font-weight: 300;
+        }
+
+        .cosmic-subtitle {
+            font-size: clamp(0.85rem, 2vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .btn-transmit {
+            background: transparent;
+            border: 1px solid var(--cosmic-cyan);
+            color: var(--cosmic-cyan);
+            padding: clamp(12px, 3vw, 15px) clamp(30px, 6vw, 50px);
+            border-radius: 40px;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.5s;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-transmit:hover {
+            background: var(--cosmic-cyan);
+            color: #000;
+            box-shadow: 0 0 40px rgba(0, 245, 212, 0.6);
+            transform: scale(1.05);
+            font-weight: 600;
+        }
+
+        /* --- STATE 2: THE REVEALED MESSAGE CARD --- */
+        .oracle-card {
+            background: rgba(10, 5, 20, 0.65);
+            border: 1px solid rgba(0, 245, 212, 0.3);
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+            padding: clamp(40px, 8vw, 60px) clamp(30px, 6vw, 50px);
+            border-radius: 20px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 245, 212, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Holographic overlay */
+        .oracle-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 245, 212, 0.05) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .divine-greeting {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--gold-light);
+            margin-bottom: 25px;
+            text-shadow: 0 0 20px rgba(255, 234, 153, 0.4);
+            position: relative;
+            z-index: 2;
+        }
+
+        .universe-message {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            color: #fff;
+            line-height: 1.6;
+            font-style: italic;
+            font-weight: 400;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .card-footer-text {
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Subtle Reset Button */
+        .reset-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+        }
+
+        .reset-btn:hover {
+            color: var(--gold-light);
+            text-decoration-color: var(--gold-light);
+        }
+
+        /* === 4. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 5px;
+        }
+
+        .creator-badge svg {
+            width: clamp(14px, 3vw, 16px);
+            height: clamp(14px, 3vw, 16px);
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 5px;
+        }
+
+        .creator-badge:hover svg {
+            fill: #E1306C;
+            transform: scale(1.2) rotate(10deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 3D Warp Galaxy -->
+    <canvas id="galaxy-canvas"></canvas>
+
+    <!-- White Flash for Transmission -->
+    <div id="transmission-flash"></div>
+
+    <div class="top-nav">
+        <button class="back-btn" onclick="window.location.href='diwali.html'">← Back to Your Diwali</button>
+    </div>
+
+    <!-- STATE 1: INITIAL PROMPT -->
+    <div id="ui-prompt" class="ui-layer active">
+        <h1 class="cosmic-title">A Little Message, Just for You.</h1>
+        <p class="cosmic-subtitle"> Somewhere among the stars, a little reminder is waiting for you.</p>
+        <button class="btn-transmit" onclick="triggerTransmission()">Open My Little Universe ✨</button>
+    </div>
+
+    <!-- STATE 2: THE REVEALED MESSAGE -->
+    <div id="ui-message" class="ui-layer">
+        <div class="oracle-card">
+            <h2 class="divine-greeting" id="visitor-greeting">Dear Soul,</h2>
+            <p class="universe-message" id="oracle-text">"A little reminder is finding its way to you..."</p>
+            <p class="card-footer-text">—— A little reminder from the universe ——</p>
+        </div>
+        <button class="reset-btn" onclick="resetTransmission()">There's More Love to Discover</button>
+    </div>
+
+    <!-- CONSTANT FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with magic by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <script>
+        const API_BASE = 'http://localhost:1307/api/v1';
+
+        // ==========================================
+        // 1. THE 30 DEEP COSMIC MESSAGES (Health, Future, Progress)
+        // ==========================================
+        const universeMessages = [
+            "Hey, take a little breath. You are doing better than you think. Even on the days when you feel lost, there is something beautiful about the way you keep trying. I hope you never forget how precious you are.",
+            "I wish you could see yourself through the eyes of the people who genuinely care about you. You would see someone worth appreciating, someone worth choosing, and someone who brings a little more happiness into this world.",
+            "May life be gentle with your heart. May your worries become lighter, your nights become peaceful, and your mornings bring little reasons to smile. You deserve that kind of happiness.",
+            "One day, I hope you wake up and realise that the life you once quietly wished for has slowly become your reality. Until then, keep believing in those little dreams. They deserve a chance.",
+            "You don't always have to be strong. Sometimes you can feel tired, take a break, and let the world wait for a moment. You deserve kindness too, especially from yourself.",
+            "I hope you meet people who make you feel comfortable being exactly who you are. People who understand your silence, celebrate your happiness, and never make you question your worth.",
+            "Somewhere in your future, there are beautiful evenings, unexpected laughter, warm hugs, long conversations, and memories you haven't made yet. Please don't miss the chance to experience them.",
+            "If nobody has told you lately, you are doing enough. You don't need to prove your worth every single day. Just being you is already something beautiful.",
+            "May all the little things you secretly wish for find their way to you. The peaceful life, the genuine friendships, the dreams you are afraid to say out loud, and the happiness you truly deserve.",
+            "Please don't be too hard on yourself for the things that didn't work out. You were learning, you were trying, and you were growing. That counts for more than you realise.",
+            "I hope you always have something to look forward to. A message that makes you smile, a song that touches your heart, a person who feels like home, or simply a beautiful new day.",
+            "Your story is not late, and your dreams are not too big. Life has its own beautiful timing. Keep growing, keep smiling, and give yourself permission to enjoy the journey.",
+            "May your heart never become too tired to love the little things. The evening sky, your favourite song, a random laugh, and those moments when everything feels just right.",
+            "There is so much more waiting for you than the things that have already happened. Don't let yesterday take away the excitement of tomorrow. Your beautiful moments are still ahead.",
+            "I hope you never settle for a life where you have to hide your happiness or silence your dreams. May you always find the freedom to be yourself and the courage to choose what makes your heart happy.",
+            "Some days will be messy, some plans will change, and some answers will take time. But please remember, a difficult day does not make your life any less beautiful.",
+            "If I could send you one little gift through these stars, it would be peace of mind. The kind that lets you sleep without overthinking and wake up without carrying yesterday's worries.",
+            "May the people you love stay close, may the memories you create stay warm, and may you always find a little happiness in the most unexpected places.",
+            "You have so many beautiful sides that the world hasn't even seen yet. Keep discovering yourself. There is no need to rush into becoming someone else.",
+            "I hope you laugh until your cheeks hurt, dance when your favourite song plays, take pictures of ordinary moments, and collect memories that make you smile years later.",
+            "Whenever life feels a little too much, remember that you don't have to solve everything at once. Just take care of today. Tomorrow can wait its turn.",
+            "May you receive the same warmth that you give to others. The same thoughtful messages, the same genuine care, and the same little efforts that make someone feel special.",
+            "One day, the little efforts nobody noticed will become the things you are most proud of. So keep going, even if your progress feels invisible right now.",
+            "I hope you never lose that little spark inside you. The one that gets excited over small things, dreams without limits, and finds magic in ordinary moments.",
+            "You deserve happiness that doesn't come with conditions, friendships that don't feel like a responsibility, and love that feels safe, gentle, and true.",
+            "May your life be filled with beautiful surprises. Not just the big ones, but the little ones too: a kind word, a perfect evening, an unexpected opportunity, and a reason to smile for no reason at all.",
+            "Please remember to celebrate yourself sometimes. For getting through difficult days, for trying again, for being kind, and for all the little things you do that nobody else sees.",
+            "I hope the future surprises you in the sweetest ways. May you find yourself in places you once dreamed of, surrounded by people who make every moment feel a little more special.",
+            "If today wasn't your best day, that's okay. You still deserve a beautiful tomorrow. Put your worries down for a little while, take a deep breath, and be gentle with your heart.",
+            "And here's one last thing, just for you: the world is a little more beautiful because you are in it. Keep your smile, protect your peace, follow your dreams, and never forget that you deserve all the good things life has to offer."
+        ];
+
+
+        let visitorName = localStorage.getItem("visitor_name") || sessionStorage.getItem("visitorName") || "Beautiful Soul";
+        document.getElementById('visitor-greeting').innerText = `Dear ${visitorName},`;
+
+        // ==========================================
+        // 2. SESSION MANAGEMENT
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedMessage = sessionStorage.getItem('cosmicMessage');
+            if (savedMessage) {
+                document.getElementById('ui-prompt').classList.remove('active');
+                document.getElementById('ui-prompt').classList.add('hidden');
+
+                document.getElementById('oracle-text').innerText = `"${savedMessage}"`;
+                document.getElementById('ui-message').classList.add('active');
+
+                baseSpeed = 0.0005;
+            }
+        });
+
+        // ==========================================
+        // 3. THE 3D GALAXY SPIRAL ENGINE (CANVAS)
+        // ==========================================
+        const canvas = document.getElementById('galaxy-canvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        let particles = [];
+        const numParticles = w < 768 ? 400 : 800;
+
+        let isTransmitting = false;
+        let baseSpeed = 0.001;
+        let zCamera = 0;
+
+        class GalaxyParticle {
+            constructor() {
+                let r = Math.random() * w;
+                let angle = r * 0.05 + Math.random() * Math.PI * 2;
+
+                this.x = Math.cos(angle) * r;
+                this.y = Math.sin(angle) * r;
+                this.z = Math.random() * 2000;
+
+                this.baseSize = Math.random() * 1.5 + 0.5;
+                const colors = ['#00f5d4', '#9d4edd', '#ffffff', '#ffea99'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            draw() {
+                let relZ = this.z - zCamera;
+
+                if (relZ < 1) {
+                    this.z = zCamera + 2000;
+                    relZ = this.z - zCamera;
+                    let r = Math.random() * w;
+                    let angle = r * 0.05 + Math.random() * Math.PI * 2;
+                    this.x = Math.cos(angle) * r;
+                    this.y = Math.sin(angle) * r;
+                }
+
+                let fov = 300;
+                let px = (this.x / relZ) * fov + w / 2;
+                let py = (this.y / relZ) * fov + h / 2;
+
+                let size = (1 - relZ / 2000) * this.baseSize * 3;
+                let alpha = Math.min(1, Math.max(0.1, 1 - (relZ / 2000)));
+
+                if (px < 0 || px > w || py < 0 || py > h) return;
+
+                ctx.beginPath();
+
+                if (isTransmitting) {
+                    let ppx = (this.x / (relZ + 30)) * fov + w / 2;
+                    let ppy = (this.y / (relZ + 30)) * fov + h / 2;
+                    ctx.moveTo(ppx, ppy); ctx.lineTo(px, py);
+                    ctx.lineWidth = size; ctx.strokeStyle = `rgba(255,255,255,${alpha})`; ctx.stroke();
+                } else {
+                    ctx.arc(px, py, size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color; ctx.globalAlpha = alpha; ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            rotateXY(angle) {
+                let nx = this.x * Math.cos(angle) - this.y * Math.sin(angle);
+                let ny = this.x * Math.sin(angle) + this.y * Math.cos(angle);
+                this.x = nx; this.y = ny;
+            }
+        }
+
+        for (let i = 0; i < numParticles; i++) particles.push(new GalaxyParticle());
+
+        function animateGalaxy() {
+            ctx.fillStyle = isTransmitting ? 'rgba(2, 1, 8, 0.3)' : 'rgba(2, 1, 8, 1)';
+            ctx.fillRect(0, 0, w, h);
+
+            particles.forEach(p => {
+                p.rotateXY(baseSpeed);
+                p.draw();
+            });
+
+            requestAnimationFrame(animateGalaxy);
+        }
+        animateGalaxy();
+
+        // ==========================================
+        // 4. TRANSMISSION ANIMATION & DATABASE LOGIC
+        // ==========================================
+        function triggerTransmission() {
+            document.getElementById('ui-prompt').classList.remove('active');
+            document.getElementById('ui-prompt').classList.add('hidden');
+
+            isTransmitting = true;
+            let accel = setInterval(() => {
+                baseSpeed += 0.005;
+                zCamera += 15;
+                if (zCamera > 500) clearInterval(accel);
+            }, 30);
+
+            setTimeout(async () => {
+                const flash = document.getElementById('transmission-flash');
+                flash.classList.add('flash');
+
+                setTimeout(async () => {
+                    isTransmitting = false;
+                    baseSpeed = 0.0005;
+
+                    // Generate Final Message
+                    const finalMsg = universeMessages[Math.floor(Math.random() * universeMessages.length)];
+                    document.getElementById('oracle-text').innerText = `"${finalMsg}"`;
+                    sessionStorage.setItem('cosmicMessage', finalMsg);
+
+                    // Show Card
+                    document.getElementById('ui-message').classList.add('active');
+
+
+                    try {
+                        await fetch(`${API_BASE}/oracle-log`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                name: visitorName,
+                                oracle: finalMsg
+                            })
+                        });
+                    } catch (err) {
+                        console.error("Failed to log universe message:", err);
+                    }
+
+                    flash.classList.remove('flash');
+                }, 800);
+            }, 2500);
+        }
+
+        function resetTransmission() {
+            sessionStorage.removeItem('cosmicMessage');
+            document.getElementById('ui-message').classList.remove('active');
+
+            setTimeout(() => {
+                document.getElementById('ui-prompt').classList.remove('hidden');
+                document.getElementById('ui-prompt').classList.add('active');
+            }, 500);
+        }
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+    </script>
+</body>
+
+</html>

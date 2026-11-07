@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystery Wish Box - A Little World Of Happiness</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-deep: #05020a;
+            --nebula-purple: rgba(88, 28, 135, 0.25);
+            --nebula-blue: rgba(14, 165, 233, 0.15);
+            --gold-light: #ffea99;
+            --gold-deep: #ffb703;
+            --fire-orange: #fb8500;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-deep);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* === HYPER-REALISTIC NEBULA BACKGROUND === */
+        .cosmic-nebula {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(ellipse at 20% 30%, var(--nebula-purple) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, var(--nebula-blue) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 183, 3, 0.05) 0%, transparent 60%);
+            z-index: -3; pointer-events: none;
+            animation: cosmicBreath 8s ease-in-out infinite alternate;
+            filter: blur(20px);
+        }
+
+        @keyframes cosmicBreath {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.1); opacity: 1; filter: blur(30px); }
+        }
+
+        /* === 3D UNIVERSE CANVAS === */
+        #universe-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2; pointer-events: none;
+        }
+
+        .core-glow {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: clamp(200px, 50vw, 600px); height: clamp(200px, 50vw, 600px);
+            background: radial-gradient(circle, rgba(255, 234, 153, 0.15) 0%, transparent 60%);
+            filter: blur(40px); z-index: -1; pointer-events: none;
+            transition: 2.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .core-glow.warp {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 215, 0, 0.4) 20%, transparent 70%);
+            transform: translate(-50%, -50%) scale(1.8); filter: blur(50px);
+        }
+
+        /* === TOP BACK BUTTON === */
+        .top-nav {
+            position: absolute; top: clamp(20px, 4vw, 40px); left: clamp(20px, 4vw, 40px);
+            z-index: 100;
+        }
+        .back-btn {
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.3);
+            color: var(--gold-light); padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 25px);
+            border-radius: 30px; cursor: pointer; font-size: clamp(0.7rem, 2vw, 0.9rem);
+            font-family: 'Montserrat', sans-serif; transition: 0.4s;
+            display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .back-btn:hover { background: rgba(255,215,0,0.2); box-shadow: 0 0 20px rgba(255,215,0,0.4); transform: translateX(-5px); border-color: var(--gold-light);}
+
+        /* === DYNAMIC CONTENT CONTAINER === */
+        .interaction-container {
+            position: relative; z-index: 10;
+            width: 90%; max-width: 700px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .state-layer {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 100%; opacity: 0; pointer-events: none;
+            transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .state-layer.active {
+            opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Typography */
+        .cosmic-title {
+            font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--gold-light); text-shadow: 0 0 30px rgba(255, 183, 3, 0.8);
+            margin-bottom: 10px; line-height: 1.2;
+        }
+        .cursive-highlight { font-family: 'Great Vibes', cursive; font-size: clamp(2.5rem, 6vw, 4.5rem); color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.5);}
+        .cosmic-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem); color: rgba(255,255,255,0.7);
+            letter-spacing: 3px; text-transform: uppercase; margin-bottom: 40px;
+        }
+
+        /* === HYPER-REAL QUANTUM PORTAL (Connection Animation) === */
+        .quantum-portal {
+            position: relative; margin: 0 auto;
+            width: clamp(120px, 25vw, 180px); height: clamp(120px, 25vw, 180px);
+            border-radius: 50%;
+            background: radial-gradient(circle, #000 30%, rgba(255,183,3,0.1) 60%, transparent 80%);
+            box-shadow: 0 0 50px rgba(255,183,3,0.3), inset 0 0 30px rgba(255,215,0,0.5);
+            display: flex; justify-content: center; align-items: center;
+        }
+        .portal-ring-1, .portal-ring-2, .portal-ring-3 {
+            position: absolute; border-radius: 50%; border: 1px solid transparent;
+        }
+        .portal-ring-1 {
+            width: 100%; height: 100%; border-top: 2px solid var(--gold-light); border-bottom: 2px solid var(--fire-orange);
+            animation: spinRing 3s linear infinite; filter: drop-shadow(0 0 10px var(--gold-light));
+        }
+        .portal-ring-2 {
+            width: 80%; height: 80%; border-left: 2px solid rgba(255,255,255,0.8); border-right: 2px solid var(--gold-deep);
+            animation: spinRingReverse 4s linear infinite; filter: blur(1px);
+        }
+        .portal-ring-3 {
+            width: 60%; height: 60%; background: radial-gradient(circle, var(--gold-light) 0%, transparent 50%);
+            animation: pulsePortal 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes spinRing { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.05); } 100% { transform: rotate(360deg) scale(1); } }
+        @keyframes spinRingReverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+        @keyframes pulsePortal { 0% { opacity: 0.3; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
+
+        /* Ethereal Input */
+        .ethereal-textarea {
+            width: 100%; height: clamp(120px, 20vh, 180px);
+            background: rgba(10, 5, 15, 0.4); border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 20px; padding: 25px; color: var(--gold-light);
+            font-size: clamp(1.2rem, 3vw, 1.6rem); font-family: 'Great Vibes', cursive;
+            text-align: center; outline: none; resize: none;
+            backdrop-filter: blur(15px); transition: 0.4s;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5); line-height: 1.5;
+        }
+        .ethereal-textarea::placeholder { color: rgba(255,255,255,0.2); font-family: 'Montserrat', sans-serif; font-size: clamp(0.9rem, 2vw, 1rem); letter-spacing: 2px; text-transform: uppercase;}
+        .ethereal-textarea:focus { border-color: var(--gold-light); box-shadow: 0 0 40px rgba(255,215,0,0.3), inset 0 0 20px rgba(255,215,0,0.2); }
+
+        .btn-magic {
+            margin-top: 35px; background: rgba(0,0,0,0.4); border: 1px solid var(--gold-deep);
+            color: var(--gold-light); padding: clamp(12px, 3vw, 15px) clamp(30px, 6vw, 50px);
+            border-radius: 40px; font-size: clamp(0.8rem, 2vw, 1rem); letter-spacing: 2px;
+            text-transform: uppercase; cursor: pointer; transition: 0.5s;
+            position: relative; overflow: hidden; backdrop-filter: blur(10px);
+        }
+        .btn-magic:hover { background: linear-gradient(45deg, var(--gold-deep), var(--fire-orange)); color: #000; border-color: transparent; box-shadow: 0 0 40px rgba(255,183,3,0.6); transform: scale(1.05); font-weight: 600;}
+
+        /* Final Message Styling */
+        .final-msg-box { background: rgba(10, 5, 15, 0.6); border: 1px solid var(--glass-border); padding: clamp(35px, 6vw, 60px) clamp(20px, 5vw, 40px); border-radius: 20px; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(255,215,0,0.1); }
+        .final-text { font-size: clamp(1.1rem, 3vw, 1.6rem); color: rgba(255,255,255,0.9); line-height: 1.8; font-style: italic; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
+        .final-highlight { font-family: 'Great Vibes', cursive; font-size: clamp(2.2rem, 5vw, 3.5rem); color: var(--gold-light); display: block; margin-top: 25px; text-shadow: 0 0 20px rgba(255,215,0,0.5);}
+
+        /* === CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem); color: rgba(255,255,255,0.5);
+            text-decoration: none; letter-spacing: 1px; transition: 0.4s; z-index: 100;
+            background: rgba(0,0,0,0.6); padding: 8px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+        .creator-badge:hover { color: #fff; border-color: var(--gold-light); box-shadow: 0 0 15px rgba(255,215,0,0.3); }
+        .creator-badge .signature { font-family: 'Great Vibes', cursive; font-size: clamp(1.2rem, 3.5vw, 1.5rem); color: var(--gold-light); margin-left: 5px; }
+        .creator-badge svg { width: clamp(14px, 3vw, 16px); height: clamp(14px, 3vw, 16px); fill: rgba(255,255,255,0.5); transition: 0.4s; margin-left: 5px;}
+        .creator-badge:hover svg { fill: #E1306C; transform: scale(1.2) rotate(10deg); }
+
+    </style>
+</head>
+<body>
+
+    <!-- Hyper-Realistic Nebula -->
+    <div class="cosmic-nebula"></div>
+
+    <!-- 3D Warp Speed Canvas -->
+    <canvas id="universe-canvas"></canvas>
+    <div class="core-glow" id="core-glow"></div>
+
+    <!-- Top Nav -->
+    <div class="top-nav">
+        <button class="back-btn" onclick="window.location.href='diwali.html'">← Back to Your Diwali ✨</button>
+    </div>
+
+    <!-- Interaction Area -->
+    <div class="interaction-container">
+        
+        <!-- State 1: Connecting (The Quantum Portal) -->
+        <div id="state-connecting" class="state-layer active">
+            <h1 class="cosmic-title">Aligning Stars...</h1>
+            <p class="cosmic-subtitle">Somewhere between your wish and the stars...</p>
+            
+            <div class="quantum-portal">
+                <div class="portal-ring-1"></div>
+                <div class="portal-ring-2"></div>
+                <div class="portal-ring-3"></div>
+            </div>
+        </div>
+
+        <!-- State 2: Writing -->
+        <div id="state-writing" class="state-layer">
+            <h1 class="cosmic-title"><span class="cursive-highlight">The Universe</span> is Listening</h1>
+            <p class="cosmic-subtitle">If you could wish for one beautiful thing, what would it be?</p>
+            <textarea id="wish-input" class="ethereal-textarea" placeholder="Write a little wish from your heart..."></textarea>
+            <button class="btn-magic" onclick="sendWish()">Send My Wish to the Stars ✨</button>
+        </div>
+
+        <!-- State 3: Sending (Warp Speed!) -->
+        <div id="state-sending" class="state-layer">
+            <h1 class="cosmic-title" style="font-size: clamp(3rem, 8vw, 5rem); color: #fff;">Transmitting Energy...</h1>
+            <p class="cosmic-subtitle" style="color: var(--gold-light);">A little hope, travelling a million stars away...</p>
+        </div>
+
+        <!-- State 4: Final Message -->
+        <div id="state-final" class="state-layer">
+            <div class="final-msg-box">
+                <p class="final-text">"Energy Received.<br><br>Now, Let Life Surprise You<br>Your wish is now a little part of the universe. Hold on to hope, follow your heart, and let life surprise you in the most beautiful ways."</p>
+                <span class="final-highlight">May your wish find its way to you.</span>
+            </div>
+            <button class="btn-magic" style="margin-top: 40px;" onclick="window.location.href='diwali.html'">Return to Earth 🌍</button>
+        </div>
+
+    </div>
+
+    <!-- CONSTANT FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with magic by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+        </svg>
+    </a>
+
+    <script>
+        const API_BASE = 'http://localhost:1307/api/v1'; // Active backend port
+
+        // === HYPER-REAL 3D STARFIELD ENGINE ===
+        const canvas = document.getElementById('universe-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const numStars = width < 768 ? 400 : 900; 
+        let stars = [];
+        let speed = 0.3; 
+        let fov = 350; 
+        
+        class Star {
+            constructor() {
+                this.x = (Math.random() - 0.5) * 2500;
+                this.y = (Math.random() - 0.5) * 2500;
+                this.z = Math.random() * 2000;
+                this.pz = this.z;
+                
+                const colors = ['#ffffff', '#ffea99', '#ffb703', '#0ea5e9', '#d946ef'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.pz = this.z;
+                this.z -= speed;
+                if (this.z < 1) {
+                    this.z = 2000;
+                    this.x = (Math.random() - 0.5) * 2500;
+                    this.y = (Math.random() - 0.5) * 2500;
+                    this.pz = this.z;
+                }
+            }
+            draw() {
+                let sx = (this.x / this.z) * fov + width / 2;
+                let sy = (this.y / this.z) * fov + height / 2;
+                let px = (this.x / this.pz) * fov + width / 2;
+                let py = (this.y / this.pz) * fov + height / 2;
+                
+                let radius = Math.max(0.1, (1 - this.z / 2000) * 3);
+
+                ctx.beginPath();
+                
+                if(speed > 5) {
+                    ctx.moveTo(px, py);
+                    ctx.lineTo(sx, sy);
+                    ctx.lineWidth = radius * 1.5;
+                    ctx.strokeStyle = this.color;
+                    ctx.stroke();
+                } else {
+                    ctx.arc(sx, sy, radius, 0, Math.PI*2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.shadowBlur = radius * 5;
+                    ctx.shadowColor = this.color;
+                }
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        for (let i = 0; i < numStars; i++) stars.push(new Star());
+
+        function animateStars() {
+            ctx.fillStyle = speed > 5 ? 'rgba(5, 2, 10, 0.3)' : 'rgba(5, 2, 10, 1)'; 
+            ctx.fillRect(0, 0, width, height);
+            stars.forEach(star => { star.update(); star.draw(); });
+            requestAnimationFrame(animateStars);
+        }
+        animateStars();
+
+        // === STATE MACHINE LOGIC ===
+        function switchState(fromId, toId) {
+            document.getElementById(fromId).classList.remove('active');
+            setTimeout(() => { document.getElementById(toId).classList.add('active'); }, 1200); 
+        }
+
+        // 1. Quantum Portal -> Transition to Writing
+        setTimeout(() => { switchState('state-connecting', 'state-writing'); }, 3500);
+
+        // 2. Handle Sending the Wish (Connected to MongoDB Backend)
+        async function sendWish() {
+            const input = document.getElementById('wish-input').value.trim();
+            if(!input) { alert('Whisper your wish to the universe first.'); return; }
+            
+            
+            const visitorName = localStorage.getItem('visitor_name') || sessionStorage.getItem('visitorName') || 'Anonymous Soul';
+
+            
+            try {
+                await fetch(`${API_BASE}/whispers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        sender: visitorName, 
+                        msg: input           
+                    })
+                });
+            } catch (err) {
+                console.error("Failed to transmit whisper to cosmic core:", err);
+            }
+
+            switchState('state-writing', 'state-sending');
+            
+            // ENGAGE WARP SPEED
+            let currentAccel = 0.5;
+            let speedRamp = setInterval(() => {
+                speed += currentAccel;
+                currentAccel += 0.2; 
+                if(speed >= 60) clearInterval(speedRamp); 
+            }, 50);
+            
+            document.getElementById('core-glow').classList.add('warp');
+
+            // 3. Auto-transition to Final Message
+            setTimeout(() => {
+                switchState('state-sending', 'state-final');
+                
+                // DECELERATE TO GENTLE GLOW
+                let speedDown = setInterval(() => {
+                    speed -= 2;
+                    if(speed <= 0.2) {
+                        speed = 0.2;
+                        clearInterval(speedDown); 
+                    }
+                }, 50);
+                
+                document.getElementById('core-glow').classList.remove('warp');
+            }, 4500); 
+        }
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

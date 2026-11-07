@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wish Tree - A Little World Of Happiness</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&family=Caveat:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-sky: #090412;
+            --bg-deep: #020105;
+            --gold-light: #ffea99;
+            --gold-deep: #d4af37;
+            --magic-cyan: #00f5d4;
+            --tree-glow: rgba(255, 215, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-deep);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* === 1. ENVIRONMENT === */
+        .magical-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 100%, #17082e 0%, var(--bg-sky) 50%, var(--bg-deep) 100%);
+            z-index: -3;
+            pointer-events: none;
+        }
+
+        #firefly-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .ground-glow {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20vh;
+            background: radial-gradient(ellipse at 50% 100%, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* === 2. TOP NAV === */
+        .top-nav {
+            position: fixed;
+            top: clamp(15px, 4vw, 30px);
+            left: clamp(15px, 4vw, 30px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: var(--gold-light);
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 20px);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        .counter-badge {
+            background: rgba(20, 10, 30, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 8px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .counter-badge span {
+            color: var(--gold-light);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* === 3. HERO TREE SECTION === */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: clamp(60px, 10vh, 100px);
+            z-index: 10;
+        }
+
+        .hero-text {
+            text-align: center;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 40px rgba(255, 183, 3, 0.8);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .hero-actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            z-index: 20;
+            pointer-events: auto;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ffb703, #fb8500);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 5px 20px rgba(255, 183, 3, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 183, 3, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: var(--gold-light);
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.4s;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        /* --- THE UPGRADED PROCEDURAL TREE --- */
+        .tree-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 800px;
+            height: 75vh;
+            z-index: 5;
+            perspective: 1200px;
+        }
+
+        /* Magical Breathing Aura Behind Tree */
+        .tree-aura {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(300px, 60vw, 600px);
+            height: clamp(300px, 60vw, 600px);
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 60%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(40px);
+            pointer-events: none;
+            animation: breatheAura 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes breatheAura {
+            0% {
+                transform: translateX(-50%) scale(0.9);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .tree-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(150px, 30vw, 250px);
+            height: 100%;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));
+        }
+
+        .canopy {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80%;
+            transform-style: preserve-3d;
+        }
+
+        /* Realistic Leaf Shape (Teardrop) */
+        .leaf {
+            position: absolute;
+            border-radius: 0 100% 100% 100%;
+            /* Creates a leaf shape */
+            cursor: pointer;
+            transition: transform 0.4s, filter 0.3s;
+            box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .leaf:hover {
+            transform: scale(2.5) rotate(45deg) !important;
+            z-index: 100;
+            filter: brightness(1.5);
+        }
+
+        .flying-lantern {
+            position: fixed;
+            bottom: -50px;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 0 100% 100% 100%;
+            transform: rotate(45deg);
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 0 30px 15px var(--gold-deep), 0 0 50px 25px var(--gold-light);
+            transition: all 3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* === 4. CLEAN & PREMIUM MODALS === */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 1, 8, 0.8);
+            backdrop-filter: blur(15px);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.5s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .glass-panel {
+            background: rgba(15, 8, 25, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            width: 90%;
+            max-width: 480px;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.03);
+            transform: scale(0.95) translateY(20px);
+            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active .glass-panel {
+            transform: scale(1) translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--gold-light);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .glass-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .glass-input:focus {
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-input:disabled {
+            color: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+        }
+
+        textarea.glass-input {
+            resize: none;
+            height: 120px;
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .wish-content {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.5;
+            margin: 20px 0;
+            color: #fff;
+        }
+
+        .wish-author {
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-heart {
+            background: transparent;
+            border: 1px solid rgba(255, 0, 85, 0.5);
+            color: #ff0055;
+            padding: 10px 25px;
+            border-radius: 30px;
+            margin: 25px auto 0;
+            display: block;
+            cursor: pointer;
+            transition: 0.4s;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+        }
+
+        .btn-heart:hover {
+            background: rgba(255, 0, 85, 0.1);
+        }
+
+        .btn-heart.liked {
+            background: #ff0055;
+            color: #fff;
+            border-color: #ff0055;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* === 5. COMMUNITY WISHES GRID === */
+        .community-section {
+            position: relative;
+            z-index: 10;
+            padding: 60px 20px 150px;
+            background: linear-gradient(to bottom, transparent, var(--bg-deep) 15%);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .filter-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.5);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            border-color: var(--gold-light);
+            color: var(--gold-light);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .wishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .wish-card {
+            background: rgba(15, 8, 25, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            padding: 25px 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: 0.4s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .wish-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.05);
+        }
+
+        .card-tag {
+            font-size: 0.7rem;
+            background: rgba(255, 215, 0, 0.08);
+            color: var(--gold-light);
+            padding: 4px 12px;
+            border-radius: 12px;
+            align-self: flex-start;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
+
+        .card-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
+
+        .card-author {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-likes {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card-likes:hover {
+            color: #fff;
+        }
+
+        /* === 6. CLOSING SECTION === */
+        .closing-section {
+            text-align: center;
+            padding: 60px 20px 180px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .closing-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(3rem, 7vw, 4.5rem);
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        /* === 7. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 5px;
+        }
+
+        .creator-badge svg {
+            width: clamp(14px, 3vw, 16px);
+            height: clamp(14px, 3vw, 16px);
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 5px;
+        }
+
+        .creator-badge:hover svg {
+            fill: #E1306C;
+            transform: scale(1.2) rotate(10deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="magical-bg"></div>
+    <div class="ground-glow"></div>
+    <canvas id="firefly-canvas"></canvas>
+
+    <div id="flying-lantern" class="flying-lantern"></div>
+
+    <div class="top-nav">
+        <button class="back-btn" onclick="window.location.href='diwali.html'">← Back to Your Diwali</button>
+        <div class="counter-badge">
+            <span id="wish-counter">128</span> <span
+                style="color: rgba(255,255,255,0.6); font-weight: 400; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Wishes
+                Planted</span>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero-section">
+        <div class="hero-text">
+            <h1 class="title">The Wish Tree</h1>
+            <p class="subtitle">Every wish begins with a little hope.</p>
+        </div>
+
+        <div class="hero-actions">
+            <button class="btn-primary" onclick="openModal('plant-modal')">Leave a Little Wish ✨</button>
+            <button class="btn-secondary" onclick="document.getElementById('community').scrollIntoView()">Explore the
+                Wishes</button>
+        </div>
+
+        <div class="tree-container">
+            <!-- New: Breathing Aura Behind Tree -->
+            <div class="tree-aura"></div>
+
+            <svg class="tree-trunk" viewBox="0 0 200 400" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="trunkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#4a3000" />
+                        <stop offset="50%" stop-color="#a67c00" />
+                        <stop offset="100%" stop-color="#4a3000" />
+                    </linearGradient>
+                </defs>
+                <path d="M100,400 Q80,250 40,150 Q100,180 100,100 Q100,180 160,150 Q120,250 100,400" fill="none"
+                    stroke="url(#trunkGrad)" stroke-width="15" stroke-linecap="round" />
+                <path d="M100,400 Q90,300 70,200 Q90,220 100,150" fill="none" stroke="#d4af37" stroke-width="5"
+                    stroke-linecap="round" opacity="0.6" />
+                <path d="M100,400 Q110,300 130,200 Q110,220 100,150" fill="none" stroke="#d4af37" stroke-width="5"
+                    stroke-linecap="round" opacity="0.6" />
+            </svg>
+            <div class="canopy" id="tree-canopy"></div>
+        </div>
+    </section>
+
+    <!-- COMMUNITY GRID -->
+    <section class="community-section" id="community">
+        <div class="section-header">
+            <h2 class="title" style="font-size: clamp(2.5rem, 5vw, 4rem);"> A Forest Full of Dreams</h2>
+            <div class="filter-group">
+                <button class="filter-btn active">All Dreams</button>
+                <button class="filter-btn">Diwali Wishes</button>
+                <button class="filter-btn">Dreams</button>
+                <button class="filter-btn">Happiness</button>
+            </div>
+        </div>
+        <div class="wishes-grid" id="wishes-grid"></div>
+    </section>
+
+    <!-- CLOSING -->
+    <section class="closing-section">
+        <h2 class="closing-title">Some Wishes Are Meant to Be Shared<br><span
+                style="font-family: 'Montserrat', sans-serif; font-size: clamp(0.9rem, 2vw, 1.2rem); text-transform: uppercase; letter-spacing: 4px; font-weight:400;">Because
+                Hope Grows When We Share It.</span></h2>
+        <p
+            style="color: rgba(255,255,255,0.5); margin: 25px 0 45px; font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 1.4rem;">
+            May life bring every heart a reason to smile.</p>
+        <button class="btn-primary" onclick="window.scrollTo(0,0); setTimeout(()=>openModal('plant-modal'), 500);">Plant
+            Add One More Wish ✨</button>
+    </section>
+
+    <!-- MODALS -->
+
+    <!-- 1. Plant Wish Modal (Cleaned for Privacy) -->
+    <div class="modal-overlay" id="plant-modal">
+        <div class="glass-panel">
+            <button class="close-btn" onclick="closeModal('plant-modal')">✕</button>
+            <h2 class="modal-title">Give Your Wish a Place to Grow</h2>
+
+            <div class="input-group">
+                <label>Choose Your Celebration</label>
+                <select class="glass-input" id="wish-fest">
+                    <option value="Diwali">Diwali - Festival of Lights</option>
+                    <option value="Chhath" disabled>Chhath (Unlocks soon 🔒)</option>
+                </select>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 30px;">
+                <label>A Wish Close to Your Heart</label>
+                <textarea class="glass-input" id="wish-text" placeholder="If there is one thing your heart wishes for..."></textarea>
+            </div>
+
+            <button class="btn-primary" style="width:100%; padding: 15px;" onclick="submitWish()">Plant This Wish 🌱</button>
+            <p
+                style="text-align: center; margin-top: 15px; font-size: 0.7rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">
+                -Your name won't be shown with your wish.</p>
+        </div>
+    </div>
+
+    <!-- 2. Read Wish Modal -->
+    <div class="modal-overlay" id="read-modal">
+        <div class="glass-panel" style="text-align: center;">
+            <button class="close-btn" onclick="closeModal('read-modal')">✕</button>
+            <span
+                style="font-size: 0.65rem; background: rgba(255,215,0,0.1); color: var(--gold-light); padding: 5px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 2px; border: 1px solid rgba(255,215,0,0.2);">A Wish from the Tree</span>
+
+            <p class="wish-content" id="read-content">"May every home be filled with peace, warmth, and little reasons to smile."</p>
+            <p class="wish-author" id="read-author">Anonymous · Diwali</p>
+
+            <button class="btn-heart" id="read-heart" onclick="toggleMainLike(this)">🤍 Send a Little Love</button>
+        </div>
+    </div>
+
+    <!-- CONSTANT FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with magic by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <script>
+        const API_BASE = 'http://localhost:1307/api/v1'; // Active backend port
+
+        // === 1. GLOBAL STATE & REAL-TIME DATA LOGIC ===
+        let visitorName = localStorage.getItem("visitor_name") || sessionStorage.getItem("visitorName") || "A Dreamer";
+
+        let totalWishes = 0;
+        let liveWishes = []; // Will be populated from the database
+
+        // Fetch Real Wishes from Backend on Page Load
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const response = await fetch(`${API_BASE}/wishes`); // Ensure you have a GET route for this
+                const data = await response.json();
+
+                if (data.success && data.wishes) {
+                    liveWishes = data.wishes;
+                    totalWishes = liveWishes.length;
+
+                    // Update counter with actual database count
+                    document.getElementById('wish-counter').innerText = totalWishes;
+                    sessionStorage.setItem('totalWishes', totalWishes);
+                }
+            } catch (err) {
+                console.error("Failed to fetch live wishes:", err);
+                // Fallback basic data if server is offline
+                liveWishes = [{ text: "May peace find its way into every home.", fest: "Diwali", likes: 24 }];
+            }
+
+            renderCommunityGrid();
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // In a real-world scenario, you could fetch liveWishes from API here:
+            // fetch(`${API_BASE}/wishes`).then(res => res.json()).then(data => liveWishes = data.wishes);
+            renderCommunityGrid();
+        });
+
+        // === 2. PROCEDURAL LEAF ENGINE ===
+        const canopy = document.getElementById('tree-canopy');
+        let leaves = [];
+
+        for (let i = 0; i < 150; i++) {
+            let leaf = document.createElement('div');
+            leaf.className = 'leaf';
+
+            let angle = Math.random() * Math.PI * 2;
+            let radiusX = Math.random() * 45 + 5;
+            let radiusY = Math.random() * 45 + 5;
+
+            let left = 50 + (radiusX * Math.cos(angle));
+            let top = 40 + (radiusY * Math.sin(angle)) - (20 * (1 - Math.random()));
+
+            let zIndex = Math.floor(Math.random() * 50);
+            let scale = Math.random() * 1 + 0.8;
+            let rotation = Math.random() * 360;
+            let isSpecial = Math.random() > 0.85;
+
+            leaf.style.left = `${left}%`;
+            leaf.style.top = `${top}%`;
+            leaf.style.zIndex = zIndex;
+
+            let color = isSpecial ? '#ffea99' : (Math.random() > 0.5 ? '#d4af37' : '#ffb703');
+            let size = isSpecial ? 12 : 8;
+
+            leaf.style.width = `${size}px`;
+            leaf.style.height = `${size}px`;
+            leaf.style.background = color;
+            leaf.style.boxShadow = `0 0 ${isSpecial ? 20 : 8}px ${color}`;
+
+            let leafData = { el: leaf, speed: Math.random() * 0.002 + 0.001, offset: Math.random() * Math.PI * 2, scale: scale, rot: rotation };
+            leaves.push(leafData);
+
+            leaf.addEventListener('click', () => {
+                let randomWish = liveWishes[Math.floor(Math.random() * liveWishes.length)];
+                document.getElementById('read-content').innerText = `"${randomWish.text}"`;
+                document.getElementById('read-author').innerText = `~ ${randomWish.author || randomWish.name} · ${randomWish.fest || 'Diwali'}`;
+                openModal('read-modal');
+                // Reset Like button state
+                let btn = document.getElementById('read-heart');
+                btn.classList.remove('liked'); btn.innerHTML = "❤️ A Little Love Sent!";
+            });
+            canopy.appendChild(leaf);
+        }
+
+        let time = 0;
+        function animateTree() {
+            time += 1;
+            leaves.forEach(l => {
+                let moveX = Math.sin(time * l.speed + l.offset) * 2.5;
+                let moveY = Math.cos(time * l.speed * 0.8 + l.offset) * 1.5;
+                l.el.style.transform = `translate(${moveX}px, ${moveY}px) scale(${l.scale}) rotate(${l.rot}deg)`;
+            });
+            requestAnimationFrame(animateTree);
+        }
+        animateTree();
+
+        document.addEventListener('mousemove', (e) => {
+            let mouseX = (window.innerWidth / 2 - e.clientX) / 60;
+            let mouseY = (window.innerHeight / 2 - e.clientY) / 60;
+            canopy.style.transform = `rotateY(${mouseX}deg) rotateX(${mouseY}deg)`;
+        });
+
+        // === 3. PLANT WISH (REAL DATABASE CONNECTION) ===
+        async function submitWish() {
+            const text = document.getElementById('wish-text').value.trim();
+            const fest = document.getElementById('wish-fest').value;
+            if (!text) { alert("Every little wish begins with a word. Write yours first. ✨"); return; }
+
+            closeModal('plant-modal');
+
+            // Send actual wish to backend database
+            try {
+                await fetch(`${API_BASE}/wishes`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: visitorName,
+                        text: text,
+                        fest: fest
+                    })
+                });
+            } catch (err) {
+                console.error("Failed to plant wish in database:", err);
+            }
+
+            // Fire the Flying Lantern Animation
+            const lantern = document.getElementById('flying-lantern');
+            const targetLeaf = leaves[Math.floor(Math.random() * leaves.length)];
+
+            const targetRect = targetLeaf.el.getBoundingClientRect();
+            const startX = window.innerWidth / 2;
+            const startY = window.innerHeight;
+            const endX = targetRect.left;
+            const endY = targetRect.top;
+
+            lantern.style.transition = 'none';
+            lantern.style.transform = `translate(0, 0) rotate(45deg)`;
+            lantern.style.opacity = 1;
+
+            setTimeout(() => {
+                lantern.style.transition = 'all 2.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                lantern.style.transform = `translate(${endX - startX}px, -${startY - endY}px) scale(0.3) rotate(45deg)`;
+
+                setTimeout(() => {
+                    lantern.style.opacity = 0;
+
+                    targetLeaf.el.style.transition = "all 0.5s";
+                    targetLeaf.el.style.background = "#fff";
+                    targetLeaf.el.style.boxShadow = "0 0 40px 20px rgba(255,234,153,0.8)";
+                    targetLeaf.scale = 2;
+
+                    totalWishes++;
+                    sessionStorage.setItem('totalWishes', totalWishes);
+                    document.getElementById('wish-counter').innerText = totalWishes;
+                    document.getElementById('wish-text').value = '';
+
+                    setTimeout(() => alert("Your wish has found its little place among the stars. May it bloom beautifully! ✨"), 400);
+                }, 2500);
+            }, 50);
+        }
+
+        // === 4. UI LOGIC ===
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function toggleMainLike(btn) {
+            btn.classList.toggle('liked');
+            if (btn.classList.contains('liked')) {
+                btn.innerHTML = "❤️ A Little Love Sent!";
+            } else {
+                btn.innerHTML = "🤍 Send Good Wishes";
+            }
+        }
+
+        function toggleCardLike(span, baseCount) {
+            let isLiked = span.getAttribute('data-liked') === 'true';
+            if (isLiked) {
+                span.setAttribute('data-liked', 'false');
+                span.innerHTML = `🤍 ${baseCount}`;
+                span.style.color = 'rgba(255,255,255,0.6)';
+            } else {
+                span.setAttribute('data-liked', 'true');
+                span.innerHTML = `❤️ ${baseCount + 1}`;
+                span.style.color = '#ff0055';
+            }
+        }
+
+        // === 5. COMMUNITY GRID ===
+        function renderCommunityGrid() {
+            const grid = document.getElementById('wishes-grid');
+            grid.innerHTML = '';
+
+            // Show newest wishes first (assuming backend returns oldest first)
+            const displayWishes = [...liveWishes].reverse();
+
+            displayWishes.forEach((w) => {
+                let html = `
+                    <div class="wish-card">
+                        <span class="card-tag">${w.fest || 'Diwali'}</span>
+                        <p class="card-text">"${w.text}"</p>
+                        <div class="card-footer">
+                            <!-- PRIVACY: Hidden actual name, showing Anonymous -->
+                            <span class="card-author">~ Anonymous</span>
+                            <span class="card-likes" data-liked="false" onclick="toggleCardLike(this, ${w.likes || 0})">🤍 ${w.likes || 0}</span>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += html;
+            });
+        }
+
+        // === 6. BACKGROUND FIREFLIES ===
+        const bgCanvas = document.getElementById('firefly-canvas');
+        const ctx = bgCanvas.getContext('2d');
+        let w = bgCanvas.width = window.innerWidth;
+        let h = bgCanvas.height = window.innerHeight;
+
+        let fireflies = [];
+        for (let i = 0; i < 70; i++) {
+            fireflies.push({
+                x: Math.random() * w, y: Math.random() * h,
+                s: Math.random() * 2 + 0.5,
+                vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
+                a: Math.random()
+            });
+        }
+
+        function drawFireflies() {
+            ctx.clearRect(0, 0, w, h);
+            fireflies.forEach(f => {
+                f.x += f.vx; f.y += f.vy;
+                if (f.x < 0 || f.x > w) f.vx *= -1; if (f.y < 0 || f.y > h) f.vy *= -1;
+                f.a += (Math.random() - 0.5) * 0.05;
+                if (f.a > 1) f.a = 1; if (f.a < 0.1) f.a = 0.1;
+
+                ctx.globalAlpha = f.a; ctx.fillStyle = '#ffea99';
+                ctx.shadowBlur = 10; ctx.shadowColor = '#d4af37';
+                ctx.beginPath(); ctx.arc(f.x, f.y, f.s, 0, Math.PI * 2); ctx.fill();
+            });
+            requestAnimationFrame(drawFireflies);
+        }
+        drawFireflies();
+
+        window.addEventListener('resize', () => { w = bgCanvas.width = window.innerWidth; h = bgCanvas.height = window.innerHeight; });
+    </script>
+</body>
+
+</html>

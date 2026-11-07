@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festive Scrapbook - A Little World Of Happiness</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&family=Caveat:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #05020a;
+            --bg-space: #14081c;
+            --gold-light: #ffea99;
+            --gold-deep: #d4af37;
+            --card-bg: rgba(20, 10, 30, 0.7);
+            --card-border: rgba(255, 215, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at top, var(--bg-space) 0%, var(--bg-deep) 100%);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* === 1. TOP NAV & GLOBAL ACTIONS === */
+        .top-nav {
+            position: absolute;
+            top: clamp(15px, 4vw, 30px);
+            left: clamp(15px, 4vw, 30px);
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-ghost {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: var(--gold-light);
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 20px);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: linear-gradient(45deg, #ffb703, #fb8500);
+            color: #000;
+            border: none;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 183, 3, 0.4);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 183, 3, 0.6);
+        }
+
+        /* === 2. HEADER & PRIVACY NOTE === */
+        .header-section {
+            width: 100%;
+            text-align: center;
+            padding: clamp(70px, 12vh, 120px) 20px 30px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 30px rgba(255, 183, 3, 0.6);
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .privacy-note {
+            background: rgba(255, 234, 153, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 15px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: 0.4s;
+        }
+
+        .privacy-note:hover {
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.15);
+        }
+
+        .privacy-note p {
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            letter-spacing: 0.5px;
+        }
+
+        .highlight {
+            color: var(--gold-light);
+            font-weight: 600;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2em;
+        }
+
+        /* === 3. AESTHETIC SCRAPBOOK GRID === */
+        .scrapbook-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(40px, 6vw, 60px);
+            padding: 20px clamp(20px, 5vw, 60px);
+            max-width: 1300px;
+            margin: 0 auto 120px;
+            perspective: 1500px;
+        }
+
+        .polaroid {
+            background: var(--card-bg);
+            padding: 18px 18px 25px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            transform-style: preserve-3d;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+        }
+
+        .polaroid::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            z-index: -1;
+            background: linear-gradient(45deg, #ff0055, #ffb703, #00f5d4, #9d4edd, #ff0055);
+            background-size: 200% 200%;
+            border-radius: 14px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .polaroid:hover {
+            transform: translateY(-12px) scale(1.05) rotateZ(0deg) !important;
+            z-index: 10;
+            background: rgba(30, 15, 45, 0.9);
+        }
+
+        .polaroid:hover::before {
+            opacity: 1;
+            animation: rainbowGlow 3s linear infinite;
+        }
+
+        @keyframes rainbowGlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 200% 50%;
+            }
+        }
+
+        .photo-area {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: 0.4s;
+        }
+
+        .polaroid:hover .photo-area:not(:has(.loaded)) {
+            border-color: var(--gold-light);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .photo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: all 0.6s;
+        }
+
+        .photo-img.loaded {
+            opacity: 1;
+            border: 2px solid var(--gold-light);
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .photo-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: 0.4s;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .photo-actions.active {
+            pointer-events: auto;
+        }
+
+        .polaroid:hover .photo-actions.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .action-mini {
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--gold-light);
+            border: 1px solid var(--gold-deep);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .action-mini:hover {
+            background: var(--gold-deep);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .add-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 10px;
+            transition: 0.4s;
+        }
+
+        .photo-prompt {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-align: center;
+            padding: 0 15px;
+        }
+
+        .polaroid:hover .add-icon {
+            transform: scale(1.2);
+            color: var(--gold-light);
+        }
+
+        .hidden-placeholder {
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .caption-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: 'Caveat', cursive;
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+            outline: none;
+            border-bottom: 1px dashed transparent;
+            transition: 0.3s;
+            padding-bottom: 5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .caption-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+        }
+
+        .caption-input:focus {
+            border-bottom: 1px dashed rgba(255, 215, 0, 0.5);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* === 4. PREVIEW & DOWNLOAD MODAL === */
+        .preview-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 1, 8, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            backdrop-filter: blur(15px);
+            padding: 20px;
+        }
+
+        .preview-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .preview-container {
+            width: 100%;
+            max-width: 600px;
+            max-height: 70vh;
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 2px solid var(--gold-deep);
+            box-shadow: 0 0 50px rgba(255, 183, 3, 0.4);
+            margin-bottom: 20px;
+            background: #000;
+        }
+
+        #preview-img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .preview-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .watermark-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gold-light);
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .watermark-toggle input {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--gold-deep);
+        }
+
+        /* === 5. BACKGROUND MAGIC CANVAS === */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* === 6. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 5px;
+        }
+
+        .creator-badge svg {
+            width: clamp(14px, 3vw, 16px);
+            height: clamp(14px, 3vw, 16px);
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 5px;
+        }
+
+        .creator-badge:hover svg {
+            fill: #E1306C;
+            transform: scale(1.2) rotate(10deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="top-nav">
+        <button class="btn-ghost" onclick="window.location.href='diwali.html'">← Back to Your Diwali</button>
+        <button class="btn-ghost" onclick="clearScrapbook()">↻ Start Fresh</button>
+        <button class="btn-ghost btn-download" onclick="openPreview()">Save My Memories 📸</button>
+    </div>
+
+    <div class="header-section">
+        <h1 class="title" id="dynamic-title">Your Scrapbook</h1>
+        <p class="subtitle">A collection of moments that mean the world.</p>
+
+        <div class="privacy-note">
+            <p>
+                <span class="highlight">A Little Promise:</span>Every memory you add here stays in your browser, just
+                for you.<br>
+                Your photos are not uploaded to any server. Take your time,
+                add the moments you love, and make this little album your own. ✨ <span class="highlight"
+                    style="font-style:italic;">'bindasly'</span>! ✨
+            </p>
+        </div>
+    </div>
+
+    <div class="scrapbook-grid" id="scrapbook-container">
+        <!-- Polaroids Injected via JS -->
+    </div>
+
+    <!-- PREVIEW & DOWNLOAD MODAL -->
+    <div class="preview-modal" id="preview-modal">
+        <h2
+            style="font-family: 'Great Vibes', cursive; color: var(--gold-light); font-size: 3rem; margin-bottom: 10px;">
+            A Memory Worth Keeping</h2>
+
+        <div class="preview-container">
+            <canvas id="export-canvas" style="display:none;"></canvas>
+            <img id="preview-img" alt="Scrapbook Preview">
+        </div>
+
+        <div class="preview-controls">
+            <label class="watermark-toggle">
+                <input type="checkbox" id="watermark-cb" checked onchange="generateAlbumImage()">
+                Add a Little Creator's Signature
+            </label>
+            <div style="display: flex; gap: 20px; margin-top: 10px;">
+                <button class="btn-ghost" onclick="closePreview()">Go Back</button>
+                <button class="btn-ghost btn-download" onclick="downloadAlbum()">Save This Memory 💛</button>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with magic by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <script>
+        const universalCaptions = [
+            "A moment worth keeping ✨",
+            "Happiness looked like this",
+            "One for the heart 💛",
+            "A little piece of forever",
+            "The kind of day we remember",
+            "Smiles without a reason",
+            "A memory I'll revisit",
+            "Life's little treasures",
+            "Wish this moment lasted longer",
+            "Everything felt just right",
+            "A beautiful kind of ordinary",
+            "Where my heart feels home",
+            "One of my favourite moments",
+            "A little joy, captured forever",
+            "The people who make it special",
+            "A night to keep close",
+            "Some memories never fade",
+            "More than just a photograph",
+            "A moment full of warmth",
+            "Happiness, in its simplest form",
+            "The beauty of being together",
+            "A memory made of smiles",
+            "If only moments could stay",
+            "A little chapter of happiness",
+            "Forever glad this happened"
+        ];
+        function getRandomCaption() { return universalCaptions[Math.floor(Math.random() * universalCaptions.length)]; }
+
+        let visitorName = "Beautiful Soul";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedName = localStorage.getItem("visitor_name");
+
+            if (savedName && savedName.trim() !== "") {
+                visitorName = savedName;
+                // Update the Scrapbook title with the real name
+                document.getElementById('dynamic-title').textContent = `${visitorName}'s Scrapbook`;
+            }
+        });
+
+        const prompts = [
+            "A Diwali to Remember",
+            "Little Moments of Joy",
+            "Together Is Everything",
+            "Sweet Little Traditions",
+            "A Night Full of Lights",
+            "Moments Close to Heart"
+        ]; let scrapbookData = JSON.parse(sessionStorage.getItem('scrapbookMemories')) || {};
+        const container = document.getElementById('scrapbook-container');
+
+        function renderScrapbook() {
+            container.innerHTML = '';
+            prompts.forEach((promptText, index) => {
+                let tilt = (Math.random() * 8 - 4).toFixed(1);
+                let savedImg = scrapbookData[index] ? scrapbookData[index].image : '';
+                let savedCaption = scrapbookData[index] ? scrapbookData[index].caption : '';
+
+                let imgClass = savedImg ? 'loaded' : '';
+                let placeholderClass = savedImg ? 'hidden-placeholder' : '';
+                let actionsClass = savedImg ? 'active' : '';
+
+                let cardHTML = `
+                    <div class="polaroid" style="transform: rotateZ(${tilt}deg);">
+                        <input type="file" id="file-${index}" accept="image/*" onchange="handleImageUpload(event, ${index})">
+                        
+                        <div class="photo-area" onclick="if(!'${savedImg}') document.getElementById('file-${index}').click()">
+                            <div class="photo-actions ${actionsClass}" id="actions-${index}">
+                                <button class="action-mini" onclick="event.stopPropagation(); document.getElementById('file-${index}').click()">↻ Replace</button>
+                                <button class="action-mini" onclick="event.stopPropagation(); removePhoto(${index})">✕ Remove</button>
+                            </div>
+                            <img src="${savedImg}" class="photo-img ${imgClass}" id="img-${index}">
+                            <div id="placeholder-${index}" class="${placeholderClass}" style="display:flex; flex-direction:column; align-items:center;">
+                                <div class="add-icon">+</div>
+                                <div class="photo-prompt">${promptText}</div>
+                            </div>
+                        </div>
+                        <input type="text" class="caption-input" id="caption-${index}" placeholder="Write a memory..." value="${savedCaption}" onblur="saveCaption(${index})">
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+        renderScrapbook();
+
+        function handleImageUpload(event, index) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 500;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                    document.getElementById(`img-${index}`).src = compressedBase64;
+                    document.getElementById(`img-${index}`).classList.add('loaded');
+                    document.getElementById(`placeholder-${index}`).classList.add('hidden-placeholder');
+                    document.getElementById(`actions-${index}`).classList.add('active');
+
+                    const capInput = document.getElementById(`caption-${index}`);
+                    let newCaption = capInput.value.trim();
+                    if (newCaption === "" || newCaption === "undefined") {
+                        newCaption = getRandomCaption();
+                        capInput.value = newCaption;
+                    }
+
+                    if (!scrapbookData[index]) scrapbookData[index] = {};
+                    scrapbookData[index].image = compressedBase64;
+                    scrapbookData[index].caption = newCaption;
+                    sessionStorage.setItem('scrapbookMemories', JSON.stringify(scrapbookData));
+
+                    triggerUploadMagic();
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function removePhoto(index) {
+            if (scrapbookData[index]) {
+                delete scrapbookData[index];
+                sessionStorage.setItem('scrapbookMemories', JSON.stringify(scrapbookData));
+            }
+            renderScrapbook();
+        }
+
+        function clearScrapbook() {
+            if (confirm("Would you like to clear this album and begin again? Your saved memories in this session will be removed.")) {
+                sessionStorage.removeItem('scrapbookMemories');
+                scrapbookData = {};
+                renderScrapbook();
+            }
+        }
+
+        function saveCaption(index) {
+            const captionValue = document.getElementById(`caption-${index}`).value.trim();
+            if (!scrapbookData[index] || !scrapbookData[index].image) return;
+            let finalCaption = captionValue === "" ? getRandomCaption() : captionValue;
+            document.getElementById(`caption-${index}`).value = finalCaption;
+            scrapbookData[index].caption = finalCaption;
+            sessionStorage.setItem('scrapbookMemories', JSON.stringify(scrapbookData));
+        }
+
+        // ==========================================
+        // ALBUM EXPORT (HYPER-UPGRADED CANVAS LOGIC)
+        // ==========================================
+        async function openPreview() {
+            const keys = Object.keys(scrapbookData).filter(k => scrapbookData[k].image);
+            if (keys.length === 0) {
+                alert("Add at least one memory to your little album first. ✨");
+                return;
+            }
+            document.getElementById('preview-modal').classList.add('active');
+            await generateAlbumImage();
+        }
+
+        function closePreview() {
+            document.getElementById('preview-modal').classList.remove('active');
+        }
+
+        async function generateAlbumImage() {
+            const includeWatermark = document.getElementById('watermark-cb').checked;
+            const keys = Object.keys(scrapbookData).filter(k => scrapbookData[k].image);
+
+            const expCanvas = document.getElementById('export-canvas');
+            const ctx = expCanvas.getContext('2d');
+
+            // Layout Configuration
+            const cols = 2;
+            const cardW = 540; const cardH = 700; // Taller for aesthetics
+            const gap = 60; const marginX = 100; const marginY = 250;
+            const rows = Math.ceil(keys.length / cols);
+
+            const totalW = marginX * 2 + (cols * cardW) + ((cols - 1) * gap);
+            const totalH = marginY + (rows * cardH) + ((rows - 1) * gap) + (includeWatermark ? 200 : 130);
+
+            expCanvas.width = totalW;
+            expCanvas.height = totalH;
+
+            // 1. Draw Deep Festive Background
+            let grd = ctx.createRadialGradient(totalW / 2, 0, 0, totalW / 2, 0, totalH);
+            grd.addColorStop(0, '#1f0d2b');
+            grd.addColorStop(1, '#05020a');
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, totalW, totalH);
+
+            // 2. Draw Decorative Double Border
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(30, 30, totalW - 60, totalH - 60);
+
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(42, 42, totalW - 84, totalH - 84);
+
+            // Corner Glowing Accents
+            const corners = [[42, 42], [totalW - 42, 42], [42, totalH - 42], [totalW - 42, totalH - 42]];
+            corners.forEach(([cx, cy]) => {
+                ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffea99'; ctx.shadowBlur = 15; ctx.shadowColor = '#d4af37';
+                ctx.fill(); ctx.shadowBlur = 0;
+            });
+
+            // Ensure fonts are fully loaded
+            await document.fonts.ready;
+
+            // 3. Draw Festive Header
+            ctx.shadowBlur = 20; ctx.shadowColor = 'rgba(255, 183, 3, 0.5)';
+            ctx.fillStyle = '#ffea99';
+            ctx.textAlign = 'center';
+            ctx.font = '100px "Great Vibes", cursive';
+            ctx.fillText(`✨ ${visitorName}'s Little Memory Book ✨`, totalW / 2, 130);
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+            ctx.font = 'italic 34px "Cormorant Garamond", serif';
+            ctx.fillText("A few beautiful moments, kept close to the heart.", totalW / 2, 195);
+
+            // Golden Divider Line under subtitle
+            ctx.beginPath(); ctx.moveTo(totalW / 2 - 250, 230); ctx.lineTo(totalW / 2 + 250, 230);
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)'; ctx.lineWidth = 2; ctx.stroke();
+
+            // 4. Render Elegant Polaroids
+            let currentY = marginY + 40;
+            let currentX = marginX;
+
+            for (let i = 0; i < keys.length; i++) {
+                let data = scrapbookData[keys[i]];
+
+                // Velvet Card Background
+                ctx.fillStyle = 'rgba(20, 10, 30, 0.85)';
+                ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+                ctx.lineWidth = 2;
+
+                ctx.shadowBlur = 40; ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+                ctx.beginPath(); ctx.roundRect(currentX, currentY, cardW, cardH, 20); ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.stroke();
+
+                // Load & Draw Image
+                const img = await loadImage(data.image);
+                const padding = 35;
+                const imgSize = cardW - (padding * 2);
+                const imgY = currentY + padding;
+
+                // Inner Image Base
+                ctx.fillStyle = '#05020a';
+                ctx.beginPath(); ctx.roundRect(currentX + padding, imgY, imgSize, imgSize, 8); ctx.fill();
+
+                // Crop and Center Image
+                ctx.save();
+                ctx.beginPath(); ctx.roundRect(currentX + padding, imgY, imgSize, imgSize, 8); ctx.clip();
+                let scale = Math.max(imgSize / img.width, imgSize / img.height);
+                let nw = img.width * scale; let nh = img.height * scale;
+                let nx = (currentX + padding) + (imgSize - nw) / 2;
+                let ny = imgY + (imgSize - nh) / 2;
+                ctx.drawImage(img, nx, ny, nw, nh);
+                ctx.restore();
+
+                // Glowing Gold Frame around Image
+                ctx.strokeStyle = '#ffea99'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.roundRect(currentX + padding, imgY, imgSize, imgSize, 8); ctx.stroke();
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.roundRect(currentX + padding - 6, imgY - 6, imgSize + 12, imgSize + 12, 10); ctx.stroke();
+
+                // Draw Handwritten Caption
+                ctx.fillStyle = '#fff';
+                ctx.font = '55px "Caveat", cursive';
+                ctx.textAlign = 'center';
+                ctx.fillText(data.caption, currentX + cardW / 2, currentY + imgSize + padding + 90);
+
+                // Small decorative dots under caption
+                ctx.fillStyle = '#d4af37';
+                ctx.beginPath(); ctx.arc(currentX + cardW / 2 - 25, currentY + imgSize + padding + 130, 3, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(currentX + cardW / 2, currentY + imgSize + padding + 130, 4.5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(currentX + cardW / 2 + 25, currentY + imgSize + padding + 130, 3, 0, Math.PI * 2); ctx.fill();
+
+                // Grid Math
+                if ((i + 1) % cols === 0) {
+                    currentX = marginX;
+                    currentY += cardH + gap;
+                } else {
+                    currentX += cardW + gap;
+                }
+            }
+
+            // 5. Draw Footer & Watermark
+            const footerY = totalH - 60;
+            ctx.textAlign = 'center';
+
+            if (includeWatermark) {
+                ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                ctx.font = 'italic 32px "Cormorant Garamond", serif';
+                ctx.fillText("May these little moments always bring a smile.", totalW / 2, footerY - 55);
+
+                ctx.fillStyle = 'rgba(255,255,255,0.5)';
+                ctx.font = '30px "Montserrat", sans-serif';
+                ctx.fillText("Crafted with magic by", totalW / 2 - 75, footerY);
+
+                ctx.fillStyle = '#ffea99';
+                ctx.font = '45px "Great Vibes", cursive';
+                ctx.fillText("Shubham", totalW / 2 + 165, footerY + 5);
+            } else {
+                ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                ctx.font = 'italic 36px "Cormorant Garamond", serif';
+                ctx.fillText("May these little moments always bring a smile.", totalW / 2, footerY - 20);
+            }
+
+            // Apply to Preview Element
+            document.getElementById('preview-img').src = expCanvas.toDataURL('image/jpeg', 0.95);
+        }
+
+        // Helper to load image via promise
+        function loadImage(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        const API_BASE = 'http://localhost:1307/api/v1';
+
+        async function downloadAlbum() {
+            const dataUrl = document.getElementById('preview-img').src;
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = `Festive_Scrapbook_${visitorName}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+
+            try {
+                await fetch(`${API_BASE}/metrics/increment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: 'scrapbook_downloads' })
+                });
+            } catch (err) {
+                console.error("Failed to track scrapbook download metric:", err);
+            }
+        }
+
+        // --- BACKGROUND MAGIC CANVAS ---
+        const bgCanvas = document.getElementById('bg-canvas');
+        const ctx = bgCanvas.getContext('2d');
+        let w = bgCanvas.width = window.innerWidth;
+        let h = bgCanvas.height = window.innerHeight;
+        let particles = [];
+
+        class Particle {
+            constructor(x, y, isMagic = false) {
+                this.x = x || Math.random() * w; this.y = y || Math.random() * h;
+                this.size = Math.random() * 2 + 0.5;
+                this.vx = (Math.random() - 0.5) * 1; this.vy = (Math.random() - 0.5) * 1;
+                this.alpha = Math.random() * 0.5 + 0.1;
+                this.isMagic = isMagic;
+                if (isMagic) { this.vx *= 6; this.vy *= 6; this.size *= 2; this.alpha = 1; }
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > w) this.vx *= -1; if (this.y < 0 || this.y > h) this.vy *= -1;
+                if (this.isMagic) { this.alpha -= 0.02; this.size *= 0.95; }
+            }
+            draw() {
+                ctx.globalAlpha = Math.max(0, this.alpha); ctx.fillStyle = '#ffea99';
+                ctx.shadowBlur = this.isMagic ? 20 : 5; ctx.shadowColor = '#ffb703';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+            }
+        }
+
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
+
+        function animateBg() {
+            ctx.clearRect(0, 0, w, h);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update(); particles[i].draw();
+                if (particles[i].isMagic && particles[i].alpha <= 0) particles.splice(i, 1);
+            }
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
+
+        function triggerUploadMagic() { for (let i = 0; i < 60; i++) particles.push(new Particle(w / 2, h / 2, true)); }
+
+        window.addEventListener('resize', () => { w = bgCanvas.width = window.innerWidth; h = bgCanvas.height = window.innerHeight; });
+
+    </script>
+</body>
+
+</html>
