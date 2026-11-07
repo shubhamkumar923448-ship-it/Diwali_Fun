@@ -21,6 +21,8 @@ async function seedMetrics() {
 }
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const app = express();
+
 app.use(express.static(path.join(__dirname, '../public')));
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
@@ -30,7 +32,6 @@ connectDB();
 seedMetrics(); // Seed initial metrics if not already present in DB
 
 
-const app = express();
 
 
 app.use(cors({ origin: '*' }));
