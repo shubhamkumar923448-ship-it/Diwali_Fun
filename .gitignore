@@ -1,18 +1,16 @@
 # Dependency directories
 node_modules/
 
-# Environment variables (SUPER IMPORTANT - NEVER PUSH THIS)
+# Environment variables 
 .env
 
-# Optional npm cache and debug logs
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .npm/
 
-# Mac OS junk files (if you or anyone uses Mac)
 .DS_Store
 
-# Any local testing databases or coverage folders (if you have them)
 coverage/
 .nyc_output/
