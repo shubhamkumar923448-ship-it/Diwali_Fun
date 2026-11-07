@@ -21,7 +21,7 @@ async function seedMetrics() {
 }
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+app.use(express.static(path.join(__dirname, '../public')));
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
@@ -40,6 +40,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/shubham-dashboard', (req, res) => {
     // Send the admin.html file explicitly when someone visits /system-login
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 
