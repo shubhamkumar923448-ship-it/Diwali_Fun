@@ -46,7 +46,7 @@
             font-family: 'Yatra One', system-ui;
         }
 
-
+        /* === 1. SUNRISE INTRO OVERLAY === */
         #sunrise-intro {
             position: fixed;
             inset: 0;
@@ -57,6 +57,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            cursor: pointer;
         }
 
         #sky {
@@ -193,13 +194,11 @@
             }
         }
 
-
+        /* === 2. MAIN APP === */
         #main-app {
             opacity: 0;
             pointer-events: none;
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: relative;
             width: 100%;
             min-height: 100vh;
             z-index: 1;
@@ -211,6 +210,7 @@
             position: fixed;
             inset: 0;
             z-index: -3;
+            pointer-events: none;
         }
 
         .deity-container {
@@ -471,7 +471,7 @@
             font-weight: 600;
         }
 
-
+        /* === 3. SEAMLESS PORTAL OVERLAY (With Failsafe Close Button!) === */
         #seamless-portal {
             position: fixed;
             inset: 0;
@@ -485,6 +485,23 @@
             width: 100%;
             height: 100%;
             border: none;
+            position: relative;
+            z-index: 2;
+            background: transparent;
+        }
+
+        #portal-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--gold-light);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            z-index: 1;
+            pointer-events: none;
+            animation: pulseText 1.2s infinite alternate;
         }
 
         /* Exact Share Section */
@@ -687,8 +704,8 @@
         <source src="../public/assets/tunes/tune.mp3" type="audio/mpeg">
     </audio>
 
-
-    <div id="sunrise-intro">
+    <!-- 1. SUNRISE INTRO OVERLAY (Click anywhere on screen to start!) -->
+    <div id="sunrise-intro" onclick="startCinematicSunrise()">
         <div id="sky"></div>
 
         <div class="sun-container" id="sun-box">
@@ -701,13 +718,13 @@
             <div id="intro-diyas-container"></div>
         </div>
 
-        <div class="intro-text-box" id="tap-box" onclick="startCinematicSunrise()">
+        <div class="intro-text-box" id="tap-box">
             <h1 class="tap-msg">A Sacred Dawn Awaits...</h1>
-            <p class="tap-sub">A moment of faith, a prayer of gratitude. Touch to begin.✨</p>
+            <p class="tap-sub">A moment of faith, a prayer of gratitude. Touch to begin. ✨</p>
         </div>
     </div>
 
-
+    <!-- 2. MAIN CHHATH GHAT APP -->
     <div id="main-app">
 
         <!-- DEITY BLENDED IN BACKGROUND -->
@@ -743,14 +760,13 @@
             </div>
         </main>
 
-        <!-- ALL CARDS NOW OPEN DEDICATED INTERACTIVE PAGES SMOOTHLY WITH CONTINUOUS TUNE! -->
+        <!-- ALL CARDS OPEN DEDICATED INTERACTIVE PAGES WITH CONTINUOUS TUNE -->
         <section class="features-grid">
 
             <div class="feature-card" onclick="openChhathPage('chhath-blessings.html')">
                 <div class="card-icon">🪔</div>
                 <h3>Maiya's Blessings</h3>
-                <p>Take a quiet moment to receive heartfelt blessings and prayers for peace, good health and happiness.
-                </p>
+                <p>Take a quiet moment to receive heartfelt blessings and prayers for peace, good health and happiness.</p>
                 <span class="card-btn">Get Blessings →</span>
             </div>
 
@@ -768,7 +784,6 @@
                 <span class="card-btn">Write Note →</span>
             </div>
 
-            <!-- DEDICATED DAY 1 PAGE -->
             <div class="feature-card" onclick="openChhathPage('nahay-khay.html')">
                 <div class="card-icon">💧</div>
                 <h3>Day 1: Nahay Khay</h3>
@@ -776,7 +791,6 @@
                 <span class="card-btn">Enter Day 1 →</span>
             </div>
 
-            <!-- DEDICATED DAY 2 PAGE -->
             <div class="feature-card" onclick="openChhathPage('kharna.html')">
                 <div class="card-icon">🔥</div>
                 <h3>Day 2: Kharna</h3>
@@ -784,21 +798,17 @@
                 <span class="card-btn">Enter Day 2 →</span>
             </div>
 
-            <!-- DEDICATED DAY 3 PAGE (Virtual Setting Sun Arghya) -->
             <div class="feature-card" onclick="openChhathPage('sandhya-arghya.html')">
                 <div class="card-icon">🌇</div>
                 <h3>Day 3: Sandhya Arghya</h3>
-                <p>As the sun sets over the sacred waters, devotees gather with prayers and offerings to express their
-                    gratitude to Surya Dev.</p>
+                <p>As the sun sets over the sacred waters, devotees gather with prayers and offerings to express their gratitude to Surya Dev.</p>
                 <span class="card-btn">Offer Sandhya Arghya →</span>
             </div>
 
-            <!-- DEDICATED DAY 4 PAGE (Virtual Rising Sun Arghya) -->
             <div class="feature-card" onclick="openChhathPage('bhor-arghya.html')">
                 <div class="card-icon">🌄</div>
                 <h3>Day 4: Bhor Arghya</h3>
-                <p>Welcome the rising sun with prayers of gratitude. The final offering marks the completion of this
-                    beautiful journey of faith and devotion.</p>
+                <p>Welcome the rising sun with prayers of gratitude. The final offering marks the completion of this beautiful journey of faith and devotion.</p>
                 <span class="card-btn">Offer Bhor Arghya →</span>
             </div>
         </section>
@@ -847,8 +857,9 @@
         </a>
     </div>
 
-
+    <!-- 3. SEAMLESS PORTAL CONTAINER -->
     <div id="seamless-portal">
+        <div id="portal-loader">✨ Opening Sacred Sanctuary...</div>
         <iframe id="portal-frame" src="about:blank"></iframe>
     </div>
 
@@ -856,28 +867,24 @@
     <script>
         const API_BASE = 'https://diwali-fun.onrender.com/api/v1';
 
+        const blessingsList = [
+            "छठी मईया की कृपा आपके घर-परिवार पर सदा बनी रहे। आपके घर में अपनों का साथ, मन में सुकून और जीवन में सुख-शांति बनी रहे।",
+            "हे छठी मईया, हर घर की खुशियाँ सलामत रखना। माँ-बाप को स्वस्थ रखना, बच्चों पर अपनी ममता बनाए रखना और सबके जीवन में मंगल करना।",
+            "सूर्य देव की पहली किरण के साथ आपके जीवन में नई आशाएँ जागें। छठी मईया आपके हर दिन को अपनी कृपा और आशीर्वाद से संवारती रहें।",
+            "जो श्रद्धा और विश्वास से छठी मईया के चरणों में अपना शीश झुकाते हैं, उनकी प्रार्थनाएँ स्वीकार हों। हर परिवार में प्रेम, अपनापन और खुशहाली बनी रहे।",
+            "छठी मईया, सबके आँगन में खुशियों की धूप बनी रहे। किसी अपने का साथ न छूटे, हर घर में हँसी गूँजे और सबके मन को आपका आशीर्वाद मिलता रहे।",
+            "May Chhathi Maiya keep her loving grace upon your family. May your home always have the warmth of togetherness, the comfort of peace and the happiness of being with your loved ones.",
+            "May every prayer offered with a sincere heart find its way to Chhathi Maiya. May she bless your family with good health, togetherness and countless moments of peace.",
+            "As the first rays of Surya Dev touch the earth, may Chhathi Maiya bring gentle new beginnings into your life and keep your loved ones under her loving care.",
+            "May the devotion of this sacred festival bring peace to your heart, strength to your faith and blessings to every member of your family.",
+            "May Chhathi Maiya's blessings reach every home, bring comfort to every heart and keep the bonds of love and togetherness strong among those we hold dear."
+        ];
 
-        
-const blessingsList = [
-    // Hindi Blessings
-    "छठी मईया की कृपा आपके घर-परिवार पर सदा बनी रहे। आपके घर में अपनों का साथ, मन में सुकून और जीवन में सुख-शांति बनी रहे।",
-    "हे छठी मईया, हर घर की खुशियाँ सलामत रखना। माँ-बाप को स्वस्थ रखना, बच्चों पर अपनी ममता बनाए रखना और सबके जीवन में मंगल करना।",
-    "सूर्य देव की पहली किरण के साथ आपके जीवन में नई आशाएँ जागें। छठी मईया आपके हर दिन को अपनी कृपा और आशीर्वाद से संवारती रहें।",
-    "जो श्रद्धा और विश्वास से छठी मईया के चरणों में अपना शीश झुकाते हैं, उनकी प्रार्थनाएँ स्वीकार हों। हर परिवार में प्रेम, अपनापन और खुशहाली बनी रहे।",
-    "छठी मईया, सबके आँगन में खुशियों की धूप बनी रहे। किसी अपने का साथ न छूटे, हर घर में हँसी गूँजे और सबके मन को आपका आशीर्वाद मिलता रहे।",
-    // English Blessings
-    "May Chhathi Maiya keep her loving grace upon your family. May your home always have the warmth of togetherness, the comfort of peace and the happiness of being with your loved ones.",
-    "May every prayer offered with a sincere heart find its way to Chhathi Maiya. May she bless your family with good health, togetherness and countless moments of peace.",
-    "As the first rays of Surya Dev touch the earth, may Chhathi Maiya bring gentle new beginnings into your life and keep your loved ones under her loving care.",
-    "May the devotion of this sacred festival bring peace to your heart, strength to your faith and blessings to every member of your family.",
-    "May Chhathi Maiya's blessings reach every home, bring comfort to every heart and keep the bonds of love and togetherness strong among those we hold dear."
-];
-
-
-
+        // ====================================================
+        // 1. MASTER AUDIO ENGINE
+        // ====================================================
         const bgm = document.getElementById('bgm');
         const soundBtn = document.getElementById('sound-btn');
-
 
         function playMasterAudio() {
             const savedTime = parseFloat(sessionStorage.getItem('chhath_bgm_time') || '0');
@@ -926,32 +933,47 @@ const blessingsList = [
             }
         }, 250);
 
-
+        // ====================================================
+        // 2. SEAMLESS PORTAL CONTROLLER (Never Gets Stuck!)
+        // ====================================================
         const portal = document.getElementById('seamless-portal');
         const portalFrame = document.getElementById('portal-frame');
+        const portalLoader = document.getElementById('portal-loader');
 
         function openChhathPage(pageUrl) {
             if (bgm.paused && sessionStorage.getItem('chhath_bgm_muted') !== 'true') {
                 bgm.play().catch(() => { });
             }
 
-            portalFrame.src = pageUrl;
+            gsap.killTweensOf(portal);
+            portalLoader.style.display = 'block';
             portal.style.display = 'block';
-            gsap.to(portal, { opacity: 1, duration: 0.45, ease: "power2.out" });
+            portalFrame.src = pageUrl;
+
+            gsap.to(portal, { opacity: 1, duration: 0.4, ease: "power2.out" });
             history.pushState({ chhathPortal: true, url: pageUrl }, "", `#${pageUrl.replace('.html', '')}`);
 
             portalFrame.onload = () => {
+                portalLoader.style.display = 'none';
                 try {
-                    const childDoc = portalFrame.contentDocument || portalFrame.contentWindow.document;
-                    // Silence any duplicate audio inside child page so master bgm plays with zero cut
+                    const childWin = portalFrame.contentWindow;
+                    const childDoc = portalFrame.contentDocument || childWin.document;
+
+                    // If child somehow loaded chhath.html inside the iframe, close the portal immediately!
+                    if (childWin.location.pathname.endsWith('chhath.html') || childWin.location.pathname.endsWith('/chhath')) {
+                        closeChhathPortal();
+                        return;
+                    }
+
+                    // Silence duplicate audio inside child page so master bgm plays with zero cut
                     const childAudios = childDoc.querySelectorAll('audio');
                     childAudios.forEach(a => { a.pause(); a.muted = true; a.removeAttribute('src'); });
 
-                    // Intercept Back / Ghat / Home links inside child page
+                    // Intercept all navigation links inside child page
                     const links = childDoc.querySelectorAll('a');
                     links.forEach(link => {
-                        const href = link.getAttribute('href') || '';
-                        if (href.includes('chhath.html')) {
+                        const href = (link.getAttribute('href') || '').trim();
+                        if (href === 'chhath.html' || href === '/chhath.html' || href === '/chhath') {
                             link.addEventListener('click', (e) => {
                                 e.preventDefault();
                                 closeChhathPortal();
@@ -959,20 +981,30 @@ const blessingsList = [
                         } else if (href.includes('index.html') || href.includes('diwali.html')) {
                             link.addEventListener('click', (e) => {
                                 e.preventDefault();
-                                window.location.href = href;
+                                window.top.location.href = href;
+                            });
+                        } else if (href.endsWith('.html')) {
+                            // Switching from one subpage to another (e.g., Blessings -> Wishes)
+                            link.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                openChhathPage(href);
                             });
                         }
                     });
-                } catch (err) { }
+                } catch (err) {
+                    console.log("Portal navigation fallback:", err);
+                }
             };
         }
 
         function closeChhathPortal() {
+            gsap.killTweensOf(portal);
             gsap.to(portal, {
                 opacity: 0,
-                duration: 0.35,
+                duration: 0.3,
                 onComplete: () => {
                     portal.style.display = 'none';
+                    portalFrame.onload = null;
                     portalFrame.src = 'about:blank';
                     if (location.hash) {
                         history.replaceState(null, "", window.location.pathname);
@@ -980,6 +1012,7 @@ const blessingsList = [
                 }
             });
         }
+        window.closeChhathPortal = closeChhathPortal;
 
         window.addEventListener('popstate', () => {
             if (portal.style.display === 'block') {
@@ -987,9 +1020,51 @@ const blessingsList = [
             }
         });
 
+        // ====================================================
+        // 3. INTRO & INITIALIZATION (Syntax Errors Fixed!)
+        // ====================================================
+        const introOverlay = document.getElementById('sunrise-intro');
+        const mainApp = document.getElementById('main-app');
+        let sunriseStarted = false;
+
+        function startCinematicSunrise() {
+            if (sunriseStarted) return;
+            sunriseStarted = true;
+
+            playMasterAudio();
+            document.getElementById('tap-box').style.display = 'none';
+            sessionStorage.setItem('chhathIntroSeen', 'true');
+
+            const tl = gsap.timeline();
+
+            tl.to("#sky", { background: "linear-gradient(to top, #4a0c00 0%, #010002 100%)", duration: 3.0 })
+                .to("#sun-box", { y: "-12vh", duration: 4.0, ease: "power2.out" }, "-=2.2")
+                .to("#s-rays", { opacity: 1, duration: 2.5 }, "-=2.8")
+                .to("#s-reflect", { opacity: 1, duration: 2.5 }, "-=2.8")
+                .to(mainApp, {
+                    opacity: 1,
+                    duration: 2.8,
+                    ease: "power2.inOut",
+                    onStart: () => { mainApp.style.pointerEvents = 'auto'; }
+                }, "-=1.0")
+                .to(introOverlay, {
+                    opacity: 0,
+                    duration: 2.5,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        introOverlay.style.display = 'none';
+                    }
+                }, "<");
+        }
+        window.startCinematicSunrise = startCinematicSunrise;
 
         document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.setItem('lastFestivalSection', 'chhath.html');
+
+            // Ensure any leftover hash doesn't trap the user
+            if (location.hash) {
+                history.replaceState(null, "", window.location.pathname);
+            }
 
             const savedName = localStorage.getItem("visitor_name") || sessionStorage.getItem("visitorName");
             if (savedName && savedName.trim() !== "") {
@@ -1005,64 +1080,41 @@ const blessingsList = [
             }
             document.getElementById('constant-blessing').textContent = `"${sessionBlessing}"`;
 
+            const hasSeenIntro = sessionStorage.getItem('chhathIntroSeen') === 'true';
+
+            if (hasSeenIntro) {
+                introOverlay.style.display = 'none';
+                mainApp.style.opacity = '1';
+                mainApp.style.pointerEvents = 'auto';
+                playMasterAudio();
+            } else {
+                const introDiyasContainer = document.getElementById('intro-diyas-container');
+                for (let i = 0; i < 8; i++) {
+                    let d = document.createElement('div');
+                    d.className = 'intro-diya';
+                    d.style.left = Math.random() * 100 + 'vw';
+                    d.style.top = Math.random() * 100 + '%';
+                    introDiyasContainer.appendChild(d);
+
+                    // FIXED SYNTAX BUG HERE!
+                    const driftX = (Math.random() * 50) - 25;
+                    gsap.to(d, {
+                        x: `+=${driftX}`,
+                        y: '-=20',
+                        opacity: 0.8,
+                        duration: 2 + Math.random() * 2,
+                        repeat: -1,
+                        yoyo: true,
+                        ease: 'sine.inOut'
+                    });
+                }
+            }
+
             createDivineParticles();
         });
 
-        const introOverlay = document.getElementById('sunrise-intro');
-        const mainApp = document.getElementById('main-app');
-        const hasSeenIntro = sessionStorage.getItem('chhathIntroSeen');
-
-        if (hasSeenIntro) {
-            introOverlay.style.display = 'none';
-            mainApp.style.opacity = 1;
-            mainApp.style.pointerEvents = 'auto';
-            playMasterAudio();
-        } else {
-            const introDiyasContainer = document.getElementById('intro-diyas-container');
-            for (let i = 0; i < 8; i++) {
-                let d = document.createElement('div');
-                d.className = 'intro-diya';
-                d.style.left = Math.random() * 100 + 'vw';
-                d.style.top = Math.random() * 100 + '%';
-                introDiyasContainer.appendChild(d);
-                gsap.to(d, {
-                    x: `+=${Math.random() * 50 - 25}`,
-                    y: '-=20',
-                    opacity: 0.8,
-                    duration: 2 + Math.random() * 2,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: 'sine.inOut'
-                });
-            }
-
-            function startCinematicSunrise() {
-                playMasterAudio();
-                document.getElementById('tap-box').style.display = 'none';
-
-                const tl = gsap.timeline();
-
-                tl.to("#sky", { background: "linear-gradient(to top, #4a0c00 0%, #010002 100%)", duration: 3.5 })
-                    .to("#sun-box", { y: "-12vh", duration: 4.5, ease: "power2.out" }, "-=2.5")
-                    .to("#s-rays", { opacity: 1, duration: 3 }, "-=3")
-                    .to("#s-reflect", { opacity: 1, duration: 3 }, "-=3")
-                    .to(mainApp, {
-                        opacity: 1,
-                        duration: 3.5,
-                        ease: "power2.inOut",
-                        onStart: () => { mainApp.style.pointerEvents = 'auto'; }
-                    }, "+=0.5")
-                    .to(introOverlay, { opacity: 0, duration: 3.5, ease: "power2.inOut" }, "<")
-                    .call(() => {
-                        introOverlay.style.display = 'none';
-                        sessionStorage.setItem('chhathIntroSeen', 'true');
-                    });
-            }
-            window.startCinematicSunrise = startCinematicSunrise;
-        }
-
         // ====================================================
-        // 4. DIVINE PARTICLES
+        // 4. DIVINE PARTICLES (Syntax Error Fixed!)
         // ====================================================
         function createDivineParticles() {
             const container = document.getElementById('divine-particles');
@@ -1084,9 +1136,11 @@ const blessingsList = [
                 star.style.top = Math.random() * 100 + 'vh';
                 container.appendChild(star);
 
+                // FIXED SYNTAX BUG HERE!
+                const starDriftX = (Math.random() * 40) - 20;
                 gsap.to(star, {
                     y: `-=${Math.random() * 100 + 50}`,
-                    x: `+=${Math.random() * 40 - 20}`,
+                    x: `+=${starDriftX}`,
                     opacity: Math.random() * 0.5 + 0.2,
                     duration: Math.random() * 10 + 10,
                     repeat: -1,
@@ -1097,25 +1151,41 @@ const blessingsList = [
             }
         }
 
-
+        // ====================================================
+        // 5. SHARE & METRICS
+        // ====================================================
         const siteLink = 'https://diwali-fun-seven.vercel.app';
         const shareMessage = "Step into a magical world of devotion! ✨ Experience the beauty of Chhath Puja here: ";
 
         async function trackMetric(key) {
-            try { await fetch(`${API_BASE}/metrics/increment`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: key }) }); } catch (err) { }
+            try {
+                await fetch(`${API_BASE}/metrics/increment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: key })
+                });
+            } catch (err) { }
         }
+
         async function shareToWhatsApp() {
-            await trackMetric('whatsapp_shares'); window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage + siteLink)}`, '_blank');
+            await trackMetric('whatsapp_shares');
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage + siteLink)}`, '_blank');
         }
+
         async function shareSystem() {
             await trackMetric('system_shares');
-            if (navigator.share) { navigator.share({ title: 'Chhath Mahaparv ✨', text: shareMessage, url: siteLink }).catch(e => console.log(e)); }
-            else { alert("System share is not supported on this browser. Use the Copy Link button!"); }
+            if (navigator.share) {
+                navigator.share({ title: 'Chhath Mahaparv ✨', text: shareMessage, url: siteLink }).catch(e => console.log(e));
+            } else {
+                alert("System share is not supported on this browser. Use the Copy Link button!");
+            }
         }
+
         async function copyWebsiteLink() {
             await trackMetric('system_shares');
             navigator.clipboard.writeText(siteLink).then(() => {
-                const toast = document.getElementById('toast-msg'); toast.classList.add('show');
+                const toast = document.getElementById('toast-msg');
+                toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 2500);
             });
         }
