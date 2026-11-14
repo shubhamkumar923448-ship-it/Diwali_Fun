@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Day 4: Bhor Arghya - The Chhath Edit</title>
+
+    <!-- Exact Luxury Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&family=Yatra+One&display=swap"
+        rel="stylesheet">
+
+    <!-- GSAP for Sunrise Physics & Arghya Stream Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <link rel="stylesheet" href="global.css">
+
+    <style>
+        :root {
+            --bg-void: #050308;
+            --gold-light: #ffea99;
+            --gold-deep: #ffb703;
+            --fire-orange: #fb8500;
+            --usha-saffron: #ff9f1c;
+            --glass-bg: rgba(20, 12, 6, 0.76);
+            --glass-border: rgba(255, 215, 0, 0.32);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 1.5s ease;
+            background-image:
+                radial-gradient(circle at 50% 12%, rgba(255, 183, 3, 0.22) 0%, transparent 60%),
+                radial-gradient(circle at 50% 55%, rgba(251, 133, 0, 0.14) 0%, transparent 70%),
+                radial-gradient(circle at 50% 95%, rgba(255, 234, 153, 0.12) 0%, transparent 60%);
+        }
+
+        .hindi-font {
+            font-family: 'Yatra One', system-ui;
+        }
+
+        /* === 1. INTERACTIVE DAWN RAYS & GOLDEN PETAL CANVAS === */
+        #bhor-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* === 2. BLENDED DEITY BACKDROP === */
+        .deity-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        .deity {
+            height: clamp(360px, 75vh, 850px);
+            width: auto;
+            max-width: 95vw;
+            object-fit: contain;
+            opacity: 0.4;
+            -webkit-mask-image: radial-gradient(ellipse 52% 62% at 50% 42%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.45) 50%, transparent 75%);
+            mask-image: radial-gradient(ellipse 52% 62% at 50% 42%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.45) 50%, transparent 75%);
+            filter: drop-shadow(0 0 45px rgba(255, 183, 3, 0.55)) brightness(1.12);
+            mix-blend-mode: lighten;
+            transition: all 1.2s ease;
+        }
+
+        /* === 3. HEADER === */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(15px, 3vw, 25px) clamp(18px, 5vw, 50px);
+            position: relative;
+            z-index: 20;
+        }
+
+        .logo-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: clamp(14px, 3vw, 28px);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.78);
+            text-decoration: none;
+            font-size: clamp(0.82rem, 1.5vw, 1rem);
+            transition: 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-light);
+        }
+
+        /* === 4. HERO SECTION === */
+        .page-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 10px 18px 120px;
+        }
+
+        .hero-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .day-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 183, 3, 0.15);
+            border: 1px solid rgba(255, 234, 153, 0.5);
+            color: var(--gold-light);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            box-shadow: 0 0 25px rgba(255, 183, 3, 0.3);
+        }
+
+        .subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.7rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .main-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2rem, 5.5vw, 3.6rem);
+            background: linear-gradient(to bottom, #ffffff, #ffea99, #ffb703);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(255, 183, 3, 0.6));
+            margin: 4px 0 10px;
+        }
+
+        .poetic-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.05rem, 2.3vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+            max-width: 720px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* === 5. THE VIRTUAL BHOR ARGHYA SANCTUARY === */
+        .ritual-sanctuary {
+            background: linear-gradient(145deg, rgba(28, 15, 6, 0.84), rgba(8, 4, 2, 0.96));
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: clamp(22px, 4vw, 38px);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 25px 65px rgba(0, 0, 0, 0.85), inset 0 0 35px rgba(255, 215, 0, 0.08);
+            margin-bottom: 45px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Stepper */
+        .step-tracker {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(8px, 2.5vw, 20px);
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .step-node {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: clamp(0.7rem, 1.8vw, 0.82rem);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.45);
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .step-node.active {
+            border-color: var(--gold-light);
+            background: rgba(255, 183, 3, 0.25);
+            color: var(--gold-light);
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.4);
+            font-weight: 600;
+        }
+
+        .step-node.completed {
+            border-color: #ffd166;
+            background: rgba(255, 234, 153, 0.18);
+            color: #fff;
+        }
+
+        /* Interactive Stage Grid */
+        .interactive-stage {
+            display: grid;
+            grid-template-columns: 1.15fr 1.1fr;
+            gap: clamp(20px, 4vw, 38px);
+            align-items: center;
+        }
+
+        @media (max-width: 850px) {
+            .interactive-stage {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        /* Interactive Sunrise Ghat Viewport (Starts in Pre-Dawn Indigo Night!) */
+        .visual-ghat-box {
+            position: relative;
+            height: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom, #070514 0%, #191233 45%, #3b1c32 68%, #0d0714 68%, #040208 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 215, 0, 0.35);
+            overflow: hidden;
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.75), 0 15px 35px rgba(0, 0, 0, 0.65);
+            transition: background 1.4s ease;
+        }
+
+        .ghat-svg {
+            width: 100%;
+            height: 100%;
+            max-width: 380px;
+            overflow: visible;
+        }
+
+        /* Rotating Volumetric Dawn Rays */
+        #usha-sun-rays {
+            transform-origin: 0px 0px;
+            animation: spinDawnRays 28s linear infinite;
+        }
+
+        @keyframes spinDawnRays {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Animated Arghya Stream */
+        #bhor-milk-stream,
+        #bhor-water-stream {
+            opacity: 0;
+            stroke-dasharray: 14 6;
+            animation: pourFlow 0.35s linear infinite;
+        }
+
+        @keyframes pourFlow {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        /* Shimmering Dawn Reflection on River */
+        #dawn-water-reflection {
+            opacity: 0.15;
+            animation: shimmerReflect 2.5s ease-in-out infinite alternate;
+            transform-origin: center;
+            transition: opacity 1s ease;
+        }
+
+        @keyframes shimmerReflect {
+            0% {
+                transform: scaleX(0.9);
+            }
+
+            100% {
+                transform: scaleX(1.15);
+            }
+        }
+
+        /* Status Badge inside Viewport */
+        .arghya-counter-badge {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid var(--gold-deep);
+            color: var(--gold-light);
+            font-size: 0.72rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+            letter-spacing: 0.5px;
+            z-index: 5;
+        }
+
+        /* Right Side Narrative */
+        .ritual-narrative {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hindi-mantra-tag {
+            font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+            color: var(--gold-deep);
+            margin-bottom: 6px;
+            text-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+        }
+
+        .stage-heading {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.3rem, 3vw, 1.85rem);
+            color: var(--gold-light);
+            margin-bottom: 12px;
+        }
+
+        .stage-body {
+            font-size: clamp(0.88rem, 2vw, 0.98rem);
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.7;
+            margin-bottom: 18px;
+            font-weight: 300;
+        }
+
+        .qualities-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-bottom: 22px;
+        }
+
+        @media (max-width: 850px) {
+            .qualities-badges {
+                justify-content: center;
+            }
+        }
+
+        .q-badge {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            color: var(--gold-light);
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 0.74rem;
+            letter-spacing: 0.4px;
+        }
+
+        .ritual-action-btn {
+            background: linear-gradient(45deg, #ffea99, #ffb703, #fb8500);
+            border: none;
+            color: #000;
+            font-family: 'Cinzel Decorative', serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1.2px;
+            padding: 15px 28px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(255, 183, 3, 0.45), inset 0 0 12px rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            align-self: flex-start;
+        }
+
+        @media (max-width: 850px) {
+            .ritual-action-btn {
+                align-self: center;
+                width: 100%;
+            }
+        }
+
+        .ritual-action-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(255, 234, 153, 0.75);
+        }
+
+        /* === 6. SPECIFICATIONS & QUALITIES GRID === */
+        .section-heading {
+            text-align: center;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.5rem, 4vw, 2.3rem);
+            color: var(--gold-light);
+            margin: 20px 0 10px;
+            text-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+        }
+
+        .section-sub {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .qualities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .quality-card {
+            background: linear-gradient(145deg, rgba(28, 15, 8, 0.78), rgba(10, 5, 2, 0.94));
+            border: 1px solid var(--glass-border);
+            border-radius: 22px;
+            padding: 26px 22px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s ease;
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.04), 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .quality-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold-light);
+            box-shadow: 0 18px 35px rgba(255, 183, 3, 0.3), inset 0 0 25px rgba(255, 215, 0, 0.12);
+        }
+
+        .q-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.07);
+            border: 1px dashed var(--gold-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 15px;
+            transition: 0.4s;
+        }
+
+        .quality-card:hover .q-icon {
+            transform: scale(1.12);
+            background: rgba(255, 215, 0, 0.2);
+            border-style: solid;
+        }
+
+        .quality-card h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+        }
+
+        .quality-card .q-hindi {
+            font-size: 0.95rem;
+            color: var(--gold-deep);
+            margin-bottom: 10px;
+        }
+
+        .quality-card p {
+            font-size: 0.84rem;
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* === 7. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.68rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.65);
+            padding: 7px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.15rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 4px;
+        }
+
+        .creator-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- FALLBACK CONTINUOUS AUDIO (Automatically silenced inside chhath.html portal) -->
+    <audio id="bgm" loop preload="auto">
+        <source src="assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="/assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="../public/assets/tunes/tune.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 1. INTERACTIVE GOLDEN DAWN & MARIGOLD PETAL CANVAS -->
+    <canvas id="bhor-canvas"></canvas>
+
+    <!-- 2. BLENDED DEITY BACKDROP -->
+    <div class="deity-container">
+        <img src="assets/images/chathi-maiya.jpeg" onerror="this.onerror=null; this.src='assets/chhathi-maiya.png';"
+            alt="Chhathi Maiya" class="deity" id="deity-bg">
+    </div>
+
+    <!-- 3. HEADER -->
+    <header>
+        <a href="chhath.html" class="logo-text">The Chhath Edit</a>
+        <nav class="nav-links">
+            <a href="chhath.html">← Back to Ghat</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <!-- 4. MAIN CONTENT -->
+    <main class="page-container">
+
+        <div class="hero-header">
+            <div class="day-pill">🌄 Day 4 of the Mahaparv • कार्तिक शुक्ल सप्तमी (उषा अर्घ्य एवं पारण)</div>
+            <h2 class="subtitle">A Prayer of Gratitude at the First Light</h2>
+            <h1 class="main-title">Bhor Arghya</h1>
+            <p class="poetic-desc">Before the first light touches the horizon, devotees gather
+                at the water's edge to offer Usha Arghya to the rising Surya Dev.
+                With folded hands, they pray to Chhathi Maiya, give thanks for
+                the gift of life, and bring the sacred Nirjala Vrat to its
+                completion through Parana.</p>
+        </div>
+
+        <!-- 5. INTERACTIVE VIRTUAL BHOR ARGHYA & PARAN SIMULATOR -->
+        <section class="ritual-sanctuary">
+
+            <!-- Stepper -->
+            <div class="step-tracker">
+                <div class="step-node active" id="tab-0" onclick="jumpToStep(0)">
+                    <span>1. उषाकाल की प्रतीक्षा</span> (Waiting for Dawn)
+                </div>
+
+                <div class="step-node" id="tab-1" onclick="jumpToStep(1)">
+                    <span>2. उदीयमान सूर्य को अर्घ्य</span> (Usha Arghya)
+                </div>
+
+                <div class="step-node" id="tab-2" onclick="jumpToStep(2)">
+                    <span>3. व्रत पारण एवं प्रसाद</span> (Parana & Prasad)
+                </div>
+            </div>
+
+            <div class="interactive-stage">
+                <!-- Left: Interactive Sunrise Ghat SVG Viewport -->
+                <div class="visual-ghat-box" id="ghat-viewport">
+                    <div class="arghya-counter-badge" id="arghya-status">🌌 4:30 AM: Brahma-Muhurta Mist</div>
+
+                    <svg class="ghat-svg" viewBox="0 0 320 280">
+                        <defs>
+                            <radialGradient id="risingSunGrad">
+                                <stop offset="0%" stop-color="#ffffff" />
+                                <stop offset="35%" stop-color="#ffea99" />
+                                <stop offset="70%" stop-color="#ffb703" />
+                                <stop offset="100%" stop-color="#fb8500" stop-opacity="0" />
+                            </radialGradient>
+                            <linearGradient id="soopBamboo" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#e9c46a" />
+                                <stop offset="50%" stop-color="#d4a373" />
+                                <stop offset="100%" stop-color="#8d5b28" />
+                            </linearGradient>
+                            <linearGradient id="copperLota" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#ffea99" />
+                                <stop offset="50%" stop-color="#f77f00" />
+                                <stop offset="100%" stop-color="#7f2b00" />
+                            </linearGradient>
+                            <!-- Clip Path so Sun rises strictly from behind the river horizon at y=185! -->
+                            <clipPath id="skyHorizonClip">
+                                <rect x="0" y="0" width="320" height="185" />
+                            </clipPath>
+                        </defs>
+
+                        <!-- 0. PRE-DAWN STARS (Fade out as Sun rises!) -->
+                        <g id="morning-stars" opacity="0.85">
+                            <circle cx="45" cy="35" r="1.5" fill="#fff" />
+                            <circle cx="95" cy="22" r="1.2" fill="#ffea99" />
+                            <circle cx="160" cy="18" r="2" fill="#fff" filter="drop-shadow(0 0 4px #fff)" />
+                            <circle cx="230" cy="28" r="1.4" fill="#ffea99" />
+                            <circle cx="280" cy="42" r="1.5" fill="#fff" />
+                            <circle cx="70" cy="65" r="1" fill="#fff" />
+                            <circle cx="255" cy="70" r="1.2" fill="#ffea99" />
+                        </g>
+
+                        <!-- 1. THE RISING GOLDEN SUN (Clipped to Sky Horizon so it emerges from the water!) -->
+                        <g clip-path="url(#skyHorizonClip)">
+                            <!-- Starts hidden below horizon at y=220, rises to y=92 -->
+                            <g id="rising-sun-group" transform="translate(160, 220)">
+                                <!-- Rotating Sunbeams -->
+                                <g id="usha-sun-rays" opacity="0">
+                                    <line x1="0" y1="-95" x2="0" y2="95" stroke="rgba(255, 234, 153, 0.45)"
+                                        stroke-width="3" stroke-dasharray="8 6" />
+                                    <line x1="-95" y1="0" x2="95" y2="0" stroke="rgba(255, 234, 153, 0.45)"
+                                        stroke-width="3" stroke-dasharray="8 6" />
+                                    <line x1="-68" y1="-68" x2="68" y2="68" stroke="rgba(255, 183, 3, 0.4)"
+                                        stroke-width="2.5" stroke-dasharray="8 6" />
+                                    <line x1="68" y1="-68" x2="-68" y2="68" stroke="rgba(255, 183, 3, 0.4)"
+                                        stroke-width="2.5" stroke-dasharray="8 6" />
+                                </g>
+                                <!-- Outer Golden Halo -->
+                                <circle id="dawn-sun-aura" cx="0" cy="0" r="75" fill="url(#risingSunGrad)"
+                                    opacity="0.85" />
+                                <!-- Brilliant Morning Sun Disc -->
+                                <circle id="dawn-sun-disc" cx="0" cy="0" r="34" fill="#ffffff" stroke="#ffea99"
+                                    stroke-width="3" />
+                            </g>
+                        </g>
+
+                        <!-- 2. SUGARCANE MANDAP ON GHAT BANKS -->
+                        <g id="sugarcane-mandap" opacity="0.65">
+                            <line x1="28" y1="190" x2="48" y2="45" stroke="#52b788" stroke-width="4"
+                                stroke-linecap="round" />
+                            <line x1="42" y1="190" x2="55" y2="50" stroke="#74c69d" stroke-width="3.5"
+                                stroke-linecap="round" />
+                            <path d="M48 45 Q65 30 82 48" fill="none" stroke="#40916c" stroke-width="3" />
+                            <line x1="292" y1="190" x2="272" y2="45" stroke="#52b788" stroke-width="4"
+                                stroke-linecap="round" />
+                            <line x1="278" y1="190" x2="265" y2="50" stroke="#74c69d" stroke-width="3.5"
+                                stroke-linecap="round" />
+                            <path d="M272 45 Q255 30 238 48" fill="none" stroke="#40916c" stroke-width="3" />
+                        </g>
+
+                        <!-- 3. RIVER HORIZON & MORNING GOLDEN REFLECTION (y=185 to 280) -->
+                        <g id="river-surface">
+                            <!-- Horizon Line -->
+                            <line x1="0" y1="185" x2="320" y2="185" stroke="rgba(255, 234, 153, 0.5)"
+                                stroke-width="1.5" />
+
+                            <!-- Shimmering Morning Gold Reflection Pillar -->
+                            <g id="dawn-water-reflection">
+                                <ellipse cx="160" cy="195" rx="60" ry="5.5" fill="#ffffff" opacity="0.8" />
+                                <ellipse cx="160" cy="209" rx="48" ry="4.5" fill="#ffea99" opacity="0.7" />
+                                <ellipse cx="160" cy="223" rx="35" ry="3.5" fill="#ffb703" opacity="0.6" />
+                                <ellipse cx="160" cy="238" rx="22" ry="2.5" fill="#fb8500" opacity="0.5" />
+                            </g>
+
+                            <!-- Floating Diyas on Misty Morning River -->
+                            <g id="ghat-diyas" opacity="0.85">
+                                <circle cx="52" cy="210" r="4" fill="#ffea99" filter="drop-shadow(0 0 8px #ffb703)" />
+                                <circle cx="268" cy="215" r="4" fill="#ffea99" filter="drop-shadow(0 0 8px #ffb703)" />
+                                <circle cx="82" cy="245" r="3.5" fill="#ffb703" filter="drop-shadow(0 0 8px #fb5600)" />
+                                <circle cx="238" cy="240" r="3.5" fill="#ffb703"
+                                    filter="drop-shadow(0 0 8px #fb5600)" />
+                            </g>
+
+                            <!-- Expanding Arghya Ripples -->
+                            <ellipse id="bhor-ripple-1" cx="160" cy="215" rx="45" ry="12" fill="none" stroke="#ffffff"
+                                stroke-width="2" opacity="0" />
+                            <ellipse id="bhor-ripple-2" cx="160" cy="215" rx="75" ry="20" fill="none" stroke="#ffea99"
+                                stroke-width="1.5" opacity="0" />
+                        </g>
+
+                        <!-- 4. SACRED BAMBOO SOOP RAISED TOWARDS RISING SUN -->
+                        <g id="sacred-soop-group" transform="translate(0, 8)">
+                            <path d="M98 182 L222 182 L208 216 Q160 226 112 216 Z" fill="url(#soopBamboo)"
+                                stroke="#ffea99" stroke-width="1.8" filter="drop-shadow(0 8px 16px rgba(0,0,0,0.8))" />
+                            <!-- Sindoor Stripes -->
+                            <line x1="115" y1="182" x2="115" y2="190" stroke="#d90429" stroke-width="3.5" />
+                            <line x1="160" y1="182" x2="160" y2="190" stroke="#d90429" stroke-width="3.5" />
+                            <line x1="205" y1="182" x2="205" y2="190" stroke="#d90429" stroke-width="3.5" />
+
+                            <!-- Offerings Inside Soop -->
+                            <g id="soop-offerings">
+                                <!-- Coconut -->
+                                <ellipse cx="160" cy="178" rx="16" ry="13" fill="#6f3b15" stroke="#ffea99"
+                                    stroke-width="1" />
+                                <circle cx="160" cy="175" r="3" fill="#d90429" />
+                                <!-- Bananas -->
+                                <path d="M118 182 Q132 162 146 174" fill="none" stroke="#ffd166" stroke-width="6"
+                                    stroke-linecap="round" />
+                                <path d="M124 185 Q138 167 150 178" fill="none" stroke="#ffea99" stroke-width="5"
+                                    stroke-linecap="round" />
+                                <!-- Golden Thekua Stack -->
+                                <ellipse cx="188" cy="180" rx="13" ry="7" fill="#b5541c" stroke="#ffea99"
+                                    stroke-width="0.8" />
+                                <ellipse cx="185" cy="175" rx="12" ry="6.5" fill="#c86428" stroke="#ffea99"
+                                    stroke-width="0.8" />
+                                <!-- Glowing Diya inside Soop -->
+                                <circle cx="132" cy="186" r="6" fill="#9c3d10" />
+                                <path
+                                    d="M132 172 C132 172 137 180 135 185 C133 188 131 188 129 185 C127 180 132 172 132 172 Z"
+                                    fill="#ffffff" filter="drop-shadow(0 0 10px #ffea99)" />
+                            </g>
+                        </g>
+
+                        <!-- 5. VIRTUAL BRASS LOTA POURING MORNING ARGHYA (Step 2) -->
+                        <g id="arghya-lota-group" opacity="0" transform="translate(130, 12)">
+                            <g id="lota-vessel">
+                                <ellipse cx="30" cy="12" rx="14" ry="5" fill="#7f2b00" stroke="#ffea99"
+                                    stroke-width="1.2" />
+                                <path d="M16 12 Q4 32 18 48 L42 48 Q56 32 44 12 Z" fill="url(#copperLota)"
+                                    stroke="#ffea99" stroke-width="1" />
+                            </g>
+                        </g>
+
+                        <!-- Milk & Gangajal Stream -->
+                        <line id="bhor-milk-stream" x1="160" y1="60" x2="160" y2="195" stroke="#ffffff"
+                            stroke-width="4.5" stroke-linecap="round" filter="drop-shadow(0 0 10px #ffffff)" />
+                        <line id="bhor-water-stream" x1="164" y1="60" x2="164" y2="195" stroke="#ffea99"
+                            stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                </div>
+
+                <!-- Right: Dynamic Ritual Narrative & Controls -->
+                <div class="ritual-narrative" id="narrative-box">
+                    <div class="hindi-font hindi-mantra-tag" id="stage-hindi">१. ब्रह्म मुहूर्त एवं प्रथम किरण की
+                        प्रतीक्षा</div>
+                    <h3 class="stage-heading" id="stage-title">Step 1: The Pre-Dawn Vigil in Sacred Waters</h3>
+                    <p class="stage-body" id="stage-desc">
+                        Long before sunrise, under a canopy of fading stars and cool river mist, Vrati devotees enter
+                        the holy water holding bamboo Soops. Facing East in deep meditation, the entire ghat awaits the
+                        arrival of Usha—the Vedic Goddess of Dawn.
+                    </p>
+
+                    <div class="qualities-badges" id="stage-badges">
+                        <span class="q-badge">🌌 Brahma-Muhurta Stillness</span>
+                        <span class="q-badge">🪔 Floating Diyas in Mist</span>
+                        <span class="q-badge">🧘‍♀️ 36 Hours of Unbroken Vow</span>
+                    </div>
+
+                    <button class="ritual-action-btn" id="ritual-btn" onclick="triggerBhorStep()">
+                        Awaken the First Crimson Dawn 🌅
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 6. THE 4 SACRED SPECIFICATIONS OF BHOR ARGHYA & PARAN -->
+        <h2 class="section-heading">The Sacred Specifications of Bhor Arghya</h2>
+        <p class="section-sub">A morning of prayer, gratitude and the sharing of Chhath Mahaprasad.</p>
+
+        <section class="qualities-grid">
+
+            <div class="quality-card">
+                <div class="q-icon">🌄</div>
+                <h3>Usha Arghya</h3>
+                <div class="hindi-font q-hindi">उदीयमान सूर्य को अर्घ्य</div>
+                <p>
+                    Before sunrise, Vratis stand in the water facing east
+                    and offer Arghya to the rising Surya Dev. This sacred
+                    prayer expresses gratitude to the source of light,
+                    energy and life, while devotees also seek the blessings
+                    of Chhathi Maiya.
+                </p>
+            </div>
+
+            <div class="quality-card">
+                <div class="q-icon">🙏</div>
+                <h3>Parana: Completion of the Vrat</h3>
+                <div class="hindi-font q-hindi">महाव्रत का पारण</div>
+                <p>
+                    After Usha Arghya, the Nirjala Vrat that began after
+                    Kharna is brought to its conclusion. The Vrati breaks
+                    the fast according to family tradition, often beginning
+                    with water or milk and a small portion of Prasad.
+                </p>
+            </div>
+
+            <div class="quality-card">
+                <div class="q-icon">🌺</div>
+                <h3>The Tradition of Sindoor</h3>
+                <div class="hindi-font q-hindi">लंबा सिंदूर लगाने की परंपरा</div>
+                <p>
+                    In many families, married women wear a long line of
+                    orange or vermilion sindoor extending from the nose
+                    towards the forehead or hairline. It is a cherished
+                    regional expression of devotion and auspiciousness.
+                </p>
+            </div>
+
+            <div class="quality-card">
+                <div class="q-icon">🍪</div>
+                <h3>Sharing Mahaprasad</h3>
+                <div class="hindi-font q-hindi">महाप्रसाद का वितरण</div>
+                <p>
+                    After the worship, Chhath Prasad such as Thekua,
+                    fruits and other sacred offerings are shared with
+                    family members, relatives, neighbours and fellow
+                    devotees. The joy of receiving and sharing Prasad
+                    brings the community together.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <a href="https://www.instagram.com/_kr._shubham" target="_blank" class="creator-badge">
+        Crafted with devotion by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <!-- SCRIPTS -->
+    <script>
+
+        const bgm = document.getElementById('bgm');
+
+        document.addEventListener("DOMContentLoaded", () => {
+            sessionStorage.setItem('lastFestivalSection', 'chhath.html');
+
+            // If inside chhath.html seamless portal, let parent play audio uninterrupted
+            if (window.self !== window.top) {
+                bgm.pause();
+                bgm.muted = true;
+            } else {
+                const savedTime = parseFloat(sessionStorage.getItem('chhath_bgm_time') || '0');
+                const isMuted = sessionStorage.getItem('chhath_bgm_muted') === 'true';
+                bgm.volume = 0.5;
+                bgm.muted = isMuted;
+                if (savedTime > 0) {
+                    try { bgm.currentTime = savedTime; } catch (e) { }
+                }
+                bgm.play().catch(() => {
+                    document.addEventListener('click', () => bgm.play().catch(() => { }), { once: true });
+                });
+                setInterval(() => {
+                    if (!bgm.paused) sessionStorage.setItem('chhath_bgm_time', bgm.currentTime);
+                }, 300);
+            }
+        });
+
+
+        let currentStep = 0;
+        let bhorArghyaCount = 0;
+
+        const bhorSteps = [
+            {
+                hindi: "१. उषाकाल एवं प्रथम किरण की प्रतीक्षा",
+                title: "Step 1: Waiting for the First Light",
+                desc: "Before sunrise, Vratis and their families gather at the riverbank or a nearby water body with the Puja offerings arranged in bamboo Soop and Daura. Standing in the water and facing east, they wait in prayerful silence for the first rays of the rising Sun. Traditional Chhath Geet fill the morning with devotion.",
+                badges: [
+                    "🌌 Pre-Dawn at the Ghat",
+                    "🧺 Bamboo Soop & Daura",
+                    "🙏 Waiting for Usha Arghya"
+                ],
+                btnText: "Welcome the First Light 🌅",
+                status: "🌌 Before Sunrise • The Sacred Wait"
+            },
+            {
+                hindi: "२. उदीयमान सूर्य देव को उषा अर्घ्य",
+                title: "Step 2: Offering Arghya to the Rising Sun",
+                desc: "As Surya Dev rises above the eastern horizon, the Vrati offers Arghya while standing in the water, with folded hands and deep devotion. Water is offered, and milk is included in many family traditions. This prayer expresses gratitude to Surya Dev for sustaining all life and seeks the blessings of Chhathi Maiya.",
+                badges: [
+                    "🌄 Usha Arghya",
+                    "🙏 Prayer to Surya Dev",
+                    "✨ Gratitude & Devotion"
+                ],
+                btnText: "Offer Usha Arghya 🌄",
+                status: "🌅 The First Rays of Surya Dev"
+            },
+            {
+                hindi: "३. महाव्रत पारण एवं महाप्रसाद वितरण",
+                title: "Step 3: Completing the Vrat with Parana",
+                desc: "After the morning Arghya, the rigorous Nirjala Vrat observed since Kharna comes to an end. The Vrati performs Parana according to family tradition, often with water or milk and a small portion of Prasad. The offerings are then shared with family members, relatives and devotees, carrying the blessings of Chhathi Maiya into every home.",
+                badges: [
+                    "🙏 Nirjala Vrat Completed",
+                    "🍃 Sacred Parana",
+                    "🍪 Mahaprasad Distribution"
+                ],
+                btnText: "Complete Parana & Share Prasad 🙏",
+                status: "☀️ Usha Arghya Completed • जय छठी मईया!"
+            }
+        ];
+
+        function updateBhorUI(stepIndex) {
+            currentStep = stepIndex;
+            const data = bhorSteps[stepIndex];
+
+            for (let i = 0; i < 3; i++) {
+                const tab = document.getElementById(`tab-${i}`);
+                tab.classList.remove('active', 'completed');
+                if (i < stepIndex) tab.classList.add('completed');
+                if (i === stepIndex) tab.classList.add('active');
+            }
+
+            gsap.fromTo("#narrative-box", { opacity: 0, x: 15 }, { opacity: 1, x: 0, duration: 0.45 });
+            document.getElementById('stage-hindi').textContent = data.hindi;
+            document.getElementById('stage-title').textContent = data.title;
+            document.getElementById('stage-desc').textContent = data.desc;
+            document.getElementById('ritual-btn').textContent = data.btnText;
+            document.getElementById('arghya-status').textContent = data.status;
+
+            const badgeContainer = document.getElementById('stage-badges');
+            badgeContainer.innerHTML = data.badges.map(b => `<span class="q-badge">${b}</span>`).join('');
+
+            const viewport = document.getElementById('ghat-viewport');
+
+            if (stepIndex === 0) {
+                // Pre-dawn night sky: Sun hidden below water (y=220)
+                gsap.to("#rising-sun-group", { x: 160, y: 220, duration: 0.8 });
+                gsap.to("#morning-stars", { opacity: 0.85, duration: 0.6 });
+                gsap.to("#usha-sun-rays", { opacity: 0, duration: 0.5 });
+                gsap.to("#dawn-water-reflection", { opacity: 0.15, duration: 0.6 });
+                gsap.to("#arghya-lota-group", { opacity: 0, duration: 0.4 });
+                viewport.style.background = "linear-gradient(to bottom, #070514 0%, #191233 45%, #3b1c32 68%, #0d0714 68%, #040208 100%)";
+            } else if (stepIndex === 1) {
+                // First Dawn: Sun peeks above horizon (y=152), stars fade, sky turns saffron-crimson
+                gsap.to("#rising-sun-group", { x: 160, y: 152, duration: 1.2, ease: "power2.out" });
+                gsap.to("#morning-stars", { opacity: 0.15, duration: 0.8 });
+                gsap.to("#usha-sun-rays", { opacity: 0.65, duration: 0.8 });
+                gsap.to("#dawn-water-reflection", { opacity: 0.75, duration: 0.8 });
+                gsap.to("#arghya-lota-group", { opacity: 1, duration: 0.6 });
+                viewport.style.background = "linear-gradient(to bottom, #1d0b24 0%, #7c1d18 42%, #f77f00 68%, #240c04 68%, #080301 100%)";
+            } else if (stepIndex === 2) {
+                // Radiant Golden Morning: Sun high in sky (y=98), full golden rays
+                gsap.to("#rising-sun-group", { x: 160, y: 98, duration: 1.3, ease: "power2.out" });
+                gsap.to("#morning-stars", { opacity: 0, duration: 0.5 });
+                gsap.to("#usha-sun-rays", { opacity: 1, duration: 0.8 });
+                gsap.to("#dawn-water-reflection", { opacity: 1, duration: 0.8 });
+                gsap.to("#arghya-lota-group", { opacity: 1, duration: 0.5 });
+                viewport.style.background = "linear-gradient(to bottom, #3d1706 0%, #b54400 42%, #ffea99 68%, #361504 68%, #0a0401 100%)";
+            }
+        }
+
+        function jumpToStep(idx) {
+            updateBhorUI(idx);
+        }
+
+        function triggerBhorStep() {
+            const boxRect = document.getElementById('ghat-viewport').getBoundingClientRect();
+            const centerX = boxRect.left + boxRect.width / 2;
+            const centerY = boxRect.top + boxRect.height / 2;
+
+            if (currentStep === 0) {
+                // Step 1 -> Awaken the First Dawn Glow & Peek Sun above Horizon
+                spawnDawnParticles(centerX, centerY, '#ffb703', 55);
+                updateBhorUI(1);
+
+            } else if (currentStep === 1) {
+                // Step 2 -> Pour Sacred Morning Arghya as the Sun Rises Majestically!
+                bhorArghyaCount++;
+                const btn = document.getElementById('ritual-btn');
+                btn.disabled = true;
+
+                const tl = gsap.timeline();
+                tl.to("#lota-vessel", { rotation: 36, transformOrigin: "50% 50%", duration: 0.4 })
+                    .to("#bhor-milk-stream, #bhor-water-stream", { opacity: 1, duration: 0.2 })
+                    // Sun rises from y=152 to y=98 as Arghya is poured!
+                    .to("#rising-sun-group", { y: 98, duration: 1.5, ease: "power2.out" }, "<")
+                    .fromTo("#bhor-ripple-1", { scale: 0.3, opacity: 1 }, { scale: 1.5, opacity: 0, transformOrigin: "50% 50%", duration: 1.1, repeat: 1 }, "<")
+                    .fromTo("#bhor-ripple-2", { scale: 0.3, opacity: 0.85 }, { scale: 1.6, opacity: 0, transformOrigin: "50% 50%", duration: 1.3 }, "<0.2")
+                    .to("#dawn-sun-aura", { scale: 1.35, transformOrigin: "50% 50%", duration: 0.75, yoyo: true, repeat: 1 }, "<")
+                    .call(() => {
+                        spawnDawnParticles(centerX, centerY - 20, '#ffffff', 85);
+                    })
+                    .to("#bhor-milk-stream, #bhor-water-stream", { opacity: 0, duration: 0.3 })
+                    .to("#lota-vessel", { rotation: 0, duration: 0.4 })
+                    .call(() => {
+                        btn.disabled = false;
+                        updateBhorUI(2);
+                    });
+
+            } else if (currentStep === 2) {
+                // Final moment: Parana and Mahaprasad
+                spawnDawnParticles(centerX, centerY - 30, '#ffea99', 110);
+
+                gsap.to("#deity-bg", {
+                    opacity: 0.72,
+                    filter: "drop-shadow(0 0 75px rgba(255, 234, 153, 0.95)) brightness(1.3)",
+                    duration: 1
+                });
+
+                gsap.fromTo(
+                    "#sacred-soop-group",
+                    { y: 8 },
+                    { y: 0, duration: 0.4, yoyo: true, repeat: 1 }
+                );
+
+                document.getElementById('tab-2').classList.add('completed');
+
+                document.getElementById('arghya-status').textContent =
+                    "🙏 Usha Arghya & Parana Complete • जय छठी मईया!";
+
+                const btn = document.getElementById('ritual-btn');
+
+                btn.textContent = "🌅 Replay the Morning Ritual";
+                btn.onclick = () => {
+                    btn.onclick = null;
+                    currentStep = 0;
+                    updateBhorUI(0);
+                };
+            }
+        }
+
+
+        const canvas = document.getElementById('bhor-canvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+        let particles = [];
+
+        for (let i = 0; i < 45; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 0.35,
+                vy: -(Math.random() * 0.55 + 0.15),
+                size: Math.random() * 2.5 + 0.6,
+                alpha: Math.random() * 0.7 + 0.15,
+                color: ['#ffffff', '#ffea99', '#ffb703'][i % 3],
+                ambient: true
+            });
+        }
+
+        function spawnDawnParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 1.2;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 1.2,
+                    size: Math.random() * 4 + 1.5,
+                    alpha: 1,
+                    decay: Math.random() * 0.016 + 0.009,
+                    color: ['#ffffff', '#ffea99', '#ffb703', '#fb8500'][Math.floor(Math.random() * 4)],
+                    ambient: false
+                });
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, w, h);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.ambient) {
+                    if (p.y < 0) p.y = h;
+                    if (p.x < 0) p.x = w;
+                    if (p.x > w) p.x = 0;
+                } else {
+                    p.vy += 0.025;
+                    p.alpha -= p.decay;
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+                }
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        animateCanvas();
+    </script>
+</body>
+
+</html>

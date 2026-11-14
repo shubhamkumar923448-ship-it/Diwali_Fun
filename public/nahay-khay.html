@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Day 1: Nahay Khay - The Chhath Edit</title>
+
+    <!-- Exact Diwali & Chhath Luxury Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&family=Yatra+One&display=swap"
+        rel="stylesheet">
+
+    <!-- GSAP for Physics & Ritual Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <link rel="stylesheet" href="global.css">
+
+    <style>
+        :root {
+            --bg-void: #070301;
+            --gold-light: #ffea99;
+            --gold-deep: #ffb703;
+            --fire-orange: #fb8500;
+            --aqua-sacred: #48cae4;
+            --glass-bg: rgba(22, 11, 6, 0.72);
+            --glass-border: rgba(255, 215, 0, 0.28);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 50% 8%, rgba(72, 202, 228, 0.12) 0%, transparent 55%),
+                radial-gradient(circle at 50% 45%, rgba(251, 133, 0, 0.16) 0%, transparent 65%),
+                radial-gradient(circle at 50% 95%, rgba(255, 183, 3, 0.12) 0%, transparent 60%);
+        }
+
+        .hindi-font {
+            font-family: 'Yatra One', system-ui;
+        }
+
+        /* === 1. INTERACTIVE WATER & GOLDEN STEAM CANVAS === */
+        #purity-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* === 2. BLENDED DEITY BACKDROP === */
+        .deity-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        .deity {
+            height: clamp(360px, 75vh, 850px);
+            width: auto;
+            max-width: 95vw;
+            object-fit: contain;
+            opacity: 0.38;
+            -webkit-mask-image: radial-gradient(ellipse 52% 62% at 50% 42%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.45) 50%, transparent 75%);
+            mask-image: radial-gradient(ellipse 52% 62% at 50% 42%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.45) 50%, transparent 75%);
+            filter: drop-shadow(0 0 40px rgba(255, 183, 3, 0.5)) brightness(1.12);
+            mix-blend-mode: lighten;
+        }
+
+        /* === 3. HEADER === */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(15px, 3vw, 25px) clamp(18px, 5vw, 50px);
+            position: relative;
+            z-index: 20;
+        }
+
+        .logo-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: clamp(14px, 3vw, 28px);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.78);
+            text-decoration: none;
+            font-size: clamp(0.82rem, 1.5vw, 1rem);
+            transition: 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-light);
+        }
+
+        /* === 4. HERO & RITUAL STAGE === */
+        .page-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 10px 18px 120px;
+        }
+
+        .hero-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .day-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(72, 202, 228, 0.12);
+            border: 1px solid rgba(72, 202, 228, 0.4);
+            color: #ade8f4;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            box-shadow: 0 0 20px rgba(72, 202, 228, 0.2);
+        }
+
+        .subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.7rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .main-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2rem, 5.5vw, 3.6rem);
+            background: linear-gradient(to bottom, #ffffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.5));
+            margin: 4px 0 10px;
+        }
+
+        .poetic-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.05rem, 2.3vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+            max-width: 680px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* === 5. THE INTERACTIVE SACRED ALTAR (Centerpiece) === */
+        .ritual-sanctuary {
+            background: linear-gradient(145deg, rgba(26, 13, 7, 0.82), rgba(8, 3, 2, 0.94));
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: clamp(24px, 4vw, 40px);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 215, 0, 0.06);
+            margin-bottom: 45px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Step Progress Bar */
+        .step-tracker {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(10px, 3vw, 25px);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .step-node {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: clamp(0.72rem, 1.8vw, 0.82rem);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .step-node.active {
+            border-color: var(--gold-light);
+            background: rgba(255, 183, 3, 0.18);
+            color: var(--gold-light);
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.3);
+            font-weight: 600;
+        }
+
+        .step-node.completed {
+            border-color: #48cae4;
+            background: rgba(72, 202, 228, 0.15);
+            color: #ade8f4;
+        }
+
+        /* Interactive SVG Stage */
+        .interactive-stage {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: clamp(20px, 4vw, 40px);
+            align-items: center;
+        }
+
+        @media (max-width: 820px) {
+            .interactive-stage {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        .visual-altar-box {
+            position: relative;
+            height: 290px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(255, 183, 3, 0.1) 0%, rgba(0, 0, 0, 0.4) 75%);
+            border-radius: 22px;
+            border: 1px dashed rgba(255, 215, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .stage-svg {
+            width: 220px;
+            height: 220px;
+            overflow: visible;
+        }
+
+        /* Water Stream & Steam Animations */
+        #water-stream {
+            opacity: 0;
+            stroke-dasharray: 12 6;
+            animation: streamFlow 0.5s linear infinite;
+        }
+
+        @keyframes streamFlow {
+            to {
+                stroke-dashoffset: -18;
+            }
+        }
+
+        .water-ripple-ring {
+            opacity: 0;
+            transform-origin: center;
+        }
+
+        #chulha-flames {
+            opacity: 0.15;
+            transform-origin: 50% 90%;
+            animation: flameDance 1.2s ease-in-out infinite alternate;
+            transition: opacity 0.6s;
+        }
+
+        @keyframes flameDance {
+            0% {
+                transform: scale(0.95) rotate(-2deg);
+            }
+
+            100% {
+                transform: scale(1.06) rotate(2deg);
+            }
+        }
+
+        .aroma-steam {
+            opacity: 0;
+            animation: riseSteam 3s ease-in-out infinite;
+        }
+
+        @keyframes riseSteam {
+            0% {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.75;
+            }
+
+            100% {
+                transform: translateY(-35px);
+                opacity: 0;
+            }
+        }
+
+        /* Right Side Ritual Details */
+        .ritual-narrative {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hindi-mantra-tag {
+            font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+            color: var(--gold-deep);
+            margin-bottom: 6px;
+            text-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+        }
+
+        .stage-heading {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.3rem, 3vw, 1.9rem);
+            color: var(--gold-light);
+            margin-bottom: 12px;
+        }
+
+        .stage-body {
+            font-size: clamp(0.88rem, 2vw, 1rem);
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .qualities-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 820px) {
+            .qualities-badges {
+                justify-content: center;
+            }
+        }
+
+        .q-badge {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .ritual-action-btn {
+            background: linear-gradient(45deg, var(--gold-deep), var(--fire-orange));
+            border: none;
+            color: #000;
+            font-family: 'Cinzel Decorative', serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1.2px;
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(251, 133, 0, 0.4), inset 0 0 12px rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            align-self: flex-start;
+        }
+
+        @media (max-width: 820px) {
+            .ritual-action-btn {
+                align-self: center;
+                width: 100%;
+            }
+        }
+
+        .ritual-action-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(255, 183, 3, 0.65);
+        }
+
+        /* === 6. IMPORTANCE & SPIRITUAL QUALITIES GRID === */
+        .section-heading {
+            text-align: center;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.5rem, 4vw, 2.3rem);
+            color: var(--gold-light);
+            margin: 20px 0 10px;
+            text-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+        }
+
+        .section-sub {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .qualities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .quality-card {
+            background: linear-gradient(145deg, rgba(25, 14, 9, 0.75), rgba(10, 5, 3, 0.92));
+            border: 1px solid var(--glass-border);
+            border-radius: 22px;
+            padding: 26px 22px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s ease;
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.04), 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .quality-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold-light);
+            box-shadow: 0 18px 35px rgba(255, 183, 3, 0.25), inset 0 0 25px rgba(255, 215, 0, 0.12);
+        }
+
+        .q-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.07);
+            border: 1px dashed var(--gold-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 15px;
+            transition: 0.4s;
+        }
+
+        .quality-card:hover .q-icon {
+            transform: scale(1.12);
+            background: rgba(255, 215, 0, 0.2);
+            border-style: solid;
+        }
+
+        .quality-card h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+        }
+
+        .quality-card .q-hindi {
+            font-size: 0.95rem;
+            color: var(--gold-deep);
+            margin-bottom: 10px;
+        }
+
+        .quality-card p {
+            font-size: 0.84rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* === 7. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.68rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.65);
+            padding: 7px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.15rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 4px;
+        }
+
+        .creator-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="bgm" loop preload="auto">
+        <source src="assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="/assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="../public/assets/tunes/tune.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 1. INTERACTIVE WATER DROPLETS & GOLDEN STEAM CANVAS -->
+    <canvas id="purity-canvas"></canvas>
+
+    <!-- 2. BLENDED DEITY BACKDROP -->
+    <div class="deity-container">
+        <img src="assets/images/chathi-maiya.jpeg" onerror="this.onerror=null; this.src='assets/chhathi-maiya.png';"
+            alt="Chhathi Maiya" class="deity">
+    </div>
+
+    <!-- 3. HEADER -->
+    <header>
+        <a href="chhath.html" class="logo-text">The Chhath Edit</a>
+        <nav class="nav-links">
+            <a href="chhath.html">← Back to Ghat</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <!-- 4. MAIN CONTENT -->
+    <main class="page-container">
+
+        <div class="hero-header">
+            <div class="day-pill">💧 Day 1 of the Mahaparv • कार्तिक शुक्ल चतुर्थी</div>
+            <h2 class="subtitle">The First Day of Sacred Observance</h2>
+            <h1 class="main-title">Nahay Khay</h1>
+            <p class="poetic-desc">The Chhath Mahaparv begins with Nahay Khay, a day devoted to
+                cleanliness, purity and preparation. Devotees take a sacred bath,
+                prepare a simple Satvik meal and begin the observance with faith
+                and discipline, in reverence to Surya Dev and Chhathi Maiya.</p>
+        </div>
+
+        <!-- 5. INTERACTIVE 3-STEP RITUAL SANCTUARY -->
+        <section class="ritual-sanctuary">
+
+            <!-- Stepper -->
+            <div class="step-tracker">
+                <div class="step-node active" id="tab-0" onclick="jumpToStep(0)">
+                    <span>1. पवित्र स्नान</span> (Holy Dip)
+                </div>
+                <div class="step-node" id="tab-1" onclick="jumpToStep(1)">
+                    <span>2. घर एवं रसोई की शुद्धि</span> (Purifying the Home)
+                </div>
+                <div class="step-node" id="tab-2" onclick="jumpToStep(2)">
+                    <span>3.सात्विक भोजन/(कद्दू-भात प्रसाद)</span> (Kaddu-Bhat)/(Satvik Meal)
+                </div>
+            </div>
+
+            <div class="interactive-stage">
+                <!-- Left: Animated SVG Altar -->
+                <div class="visual-altar-box" id="altar-box">
+                    <svg class="stage-svg" viewBox="0 0 220 220">
+                        <defs>
+                            <linearGradient id="brassGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#ffea99" />
+                                <stop offset="50%" stop-color="#ffb703" />
+                                <stop offset="100%" stop-color="#9c5a00" />
+                            </linearGradient>
+                            <linearGradient id="clayStove" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#8d3b14" />
+                                <stop offset="100%" stop-color="#3d1404" />
+                            </linearGradient>
+                            <radialGradient id="waterGlow">
+                                <stop offset="0%" stop-color="#48cae4" stop-opacity="0.8" />
+                                <stop offset="100%" stop-color="#48cae4" stop-opacity="0" />
+                            </radialGradient>
+                        </defs>
+
+                        <!-- Background Aura Circle -->
+                        <circle id="stage-aura" cx="110" cy="115" r="78" fill="url(#waterGlow)" opacity="0.45" />
+
+                        <!-- GROUP A: SACRED KALASH & RIVER WATER (Step 1) -->
+                        <g id="svg-kalash-group">
+                            <!-- Tilted Brass Kalash pouring water -->
+                            <g id="kalash-vessel" transform="translate(80, 20)">
+                                <ellipse cx="30" cy="12" rx="16" ry="5" fill="#9c5a00" stroke="#ffea99"
+                                    stroke-width="1.5" />
+                                <path d="M16 12 Q8 35 20 52 L40 52 Q52 35 44 12 Z" fill="url(#brassGrad)" />
+                                <ellipse cx="30" cy="52" rx="12" ry="4" fill="#7a4400" />
+                            </g>
+                            <!-- Flowing Water Stream -->
+                            <line id="water-stream" x1="110" y1="72" x2="110" y2="165" stroke="#90e0ef" stroke-width="5"
+                                stroke-linecap="round" />
+                            <!-- Water Ripples at Bottom -->
+                            <ellipse class="water-ripple-ring" id="ripple-1" cx="110" cy="168" rx="35" ry="9"
+                                fill="none" stroke="#90e0ef" stroke-width="2" />
+                            <ellipse class="water-ripple-ring" id="ripple-2" cx="110" cy="168" rx="60" ry="15"
+                                fill="none" stroke="#48cae4" stroke-width="1.2" />
+                        </g>
+
+                        <!-- GROUP B: MITTI KA CHULHA & KADDU-BHAT HANDI (Steps 2 & 3) -->
+                        <g id="svg-chulha-group" opacity="0.25">
+                            <!-- Rising Golden Steam (Step 3) -->
+                            <g id="steam-group">
+                                <path class="aroma-steam" d="M95 85 Q88 70 98 55 Q106 40 95 25" fill="none"
+                                    stroke="#ffea99" stroke-width="2.5" stroke-linecap="round" />
+                                <path class="aroma-steam" style="animation-delay: 1s;"
+                                    d="M112 80 Q120 65 110 50 Q102 35 114 20" fill="none" stroke="#ffb703"
+                                    stroke-width="2.5" stroke-linecap="round" />
+                                <path class="aroma-steam" style="animation-delay: 2s;"
+                                    d="M128 85 Q135 70 125 55 Q118 40 128 28" fill="none" stroke="#ffea99"
+                                    stroke-width="2" stroke-linecap="round" />
+                            </g>
+
+                            <!-- Brass Handi (Cooking Pot) -->
+                            <g id="brass-handi" transform="translate(0, 5)">
+                                <ellipse cx="110" cy="92" rx="32" ry="7" fill="#7a4400" stroke="#ffea99"
+                                    stroke-width="1.5" />
+                                <!-- Glowing Kaddu-Bhat inside pot -->
+                                <ellipse id="prasad-glow" cx="110" cy="92" rx="27" ry="5" fill="#ffb703" opacity="0" />
+                                <path d="M78 92 Q65 125 90 142 L130 142 Q155 125 142 92 Z" fill="url(#brassGrad)"
+                                    stroke="#ffea99" stroke-width="1" />
+                            </g>
+
+                            <!-- Mitti Ka Chulha (Sacred Clay Hearth) -->
+                            <path d="M62 142 L158 142 L168 188 L52 188 Z" fill="url(#clayStove)" stroke="#ffb703"
+                                stroke-width="1.2" />
+                            <!-- Chulha Arch Opening -->
+                            <path d="M88 188 Q110 150 132 188 Z" fill="#120401" stroke="#fb8500" stroke-width="1" />
+
+                            <!-- Sacred Mango-Wood Flames -->
+                            <g id="chulha-flames">
+                                <path
+                                    d="M110 146 C110 146 126 164 121 178 C117 186 103 186 99 178 C94 164 110 146 110 146 Z"
+                                    fill="#ff5400" />
+                                <path
+                                    d="M110 155 C110 155 120 168 117 178 C114 184 106 184 103 178 C100 168 110 155 110 155 Z"
+                                    fill="#ffea99" />
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Right: Dynamic Ritual Explanation & Action -->
+                <div class="ritual-narrative" id="narrative-box">
+                    <div class="hindi-font hindi-mantra-tag" id="stage-hindi">१. गंगा स्नान एवं संकल्प</div>
+                    <h3 class="stage-heading" id="stage-title">Step 1: The Sacred River Bath</h3>
+                    <p class="stage-body" id="stage-desc">
+                        On Kartik Shukla Chaturthi, devotees begin the Chhath observance
+                        with a sacred bath, traditionally in a river or other holy water
+                        body. They wear clean clothes and prepare themselves for the
+                        days of devotion ahead. Where a river bath is not possible,
+                        household traditions may include bathing at home with Gangajal.
+                    </p>
+
+                    <div class="qualities-badges" id="stage-badges">
+                        <span class="q-badge">💧 Physical & Mental Cleansing</span>
+                        <span class="q-badge">🌅 Morning Sankalp</span>
+                        <span class="q-badge">🕊️ Dissolution of Ego</span>
+                    </div>
+
+                    <button class="ritual-action-btn" id="ritual-btn" onclick="triggerRitualStep()">
+                        Begin the Sacred Bath 💧
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 6. THE 4 PILLARS OF NAHAY KHAY (Qualities & Specifications) -->
+        <h2 class="section-heading">The Traditions of Nahay Khay</h2>
+        <p class="section-sub">The first day of Chhath reflects simplicity, cleanliness and
+            devotion through age-old household traditions.</p>
+
+        <section class="qualities-grid">
+            <div class="quality-card">
+                <div class="q-icon">🥣</div>
+                <h3>Traditional Nahay Khay Meal</h3>
+                <div class="hindi-font q-hindi">कद्दू, अरवा चावल और चना दाल</div>
+                <p>The traditional meal commonly includes kaddu ki sabzi,
+                    Arwa rice (unparboiled rice) and chana dal. Prepared with
+                    care and simplicity, this Satvik meal marks the beginning
+                    of the Chhath observance.</p>
+            </div>
+
+            <div class="quality-card">
+                <div class="q-icon">🔥</div>
+                <h3>A Pure Cooking Space</h3>
+                <div class="hindi-font q-hindi">मिट्टी का चूल्हा और आम की लकड़ी</div>
+                <p>Special attention is given to the cleanliness of the
+                    kitchen, cooking vessels and preparation area. Many
+                    households traditionally prepare the food on a separate
+                    clay stove (Mitti ka Chulha), keeping the ritual meal
+                    distinct from everyday cooking.</p>
+            </div>
+
+            <div class="quality-card">
+                <div class="q-icon">🧂</div>
+                <h3>Simple & Satvik Ingredients</h3>
+                <div class="hindi-font q-hindi">सात्विक सामग्री एवं शुद्धता</div>
+                <p> Fresh ingredients, clean utensils and careful preparation
+                    are central to the Nahay Khay meal. Many families avoid
+                    onion and garlic and follow their own traditions regarding
+                    salt, ghee and other ingredients.</p>
+            </div>
+
+            <div class="quality-card">
+                <div class="q-icon">🙏</div>
+                <h3>Ekabhukta: One Sacred Meal</h3>
+                <div class="hindi-font q-hindi">सूर्य देव के भोग के पश्चात ग्रहण</div>
+                <p> In many traditions, the Vrati observes Ekabhukta and
+                    partakes of the Nahay Khay meal only once during the day.
+                    The meal is prepared and consumed with devotion, marking
+                    the beginning of the discipline of Chhath.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 7. CONSTANT FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham" target="_blank" class="creator-badge">
+        Crafted with devotion by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <!-- SCRIPTS -->
+    <script>
+
+        const bgm = document.getElementById('bgm');
+
+        document.addEventListener("DOMContentLoaded", () => {
+            sessionStorage.setItem('lastFestivalSection', 'chhath.html');
+
+            // If opened inside chhath.html's seamless portal, parent is ALREADY playing the music!
+            if (window.self !== window.top) {
+                bgm.pause();
+                bgm.muted = true;
+            } else {
+                // If user opened nahay-khay.html directly, resume from exact millisecond
+                const savedTime = parseFloat(sessionStorage.getItem('chhath_bgm_time') || '0');
+                const isMuted = sessionStorage.getItem('chhath_bgm_muted') === 'true';
+                bgm.volume = 0.5;
+                bgm.muted = isMuted;
+                if (savedTime > 0) {
+                    try { bgm.currentTime = savedTime; } catch (e) { }
+                }
+                bgm.play().catch(() => {
+                    document.addEventListener('click', () => bgm.play().catch(() => { }), { once: true });
+                });
+                setInterval(() => {
+                    if (!bgm.paused) sessionStorage.setItem('chhath_bgm_time', bgm.currentTime);
+                }, 300);
+            }
+        });
+
+
+        let currentStep = 0;
+
+        const ritualSteps = [
+            {
+                hindi: "१. पवित्र स्नान एवं व्रत का संकल्प",
+                title: "Step 1: The Sacred Bath",
+                desc: "On Kartik Shukla Chaturthi, devotees begin the Chhath observance with a sacred bath, traditionally in a river or other holy water body. They wear clean clothes and prepare themselves for the days of devotion ahead. Where a river bath is not possible, household traditions may include bathing at home with Gangajal.",
+                badges: ["💧 Sacred Bath", "🙏 Vrat Sankalp", "🌿 Purity & Devotion"],
+                btnText: "Begin the Sacred Bath 💧"
+            },
+            {
+                hindi: "२. घर एवं रसोई की शुद्धि",
+                title: "Step 2: Preparing a Pure Space",
+                desc: "The home, courtyard and especially the kitchen are thoroughly cleaned. A clean and separate cooking space, utensils and stove are traditionally arranged for preparing the Nahay Khay meal. In many households, a clay stove and mango wood are used as part of this preparation.",
+                badges: ["🏠 Clean Home & Kitchen", "🧱 Traditional Chulha", "🌿 Ritual Cleanliness"],
+                btnText: "Prepare the Sacred Hearth 🔥"
+            },
+            {
+                hindi: "३. सात्विक कद्दू-भात का भोजन",
+                title: "Step 3: Preparing the Nahay Khay Meal",
+                desc: "A traditional Nahay Khay meal commonly includes kaddu ki sabzi, Arwa rice and chana dal. It is prepared with careful attention to cleanliness and the household's vrat traditions. In many homes, the food is offered with devotion before the Vrati partakes of the meal.",
+                badges: ["🥣 Kaddu & Arwa Rice", "🌾 Chana Dal", "🙏 Satvik Bhojan"],
+                btnText: "Complete the Nahay Khay Ritual 🙏"
+            }
+        ];
+
+        function updateStageUI(stepIndex) {
+            currentStep = stepIndex;
+            const data = ritualSteps[stepIndex];
+
+            // Update Stepper Tabs
+            for (let i = 0; i < 3; i++) {
+                const tab = document.getElementById(`tab-${i}`);
+                tab.classList.remove('active', 'completed');
+                if (i < stepIndex) tab.classList.add('completed');
+                if (i === stepIndex) tab.classList.add('active');
+            }
+
+            // Animate Text Transition
+            gsap.fromTo("#narrative-box", { opacity: 0, x: 15 }, { opacity: 1, x: 0, duration: 0.45 });
+            document.getElementById('stage-hindi').textContent = data.hindi;
+            document.getElementById('stage-title').textContent = data.title;
+            document.getElementById('stage-desc').textContent = data.desc;
+            document.getElementById('ritual-btn').textContent = data.btnText;
+
+            const badgeContainer = document.getElementById('stage-badges');
+            badgeContainer.innerHTML = data.badges.map(b => `<span class="q-badge">${b}</span>`).join('');
+
+            // Adjust SVG visibility based on step
+            if (stepIndex === 0) {
+                gsap.to("#svg-kalash-group", { opacity: 1, duration: 0.5 });
+                gsap.to("#svg-chulha-group", { opacity: 0.25, duration: 0.5 });
+                gsap.to("#chulha-flames", { opacity: 0.15, duration: 0.5 });
+                gsap.to(".aroma-steam", { opacity: 0, duration: 0.3 });
+            } else if (stepIndex === 1) {
+                gsap.to("#svg-kalash-group", { opacity: 0.2, duration: 0.5 });
+                gsap.to("#svg-chulha-group", { opacity: 1, duration: 0.5 });
+                gsap.to("#chulha-flames", { opacity: 0.3, duration: 0.5 });
+                gsap.to(".aroma-steam", { opacity: 0, duration: 0.3 });
+            } else if (stepIndex === 2) {
+                gsap.to("#svg-kalash-group", { opacity: 0.1, duration: 0.5 });
+                gsap.to("#svg-chulha-group", { opacity: 1, duration: 0.5 });
+                gsap.to("#chulha-flames", { opacity: 1, scale: 1.15, duration: 0.5 });
+                gsap.to("#prasad-glow", { opacity: 0.9, duration: 0.6 });
+                gsap.to(".aroma-steam", { opacity: 0.8, duration: 0.6 });
+            }
+        }
+
+        function jumpToStep(idx) {
+            updateStageUI(idx);
+        }
+
+        function triggerRitualStep() {
+            const boxRect = document.getElementById('altar-box').getBoundingClientRect();
+            const centerX = boxRect.left + boxRect.width / 2;
+            const centerY = boxRect.top + boxRect.height / 2;
+
+            if (currentStep === 0) {
+                // Step 1 Animation: Tilt Kalash & Pour Sacred Water
+                const tl = gsap.timeline();
+                tl.to("#kalash-vessel", { rotation: 28, transformOrigin: "50% 50%", duration: 0.4 })
+                    .to("#water-stream", { opacity: 1, duration: 0.2 })
+                    .fromTo("#ripple-1", { scale: 0.3, opacity: 1 }, { scale: 1.4, opacity: 0, duration: 1, repeat: 1 }, "<")
+                    .fromTo("#ripple-2", { scale: 0.3, opacity: 0.8 }, { scale: 1.5, opacity: 0, duration: 1.2 }, "<0.2")
+                    .call(() => spawnRitualParticles(centerX, centerY, '#48cae4', 45))
+                    .to("#water-stream", { opacity: 0, duration: 0.3 })
+                    .to("#kalash-vessel", { rotation: 0, duration: 0.4 })
+                    .call(() => updateStageUI(1));
+
+            } else if (currentStep === 1) {
+                // Step 2 Animation: Purify Courtyard & Ignite Mitti Ka Chulha
+                spawnRitualParticles(centerX, centerY, '#ffb703', 55);
+                const tl = gsap.timeline();
+                tl.to("#svg-chulha-group", { opacity: 1, scale: 1.05, transformOrigin: "50% 50%", duration: 0.5, yoyo: true, repeat: 1 })
+                    .to("#chulha-flames", { opacity: 1, scale: 1.2, duration: 0.6 }, "<")
+                    .call(() => updateStageUI(2));
+
+            } else if (currentStep === 2) {
+                // Step 3 Animation: Cook Kaddu-Bhat & Offer to Surya Dev
+                spawnRitualParticles(centerX, centerY - 20, '#ffea99', 80);
+                gsap.fromTo("#brass-handi", { scale: 1 }, { scale: 1.08, transformOrigin: "50% 50%", duration: 0.4, yoyo: true, repeat: 1 });
+
+                const btn = document.getElementById('ritual-btn');
+                btn.textContent = "✨ Nahay Khay Observance Complete (Replay) ✨";
+                document.getElementById('tab-2').classList.add('completed');
+
+                setTimeout(() => {
+                    btn.onclick = () => {
+                        btn.onclick = triggerRitualStep;
+                        updateStageUI(0);
+                    };
+                }, 400);
+            }
+        }
+
+
+        const canvas = document.getElementById('purity-canvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+        let particles = [];
+
+        // Ambient Sacred Droplets & Golden Motes
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: -(Math.random() * 0.5 + 0.15),
+                size: Math.random() * 2.2 + 0.6,
+                alpha: Math.random() * 0.6 + 0.15,
+                color: i % 3 === 0 ? '#48cae4' : '#ffea99',
+                ambient: true
+            });
+        }
+
+        function spawnRitualParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 1;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 1,
+                    size: Math.random() * 3.5 + 1.5,
+                    alpha: 1,
+                    decay: Math.random() * 0.018 + 0.01,
+                    color: color,
+                    ambient: false
+                });
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, w, h);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.ambient) {
+                    if (p.y < 0) p.y = h;
+                    if (p.x < 0) p.x = w;
+                    if (p.x > w) p.x = 0;
+                } else {
+                    p.alpha -= p.decay;
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+                }
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        animateCanvas();
+    </script>
+</body>
+
+</html>

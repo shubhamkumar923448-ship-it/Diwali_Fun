@@ -10,20 +10,17 @@ import AdminNote from '../models/adminNote.js';
 
 const router = express.Router();
 
-// 1. INITIAL SETUP ROUTE (Run once via Postman to set admin password in DB)
+// 1. SECURE ADMIN LOGIN ROUTE (Checks password against MongoDB)
 router.post('/login', async (req, res) => {
     try {
         console.log("📥 Incoming Login Request Body:", req.body);
         const { password } = req.body;
 
         const admin = await Admin.findOne({ username: 'admin' });
-        console.log("🔍 Admin found in DB:", admin);
 
         if (!admin) {
             return res.status(401).json({ success: false, message: 'Admin not initialized. Run /setup first.' });
         }
-
-        console.log(`🔐 Comparing -> Input: "${password}" vs DB: "${admin.password}"`);
 
         if (password === admin.password) {
             const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET || 'nexus_secret', { expiresIn: '24h' });
@@ -37,51 +34,38 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// 2. SECURE LOGIN ROUTE (Checks password against MongoDB)
-router.post('/login', async (req, res) => {
-    try {
-        const { password } = req.body;
-
-        // Find admin in database
-        const admin = await Admin.findOne({ username: 'admin' });
-
-        if (!admin) {
-            return res.status(401).json({ success: false, message: 'Admin not initialized. Run /setup first.' });
-        }
-
-        // Compare password directly from DB
-        if (password === admin.password) {
-            const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET || 'nexus_secret', { expiresIn: '24h' });
-            return res.status(200).json({ success: true, token, message: 'Authentication Granted from DB' });
-        }
-
-        return res.status(401).json({ success: false, message: 'Invalid Access Key' });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// 3. GET REAL-TIME DASHBOARD STATS & LOGS
+// 2. GET REAL-TIME DASHBOARD STATS & FULL UNLIMITED LOGS
 router.get('/dashboard-data', async (req, res) => {
     try {
-        const totalVisitors = await Visitor.countDocuments();
-        const totalWishes = await Wish.countDocuments();
-        const totalWhispers = await Whisper.countDocuments();
-        
+        // Fetch ALL records in parallel without any .limit(50) restriction!
+        const [
+            totalVisitors,
+            totalWishes,
+            totalWhispers,
+            visitors,
+            wishes,
+            oracleLogs,
+            whispers,
+            adminNotes,
+            metricsRaw
+        ] = await Promise.all([
+            Visitor.countDocuments(),
+            Wish.countDocuments(),
+            Whisper.countDocuments(),
+            Visitor.find().sort({ createdAt: -1 }).lean(),
+            Wish.find().sort({ createdAt: -1 }).lean(),
+            OracleLog.find().sort({ createdAt: -1 }).lean(),
+            Whisper.find().sort({ createdAt: -1 }).lean(),
+            AdminNote.find().sort({ createdAt: -1 }).lean(),
+            Metric.find().lean()
+        ]);
 
-        const visitors = await Visitor.find().sort({ createdAt: -1 }).limit(50);
-        const wishes = await Wish.find().sort({ createdAt: -1 }).limit(50);
-        const oracleLogs = await OracleLog.find().sort({ createdAt: -1 }).limit(50);
-        const whispers = await Whisper.find().sort({ createdAt: -1 }).limit(50);
-        const adminNotes = await AdminNote.find().sort({ createdAt: -1 }).limit(50);
-
-        const metricsRaw = await Metric.find();
         const metrics = {};
         metricsRaw.forEach(item => {
             metrics[item.key] = item.count;
         });
 
-        // Calculate last 7 days real visitor counts from database
+        // Calculate last 7 days real visitor & wish counts from database
         const chartLabels = [];
         const chartVisitorData = [];
         const chartInteractionData = [];
@@ -92,12 +76,13 @@ router.get('/dashboard-data', async (req, res) => {
             const dayString = d.toLocaleDateString('en-US', { weekday: 'short' });
             chartLabels.push(dayString);
 
-            // Start and end of that specific day
             const startOfDay = new Date(d.setHours(0, 0, 0, 0));
             const endOfDay = new Date(d.setHours(23, 59, 59, 999));
 
-            const dayVisitors = await Visitor.countDocuments({ createdAt: { $gte: startOfDay, $lte: endOfDay } });
-            const dayWishes = await Wish.countDocuments({ createdAt: { $gte: startOfDay, $lte: endOfDay } });
+            const [dayVisitors, dayWishes] = await Promise.all([
+                Visitor.countDocuments({ createdAt: { $gte: startOfDay, $lte: endOfDay } }),
+                Wish.countDocuments({ createdAt: { $gte: startOfDay, $lte: endOfDay } })
+            ]);
 
             chartVisitorData.push(dayVisitors);
             chartInteractionData.push(dayWishes);
@@ -123,10 +108,12 @@ router.get('/dashboard-data', async (req, res) => {
             metrics
         });
     } catch (error) {
+        console.error("❌ Dashboard Data Error:", error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
-// 4. DELETE WISH FROM TREE
+
+// 3. DELETE WISH FROM TREE
 router.delete('/wish/:id', async (req, res) => {
     try {
         await Wish.findByIdAndDelete(req.params.id);
@@ -135,13 +122,17 @@ router.delete('/wish/:id', async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
+
+// 4. LOG VISITOR
 router.post('/visitor', async (req, res) => {
     try {
         const { name, festival } = req.body;
+        const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'Local';
+
         const visitor = new Visitor({
             name: name || 'Anonymous Visitor',
             festival: festival || 'diwali',
-            ipAddress: req.ip
+            ipAddress: clientIp
         });
         await visitor.save();
         res.status(201).json({ success: true, message: 'Visitor logged successfully', data: visitor });

@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sacred Offering - The Chhath Edit</title>
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- GSAP for Physics & Timeline Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <link rel="stylesheet" href="global.css">
+
+    <style>
+        :root {
+            --bg-void: #0a0401;
+            --gold-light: #ffea99;
+            --gold-deep: #ffb703;
+            --fire-orange: #fb8500;
+            --glass-bg: rgba(20, 10, 5, 0.65);
+            --glass-border: rgba(255, 215, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 50% 10%, rgba(251, 133, 0, 0.18) 0%, transparent 70%),
+                radial-gradient(circle at 50% 90%, rgba(255, 183, 3, 0.12) 0%, transparent 60%);
+        }
+
+        /* === 1. INTERACTIVE RIVER & SKY CANVAS === */
+        #sacred-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* === 2. EXACT DIWALI DEITY BLEND (No Hard Edges!) === */
+        .deity-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        /* Subtle Solar Aura behind Maiya */
+        .solar-halo {
+            position: absolute;
+            top: 8%;
+            width: clamp(260px, 45vw, 480px);
+            height: clamp(260px, 45vw, 480px);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 183, 3, 0.28) 0%, rgba(251, 133, 0, 0.1) 50%, transparent 75%);
+            filter: blur(20px);
+            animation: breatheHalo 4s ease-in-out infinite alternate;
+        }
+
+        .deity {
+            height: clamp(380px, 78vh, 880px);
+            width: auto;
+            max-width: 95vw;
+            object-fit: contain;
+            opacity: 0.55;
+            /* Double-layered smooth feathering mask so edges disappear 100% into background */
+            -webkit-mask-image: radial-gradient(ellipse 52% 62% at 50% 42%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.5) 50%, transparent 75%);
+            mask-image: radial-gradient(ellipse 52% 62% at 50% 42%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.5) 50%, transparent 75%);
+            filter: drop-shadow(0 0 40px rgba(255, 183, 3, 0.55)) brightness(1.15) contrast(1.08);
+            mix-blend-mode: lighten;
+            transition: all 0.8s ease;
+        }
+
+        @media (max-width: 768px) {
+            .deity {
+                height: 58vh;
+                opacity: 0.42;
+                filter: drop-shadow(0 0 25px rgba(255, 183, 3, 0.45)) brightness(1.1);
+            }
+        }
+
+        @keyframes breatheHalo {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.12);
+                opacity: 1;
+            }
+        }
+
+        /* === 3. HEADER === */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(15px, 3vw, 25px) clamp(20px, 5vw, 50px);
+            position: relative;
+            z-index: 20;
+        }
+
+        .logo-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: clamp(14px, 3vw, 28px);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            font-size: clamp(0.82rem, 1.5vw, 1rem);
+            transition: 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-light);
+        }
+
+
+        .altar-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100dvh - 90px);
+            padding: 10px 16px 110px;
+        }
+
+        .hero-header {
+            text-align: center;
+            margin-bottom: 22px;
+            padding: 0 10px;
+        }
+
+        .subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.7rem, 4vw, 2.6rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            margin-bottom: 2px;
+        }
+
+        .main-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.6rem, 5vw, 3.1rem);
+            background: linear-gradient(to bottom, #ffffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.5));
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        .poetic-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 2.2vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.82);
+            font-style: italic;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.45;
+        }
+
+
+        .offering-card {
+            background: linear-gradient(145deg, rgba(25, 13, 8, 0.76), rgba(10, 4, 2, 0.92));
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: clamp(22px, 5vw, 36px) clamp(18px, 4vw, 34px);
+            width: 100%;
+            max-width: 510px;
+            text-align: center;
+            /* Ensures whisper-badge is centered without Tailwind */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), inset 0 0 25px rgba(255, 215, 0, 0.06);
+            position: relative;
+            transition: 0.4s;
+        }
+
+        .offering-card:focus-within {
+            border-color: var(--gold-light);
+            box-shadow: 0 25px 70px rgba(251, 133, 0, 0.25), inset 0 0 30px rgba(255, 215, 0, 0.12);
+        }
+
+        /* Corner Golden Ornaments */
+        .corner-ornament {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--gold-deep);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .tl {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 8px;
+        }
+
+        .tr {
+            top: 10px;
+            right: 10px;
+            border-left: none;
+            border-bottom: none;
+            border-top-right-radius: 8px;
+        }
+
+        .bl {
+            bottom: 10px;
+            left: 10px;
+            border-right: none;
+            border-top: none;
+            border-bottom-left-radius: 8px;
+        }
+
+        .br {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: 8px;
+        }
+
+        /* Secret / Anonymous Badge inside Card */
+        .whisper-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: var(--gold-light);
+            font-size: 0.72rem;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        /* Quick Intention Pills */
+        .intention-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+
+        .pill {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.22);
+            color: rgba(255, 255, 255, 0.85);
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: clamp(0.7rem, 2vw, 0.76rem);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .pill:hover,
+        .pill.active {
+            background: rgba(255, 183, 3, 0.25);
+            border-color: var(--gold-light);
+            color: var(--gold-light);
+            box-shadow: 0 0 12px rgba(255, 183, 3, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        /* 16px prevents iOS/Android auto-zoom on tap */
+        .sacred-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.22);
+            border-radius: 16px;
+            padding: 15px 18px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            outline: none;
+            transition: all 0.3s;
+            resize: none;
+        }
+
+        .sacred-input::placeholder {
+            color: rgba(255, 255, 255, 0.38);
+            font-style: italic;
+            font-size: 0.92rem;
+        }
+
+        .sacred-input:focus {
+            border-color: var(--gold-deep);
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.15);
+        }
+
+        /* === 6. INTERACTIVE SACRED DIYA & BUTTON === */
+        .diya-altar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 6px;
+        }
+
+        .sacred-diya-svg {
+            width: 82px;
+            height: 72px;
+            overflow: visible;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 5px 15px rgba(251, 133, 0, 0.4));
+        }
+
+        .diya-flame {
+            transform-origin: 50% 90%;
+            animation: flickerFlame 1.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes flickerFlame {
+            0% {
+                transform: scale(1) rotate(-2deg);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.08, 1.12) rotate(2deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0.96, 1.05) rotate(-1deg);
+                opacity: 0.95;
+            }
+        }
+
+        .offer-btn {
+            background: linear-gradient(45deg, var(--gold-deep), var(--fire-orange));
+            border: none;
+            color: #000;
+            font-family: 'Cinzel Decorative', serif;
+            font-weight: 700;
+            font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+            letter-spacing: 1.2px;
+            padding: 14px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(251, 133, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .offer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 183, 3, 0.65);
+        }
+
+        .offer-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* === 7. THE ASCENDING PRAYER ORB === */
+        #prayer-orb {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffffff 0%, #ffea99 40%, #fb8500 80%, transparent 100%);
+            box-shadow: 0 0 40px 15px #ffb703, 0 0 80px 30px #fb8500;
+            z-index: 50;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+
+        /* === 8. DIVINE BLESSING REVEAL CARD === */
+        #blessing-reveal {
+            display: none;
+            opacity: 0;
+            background: linear-gradient(145deg, rgba(30, 15, 8, 0.88), rgba(10, 5, 2, 0.96));
+            border: 1px solid var(--gold-light);
+            border-radius: 26px;
+            padding: clamp(24px, 5vw, 40px) clamp(18px, 4vw, 32px);
+            max-width: 510px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 70px rgba(255, 183, 3, 0.35), inset 0 0 35px rgba(255, 215, 0, 0.15);
+            position: relative;
+        }
+
+        .blessing-badge {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px dashed var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 25px rgba(255, 183, 3, 0.3);
+            animation: floatIcon 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatIcon {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .blessing-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+            margin-bottom: 8px;
+            text-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
+        }
+
+        .blessing-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 2.8vw, 1.45rem);
+            color: #fff;
+            font-style: italic;
+            line-height: 1.55;
+            margin: 18px 0;
+            padding: 16px;
+            background: rgba(255, 215, 0, 0.05);
+            border-left: 2px solid var(--gold-deep);
+            border-right: 2px solid var(--gold-deep);
+            border-radius: 12px;
+        }
+
+        .echo-wish {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: 22px;
+            letter-spacing: 0.5px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .outline-btn {
+            background: transparent;
+            border: 1px solid var(--gold-deep);
+            color: var(--gold-light);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .outline-btn:hover {
+            background: var(--gold-deep);
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 0 15px var(--gold-deep);
+        }
+
+        /* === 9. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.68rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.65);
+            padding: 7px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.15rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 4px;
+        }
+
+        .creator-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="bgm" loop preload="auto">
+        <source src="assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="/assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="../public/assets/tunes/tune.mp3" type="audio/mpeg">
+    </audio>
+
+    <canvas id="sacred-canvas"></canvas>
+
+    <div class="deity-container" id="maiya-shrine">
+        <div class="solar-halo" id="solar-halo"></div>
+        <img src="assets/images/chathi-maiya.jpeg"
+            onerror="this.onerror=null; this.src='../public/assets/images/chathi-maiya.jpeg';" alt="Chhathi Maiya"
+            class="deity">
+    </div>
+
+    <!-- 3. HEADER -->
+    <header>
+        <a href="chhath.html" class="logo-text">The Chhath Edit</a>
+        <nav class="nav-links">
+            <a href="chhath.html">← Back to Ghat</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <!-- 4. THE ASCENDING ORB -->
+    <div id="prayer-orb">🪔</div>
+
+    <!-- 5. MAIN SACRED ALTAR -->
+    <main class="altar-wrapper">
+
+        <div class="hero-header" id="altar-header">
+            <h2 class="subtitle">A Prayer of Faith</h2>
+            <h1 class="main-title">Whisper to Chhathi Maiya</h1>
+            <p class="poetic-desc">Some prayers are too sacred for words to be spoken aloud.
+                Place your heartfelt prayer here, light your diya, and offer it
+                with faith to Chhathi Maiya.</p>
+        </div>
+
+        <div class="offering-card" id="offering-card">
+            <div class="corner-ornament tl"></div>
+            <div class="corner-ornament tr"></div>
+            <div class="corner-ornament bl"></div>
+            <div class="corner-ornament br"></div>
+
+            <div class="whisper-badge">
+                <span>🕊️</span> Sacred Prayer Offering
+            </div>
+
+            <!-- Quick Intention Inspirations -->
+            <div class="intention-pills">
+                <span class="pill" onclick="fillIntention(this, 'Peace, warmth & good health for my family')">🌿
+                    Family's Well-being</span>
+                <span class="pill" onclick="fillIntention(this, 'Clarity, strength & success in my journey ahead')">
+                    🙏 Strength & Guidance</span>
+                <span class="pill" onclick="fillIntention(this, 'Quiet happiness and healing for my heart')">🪔 Faith &
+                    Gratitude</span>
+            </div>
+
+            <form id="wish-form" onsubmit="initiateSacredRitual(event)">
+                <div class="input-group">
+                    <textarea id="devotee-wish" rows="4" class="sacred-input"
+                        placeholder="Share what rests in your heart... Offer your prayer to Chhathi Maiya." required
+                        oninput="pulseDiyaFlame()"></textarea>
+                </div>
+
+                <!-- Interactive SVG Diya -->
+                <div class="diya-altar">
+                    <svg class="sacred-diya-svg" viewBox="0 0 100 90">
+                        <circle id="flame-glow" cx="50" cy="30" r="22" fill="url(#glowGrad)" opacity="0.6" />
+                        <g class="diya-flame" id="diya-flame">
+                            <path d="M50 8 C50 8 64 25 60 38 C57 46 43 46 40 38 C36 25 50 8 50 8 Z" fill="#ff8c00" />
+                            <path d="M50 15 C50 15 58 27 56 36 C54 42 46 42 44 36 C42 27 50 15 50 15 Z"
+                                fill="#ffea99" />
+                            <path d="M50 24 C50 24 54 31 53 36 C52 39 48 39 47 36 C46 31 50 24 50 24 Z"
+                                fill="#ffffff" />
+                        </g>
+                        <path d="M15 48 Q50 58 85 48 L75 72 Q50 82 25 72 Z" fill="url(#clayGrad)" stroke="#ffea99"
+                            stroke-width="1" />
+                        <path d="M10 52 Q50 65 90 52" fill="none" stroke="#ffb703" stroke-width="1.5" opacity="0.7" />
+                        <defs>
+                            <radialGradient id="glowGrad">
+                                <stop offset="0%" stop-color="#ffb703" stop-opacity="0.9" />
+                                <stop offset="100%" stop-color="#fb8500" stop-opacity="0" />
+                            </radialGradient>
+                            <linearGradient id="clayGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#9c3d10" />
+                                <stop offset="100%" stop-color="#4a1504" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+
+                    <button type="submit" class="offer-btn" id="submit-btn">
+                        Offer Your Prayer to Maiya 🪔
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- STEP 2: DIVINE BLESSING CARD -->
+        <div id="blessing-reveal">
+            <div class="corner-ornament tl"></div>
+            <div class="corner-ornament tr"></div>
+            <div class="corner-ornament bl"></div>
+            <div class="corner-ornament br"></div>
+
+            <div class="blessing-badge">🌅</div>
+            <h2 class="blessing-title">Your Arghya Has Reached the Sun</h2>
+            <p class="poetic-desc">Your silent diya has carried your prayer across the sacred waters. Here is the
+                blessing whispered back to you:</p>
+
+            <div class="blessing-quote" id="blessing-text"></div>
+            <p class="echo-wish">🪔 Offered with devotion at the sacred Ghat</p>
+
+            <div class="action-row">
+                <button class="outline-btn" onclick="resetAltar()">Offer Another Prayer 🪔</button>
+                <a href="chhath.html" class="outline-btn">Return to Ghat →</a>
+            </div>
+        </div>
+
+    </main>
+
+    <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
+        Crafted with love & devotion by<span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <!-- SCRIPTS -->
+    <script>
+        const API_BASE = 'https://diwali-fun.onrender.com/api/v1';
+
+        const divineBlessings = [
+            "May Chhathi Maiya always keep her loving grace upon you. May your family be blessed with good health, happiness and protection.",
+            "May the blessings of Chhathi Maiya give you strength in every difficult moment. May her divine grace guide you whenever life feels uncertain.",
+            "May Surya Dev's sacred light and Chhathi Maiya's blessings bring purity, prosperity and well-being into your home.",
+            "May Chhathi Maiya bless your loved ones with long life, good health and happiness. May her grace always keep your family united.",
+            "May your faith in Chhathi Maiya remain strong, and may her blessings be with you and your family through every season of life."
+        ];
+
+
+        const bgm = document.getElementById('bgm');
+
+        function syncContinuousTune() {
+            // If opened inside chhath.html's seamless portal, parent already plays the tune!
+            if (window.self !== window.top) {
+                bgm.pause();
+                bgm.muted = true;
+                return;
+            }
+
+            const savedTime = parseFloat(sessionStorage.getItem('chhath_bgm_time') || '0');
+            const lastTimestamp = parseInt(sessionStorage.getItem('chhath_bgm_timestamp') || '0', 10);
+            const isMuted = sessionStorage.getItem('chhath_bgm_muted') === 'true';
+
+            // Calculate exact elapsed milliseconds during page switch so rhythm never breaks!
+            let resumeTime = savedTime;
+            if (lastTimestamp > 0) {
+                const transitSeconds = (Date.now() - lastTimestamp) / 1000;
+                if (transitSeconds < 5) {
+                    resumeTime += transitSeconds;
+                }
+            }
+
+            const applyTimeAndPlay = () => {
+                if (bgm.duration && resumeTime < bgm.duration) {
+                    try { bgm.currentTime = resumeTime; } catch (e) { }
+                } else if (resumeTime > 0) {
+                    try { bgm.currentTime = resumeTime; } catch (e) { }
+                }
+                bgm.volume = 0.5;
+                bgm.muted = isMuted;
+                bgm.play().catch(() => {
+                    const resumeOnTouch = () => {
+                        bgm.play().catch(() => { });
+                        document.removeEventListener('click', resumeOnTouch);
+                        document.removeEventListener('touchstart', resumeOnTouch);
+                    };
+                    document.addEventListener('click', resumeOnTouch);
+                    document.addEventListener('touchstart', resumeOnTouch);
+                });
+            };
+
+            if (bgm.readyState >= 1) {
+                applyTimeAndPlay();
+            } else {
+                bgm.addEventListener('loadedmetadata', applyTimeAndPlay, { once: true });
+            }
+
+            // Continuously record exact time & timestamp
+            const saveAudioState = () => {
+                if (!bgm.paused) {
+                    sessionStorage.setItem('chhath_bgm_time', bgm.currentTime);
+                    sessionStorage.setItem('chhath_bgm_timestamp', Date.now());
+                }
+            };
+            setInterval(saveAudioState, 250);
+            window.addEventListener('pagehide', saveAudioState);
+            window.addEventListener('beforeunload', saveAudioState);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            syncContinuousTune();
+            sessionStorage.setItem('lastFestivalSection', 'chhath.html');
+        });
+
+        function fillIntention(el, text) {
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('devotee-wish').value = text;
+            pulseDiyaFlame();
+        }
+
+        function pulseDiyaFlame() {
+            const textLength = document.getElementById('devotee-wish').value.length;
+            const scale = Math.min(1 + (textLength * 0.005), 1.45);
+            const glowRadius = Math.min(22 + (textLength * 0.2), 38);
+            gsap.to("#diya-flame", { scale: scale, duration: 0.3, ease: "power1.out" });
+            document.getElementById('flame-glow').setAttribute('r', glowRadius);
+        }
+
+
+        async function initiateSacredRitual(e) {
+            e.preventDefault();
+
+            const message = document.getElementById('devotee-wish').value.trim();
+            const btn = document.getElementById('submit-btn');
+
+            if (!message) return;
+
+            btn.disabled = true;
+            btn.textContent = "Offering Your Prayer to Chhathi Maiya...";
+
+            // Pick the random blessing right now so we can save BOTH wish & blessing!
+            const randBlessing = divineBlessings[Math.floor(Math.random() * divineBlessings.length)];
+
+            // Get visitor's real name from storage
+            const secretUserName = (
+                localStorage.getItem("visitor_name") ||
+                sessionStorage.getItem("visitorName") ||
+                localStorage.getItem("visitorName") ||
+                sessionStorage.getItem("visitor_name") ||
+                "Anonymous Devotee"
+            ).trim();
+
+            // 1. SEND WISH TO WISH TREE (Tagged 'From Chhath 🌅')
+            fetch(`${API_BASE}/wishes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: `${secretUserName} (From Chhath 🌅)`,
+                    sender: `${secretUserName} (From Chhath 🌅)`,
+                    message: `${message} [From Chhath 🌅]`,
+                    wish: `${message} [From Chhath 🌅]`,
+                    text: `${message} [From Chhath 🌅]`,
+                    category: 'chhath'
+                })
+            }).catch(err => console.log("Wish Tree sync:", err));
+
+            // 2. SEND THE RECEIVED BLESSING TO ORACLE LOG!
+            fetch(`${API_BASE}/oracle`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: `${secretUserName} (From Chhath Wish 🌅)`,
+                    visitorName: `${secretUserName} (From Chhath Wish 🌅)`,
+                    fortune: randBlessing,
+                    blessing: randBlessing,
+                    message: randBlessing
+                })
+            }).catch(err => console.log("Oracle sync:", err));
+
+            // 3. INCREMENT METRICS
+            fetch(`${API_BASE}/metrics/increment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'wishes_sent' })
+            }).catch(() => { });
+
+            // 4. GSAP ASCENSION ANIMATION
+            const cardRect = document.getElementById('offering-card').getBoundingClientRect();
+            const targetX = window.innerWidth / 2;
+            const targetY = window.innerHeight * 0.25;
+            const orb = document.getElementById('prayer-orb');
+
+            gsap.set(orb, {
+                left: cardRect.left + cardRect.width / 2,
+                top: cardRect.bottom - 60,
+                scale: 0,
+                opacity: 1
+            });
+
+            const tl = gsap.timeline();
+
+            tl.to("#offering-card", {
+                scale: 0.7,
+                opacity: 0,
+                filter: "blur(12px)",
+                duration: 0.9,
+                ease: "power2.in"
+            })
+                .to("#altar-header", { opacity: 0, y: -20, duration: 0.6 }, "<")
+                .to(orb, {
+                    scale: 1.3,
+                    duration: 0.6,
+                    ease: "back.out(1.7)",
+                    onStart: () => spawnBurstParticles(cardRect.left + cardRect.width / 2, cardRect.bottom - 60, 35)
+                }, "-=0.3")
+                .to(orb, {
+                    top: targetY,
+                    left: targetX,
+                    scale: 0.3,
+                    duration: 2.1,
+                    ease: "power2.inOut",
+                    onUpdate: function () {
+                        const r = orb.getBoundingClientRect();
+                        spawnTrailParticle(r.left + r.width / 2, r.top + r.height / 2);
+                    }
+                })
+                .call(() => {
+                    spawnBurstParticles(targetX, targetY, 85);
+                })
+                .to(orb, { scale: 4, opacity: 0, duration: 0.5, ease: "power2.out" })
+                .to("#solar-halo", {
+                    scale: 1.5,
+                    opacity: 1,
+                    duration: 0.6,
+                    yoyo: true,
+                    repeat: 1
+                }, "<")
+                .call(() => {
+                    document.getElementById('offering-card').style.display = 'none';
+                    document.getElementById('altar-header').style.display = 'none';
+
+                    document.getElementById('blessing-text').textContent = `"${randBlessing}"`;
+                    sessionStorage.setItem('chhath_last_blessing', randBlessing);
+
+                    const revealCard = document.getElementById('blessing-reveal');
+                    revealCard.style.display = 'block';
+                    gsap.fromTo(revealCard,
+                        { opacity: 0, y: 40, scale: 0.9 },
+                        { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: "power3.out" }
+                    );
+                });
+        }
+
+        function resetAltar() {
+            document.getElementById('devotee-wish').value = '';
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            pulseDiyaFlame();
+
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = false;
+            btn.textContent = "Float Your Diya & Send Wish →";
+
+            gsap.to("#blessing-reveal", {
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.4,
+                onComplete: () => {
+                    document.getElementById('blessing-reveal').style.display = 'none';
+                    document.getElementById('offering-card').style.display = 'block';
+                    document.getElementById('altar-header').style.display = 'block';
+                    gsap.to("#offering-card", { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6 });
+                    gsap.to("#altar-header", { opacity: 1, y: 0, duration: 0.6 });
+                }
+            });
+        }
+
+
+        const canvas = document.getElementById('sacred-canvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        let particles = [];
+        let floatingDiyas = [];
+
+        function initFloatingDiyas() {
+            floatingDiyas = [];
+            for (let i = 0; i < 10; i++) {
+                floatingDiyas.push({
+                    x: Math.random() * w,
+                    y: h * 0.78 + Math.random() * (h * 0.2),
+                    speed: Math.random() * 0.4 + 0.15,
+                    size: Math.random() * 3 + 2,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+        initFloatingDiyas();
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            initFloatingDiyas();
+        });
+
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: -(Math.random() * 0.5 + 0.2),
+                size: Math.random() * 2 + 0.5,
+                alpha: Math.random() * 0.7 + 0.2,
+                color: Math.random() > 0.5 ? '#ffea99' : '#ffb703',
+                ambient: true
+            });
+        }
+
+        function spawnTrailParticle(x, y) {
+            for (let i = 0; i < 3; i++) {
+                particles.push({
+                    x: x + (Math.random() - 0.5) * 20,
+                    y: y + (Math.random() - 0.5) * 20,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: Math.random() * 2 + 0.5,
+                    size: Math.random() * 3.5 + 1.5,
+                    alpha: 1,
+                    decay: 0.025,
+                    color: Math.random() > 0.4 ? '#ffea99' : '#fb8500',
+                    ambient: false
+                });
+            }
+        }
+
+        function spawnBurstParticles(x, y, count) {
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 1;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: Math.random() * 4 + 1.5,
+                    alpha: 1,
+                    decay: Math.random() * 0.015 + 0.008,
+                    color: ['#ffea99', '#ffb703', '#fb8500', '#ffffff'][Math.floor(Math.random() * 4)],
+                    ambient: false
+                });
+            }
+        }
+
+        let time = 0;
+        function animateCanvas() {
+            ctx.clearRect(0, 0, w, h);
+            time += 0.02;
+
+            const waterTop = h * 0.76;
+            const waterGrad = ctx.createLinearGradient(0, waterTop, 0, h);
+            waterGrad.addColorStop(0, 'rgba(251, 133, 0, 0.02)');
+            waterGrad.addColorStop(0.5, 'rgba(255, 183, 3, 0.07)');
+            waterGrad.addColorStop(1, 'rgba(10, 4, 1, 0.9)');
+            ctx.fillStyle = waterGrad;
+            ctx.fillRect(0, waterTop, w, h - waterTop);
+
+            ctx.strokeStyle = 'rgba(255, 234, 153, 0.12)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 7; i++) {
+                const yPos = waterTop + (i * 22) + Math.sin(time + i) * 3;
+                const lineWidth = (w * 0.35) - (i * 15);
+                ctx.beginPath();
+                ctx.moveTo(w / 2 - lineWidth / 2 + Math.sin(time * 1.5 + i) * 15, yPos);
+                ctx.lineTo(w / 2 + lineWidth / 2 + Math.sin(time * 1.5 + i) * 15, yPos);
+                ctx.stroke();
+            }
+
+            floatingDiyas.forEach(d => {
+                d.x += d.speed;
+                if (d.x > w + 20) d.x = -20;
+                const bobY = d.y + Math.sin(time * 2 + d.phase) * 3;
+
+                ctx.save();
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#fb8500';
+                ctx.fillStyle = '#ffea99';
+                ctx.beginPath();
+                ctx.arc(d.x, bobY, d.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.ambient) {
+                    if (p.y < 0) p.y = h;
+                    if (p.x < 0) p.x = w;
+                    if (p.x > w) p.x = 0;
+                } else {
+                    p.vy += 0.03;
+                    p.alpha -= p.decay;
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+                }
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        animateCanvas();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chhath Mahaparv | A Celebration of Faith & Devotion</title>
+    <!-- Tailwind & GSAP -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Fonts & Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&family=Yatra+One&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="global.css">
+
+    <style>
+        :root {
+            --bg-void: #080201;
+            --gold-light: #ffea99;
+            --gold-deep: #ffb703;
+            --fire-orange: #fb8500;
+            --glass-bg: rgba(20, 10, 5, 0.6);
+            --glass-border: rgba(255, 215, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .hindi-font {
+            font-family: 'Yatra One', system-ui;
+        }
+
+
+        #sunrise-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #010002;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #sky {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(to top, #010002 0%, #010002 100%);
+        }
+
+        .sun-container {
+            position: absolute;
+            bottom: 35vh;
+            left: 50%;
+            transform: translateX(-50%) translateY(30vh);
+            width: clamp(100px, 20vw, 140px);
+            height: clamp(100px, 20vw, 140px);
+            z-index: 2;
+        }
+
+        .sun-core {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, #ffffff 0%, #ffdf00 30%, #ff4500 80%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px 20px rgba(255, 69, 0, 0.7), 0 0 120px 50px rgba(255, 140, 0, 0.4);
+        }
+
+        .sun-rays {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 150, 0, 0.6) 15deg, transparent 30deg, rgba(255, 150, 0, 0.6) 45deg, transparent 60deg, rgba(255, 150, 0, 0.6) 75deg, transparent 90deg, rgba(255, 150, 0, 0.6) 105deg, transparent 120deg, rgba(255, 150, 0, 0.6) 135deg, transparent 150deg, rgba(255, 150, 0, 0.6) 165deg, transparent 180deg, rgba(255, 150, 0, 0.6) 195deg, transparent 210deg, rgba(255, 150, 0, 0.6) 225deg, transparent 240deg, rgba(255, 150, 0, 0.6) 255deg, transparent 270deg, rgba(255, 150, 0, 0.6) 285deg, transparent 300deg, rgba(255, 150, 0, 0.6) 315deg, transparent 330deg, rgba(255, 150, 0, 0.6) 345deg, transparent 360deg);
+            border-radius: 50%;
+            animation: rotateRays 40s linear infinite;
+            mask-image: radial-gradient(circle, transparent 20%, black 70%);
+            -webkit-mask-image: radial-gradient(circle, transparent 20%, black 70%);
+            opacity: 0;
+        }
+
+        .holy-river {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 35vh;
+            background: linear-gradient(to bottom, rgba(30, 5, 0, 0.9), #030000);
+            backdrop-filter: blur(8px);
+            z-index: 3;
+            border-top: 1px solid rgba(255, 100, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .sun-reflection {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(60px, 15vw, 100px);
+            height: 100%;
+            background: radial-gradient(ellipse at top center, rgba(255, 140, 0, 0.9) 0%, rgba(255, 69, 0, 0.3) 50%, transparent 80%);
+            filter: blur(6px);
+            opacity: 0;
+            animation: waterRipples 3s ease-in-out infinite alternate;
+        }
+
+        .intro-diya {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ffdf00;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 5px rgba(255, 140, 0, 0.8);
+            opacity: 0;
+            z-index: 4;
+        }
+
+        .intro-text-box {
+            position: absolute;
+            z-index: 10;
+            text-align: center;
+            top: 35vh;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .tap-msg {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 25px var(--fire-orange);
+            animation: pulseText 2.5s infinite alternate;
+            cursor: pointer;
+        }
+
+        .tap-sub {
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 234, 153, 0.6);
+            margin-top: 8px;
+        }
+
+        @keyframes rotateRays {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulseText {
+            0% {
+                opacity: 0.5;
+                transform: scale(0.95);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes waterRipples {
+            0% {
+                transform: translateX(-50%) scaleX(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateX(-50%) scaleX(1.3);
+                opacity: 1;
+            }
+        }
+
+
+        #main-app {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            z-index: 1;
+            background-image: radial-gradient(circle at 50% 10%, rgba(251, 80, 0, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 50% 90%, rgba(255, 183, 3, 0.1) 0%, transparent 60%);
+        }
+
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+        }
+
+        .deity-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .deity {
+            height: clamp(400px, 85vh, 1000px);
+            width: auto;
+            max-width: 95vw;
+            object-fit: contain;
+            opacity: 0.52;
+            -webkit-mask-image: radial-gradient(ellipse 55% 68% at 50% 45%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0.4) 55%, transparent 78%);
+            mask-image: radial-gradient(ellipse 55% 68% at 50% 45%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0.4) 55%, transparent 78%);
+            filter: drop-shadow(0 0 50px rgba(255, 120, 0, 0.5)) brightness(1.15);
+            mix-blend-mode: lighten;
+        }
+
+        @media (max-width: 768px) {
+            .deity {
+                height: 62vh;
+                opacity: 0.42;
+            }
+        }
+
+        #divine-particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            font-size: 10px;
+            color: var(--gold-light);
+            opacity: 0;
+            filter: drop-shadow(0 0 5px var(--gold-deep));
+        }
+
+        .glowing-mantra {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: rgba(255, 215, 0, 0.35);
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+            margin-top: -15px;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            animation: pulseText 4s infinite alternate;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(15px, 3vw, 25px) clamp(20px, 5vw, 50px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: clamp(12px, 3vw, 28px);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            font-size: clamp(0.82rem, 1.5vw, 1rem);
+            transition: 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-light);
+        }
+
+        .sound-toggle {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(8px);
+        }
+
+        .sound-toggle:hover {
+            background: rgba(255, 215, 0, 0.25);
+            box-shadow: 0 0 12px var(--gold-deep);
+        }
+
+        .hero-section {
+            position: relative;
+            text-align: center;
+            padding: clamp(30px, 8vw, 60px) 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 45vh;
+            z-index: 2;
+        }
+
+        .subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--gold-light);
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .hero-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
+            background: linear-gradient(to bottom, #ffffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.5));
+            line-height: 1.2;
+        }
+
+        .dynamic-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: #fff;
+            text-transform: capitalize;
+        }
+
+        .wish-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+
+        .hero-message {
+            font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.6;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Aesthetic Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(240px, 30vw, 280px), 1fr));
+            gap: clamp(20px, 4vw, 35px);
+            padding: 20px clamp(20px, 5vw, 60px);
+            max-width: 1400px;
+            margin: 0 auto 100px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, rgba(25, 15, 10, 0.72), rgba(10, 5, 5, 0.92));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.6);
+            text-decoration: none;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px);
+            border-color: var(--gold-light);
+            box-shadow: 0 20px 40px rgba(255, 183, 3, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .card-icon {
+            width: clamp(60px, 15vw, 80px);
+            height: clamp(60px, 15vw, 80px);
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            border: 1px dashed var(--gold-deep);
+            transition: 0.5s;
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.1);
+        }
+
+        .feature-card:hover .card-icon {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.1);
+            border-style: solid;
+        }
+
+        .feature-card h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 20px;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .card-btn {
+            background: transparent;
+            border: 1px solid var(--gold-deep);
+            color: var(--gold-light);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            transition: 0.4s;
+            text-transform: uppercase;
+            margin-top: auto;
+        }
+
+        .feature-card:hover .card-btn {
+            background: linear-gradient(45deg, var(--gold-deep), var(--fire-orange));
+            color: #000;
+            border-color: transparent;
+            font-weight: 600;
+        }
+
+
+        #seamless-portal {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            background: var(--bg-void);
+            display: none;
+            opacity: 0;
+        }
+
+        #portal-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Exact Share Section */
+        .share-section {
+            width: 100%;
+            padding: 40px 20px 120px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+        }
+
+        .share-glass-box {
+            background: rgba(20, 10, 15, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 234, 153, 0.05);
+            transition: 0.5s ease;
+            position: relative;
+        }
+
+        .share-glass-box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 234, 153, 0.1);
+        }
+
+        .share-sparkle {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            animation: floatIcon 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatIcon {
+            0% {
+                transform: translate(-50%, 0);
+            }
+
+            100% {
+                transform: translate(-50%, -10px);
+            }
+        }
+
+        .share-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 20px rgba(255, 183, 3, 0.5);
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        .share-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--gold-deep);
+            color: var(--gold-light);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.15) translateY(-5px);
+        }
+
+        .btn-wa:hover {
+            background: #25D366;
+            color: #fff;
+            border-color: #25D366;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+        }
+
+        .btn-sys:hover {
+            background: linear-gradient(45deg, #d4af37, #ffea99);
+            color: #000;
+            border-color: var(--gold-light);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-copy:hover {
+            background: #00f5d4;
+            color: #000;
+            border-color: #00f5d4;
+            box-shadow: 0 10px 30px rgba(0, 245, 212, 0.4);
+        }
+
+        #toast-msg {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 245, 212, 0.2);
+            border: 1px solid #00f5d4;
+            color: #00f5d4;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            opacity: 0;
+            transition: 0.4s ease;
+        }
+
+        #toast-msg.show {
+            opacity: 1;
+            bottom: 20px;
+        }
+
+        /* Exact Footer */
+        .creator-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 5px;
+        }
+
+        .creator-badge svg {
+            width: clamp(14px, 3vw, 16px);
+            height: clamp(14px, 3vw, 16px);
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 5px;
+        }
+
+        .creator-badge:hover svg {
+            fill: #E1306C;
+            transform: scale(1.2) rotate(10deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MASTER CONTINUOUS CHHATH AUDIO -->
+    <audio id="bgm" loop preload="auto">
+        <source src="assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="/assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="../public/assets/tunes/tune.mp3" type="audio/mpeg">
+    </audio>
+
+
+    <div id="sunrise-intro">
+        <div id="sky"></div>
+
+        <div class="sun-container" id="sun-box">
+            <div class="sun-rays" id="s-rays"></div>
+            <div class="sun-core"></div>
+        </div>
+
+        <div class="holy-river">
+            <div class="sun-reflection" id="s-reflect"></div>
+            <div id="intro-diyas-container"></div>
+        </div>
+
+        <div class="intro-text-box" id="tap-box" onclick="startCinematicSunrise()">
+            <h1 class="tap-msg">A Sacred Dawn Awaits...</h1>
+            <p class="tap-sub">A moment of faith, a prayer of gratitude. Touch to begin.✨</p>
+        </div>
+    </div>
+
+
+    <div id="main-app">
+
+        <!-- DEITY BLENDED IN BACKGROUND -->
+        <div class="deity-container">
+            <img src="assets/images/chathi-maiya.jpeg"
+                onerror="this.onerror=null; this.src='../public/assets/images/chathi-maiya.jpeg';" alt="Chhathi Maiya"
+                class="deity">
+        </div>
+        <canvas id="bg-canvas"></canvas>
+
+        <div id="divine-particles"></div>
+
+        <!-- HEADER -->
+        <header>
+            <div class="logo-text">The Chhath Edit</div>
+            <nav class="nav-links">
+                <button class="sound-toggle" id="sound-btn" onclick="toggleMasterAudio()"
+                    title="Mute / Unmute Tune">🔊</button>
+                <a href="index.html">Home</a>
+                <a onclick="openChhathPage('chhath-wishes.html')">Wishes</a>
+            </nav>
+        </header>
+
+        <!-- HERO SECTION -->
+        <main class="hero-section">
+            <h2 class="subtitle">A Festival Rooted in Faith & Gratitude</h2>
+            <h1 class="hero-title">Happy Chhath,<br><span id="user-display-name" class="dynamic-name">✨✨</span></h1>
+
+            <div class="hindi-font glowing-mantra">ॐ सूर्याय नमः</div>
+
+            <div class="wish-container">
+                <p class="hero-message hindi-font text-xl md:text-3xl text-yellow-100" id="constant-blessing"></p>
+            </div>
+        </main>
+
+        <!-- ALL CARDS NOW OPEN DEDICATED INTERACTIVE PAGES SMOOTHLY WITH CONTINUOUS TUNE! -->
+        <section class="features-grid">
+
+            <div class="feature-card" onclick="openChhathPage('chhath-blessings.html')">
+                <div class="card-icon">🪔</div>
+                <h3>Maiya's Blessings</h3>
+                <p>Take a quiet moment to receive heartfelt blessings and prayers for peace, good health and happiness.
+                </p>
+                <span class="card-btn">Get Blessings →</span>
+            </div>
+
+            <div class="feature-card" onclick="openChhathPage('chhath-wishes.html')">
+                <div class="card-icon">🌅</div>
+                <h3>Send a Wish</h3>
+                <p>Write a wish close to your heart and offer your prayers with faith and devotion to Chhathi Maiya.</p>
+                <span class="card-btn">Send Wish →</span>
+            </div>
+
+            <div class="feature-card" onclick="openChhathPage('admin-note.html')">
+                <div class="card-icon">💌</div>
+                <h3>A Special Note</h3>
+                <p>Leave a beautiful wish or message for the Admin. It means the world to them.</p>
+                <span class="card-btn">Write Note →</span>
+            </div>
+
+            <!-- DEDICATED DAY 1 PAGE -->
+            <div class="feature-card" onclick="openChhathPage('nahay-khay.html')">
+                <div class="card-icon">💧</div>
+                <h3>Day 1: Nahay Khay</h3>
+                <p>The first day of purification. Experience the sacred river bath and pure Kaddu-Bhat ritual.</p>
+                <span class="card-btn">Enter Day 1 →</span>
+            </div>
+
+            <!-- DEDICATED DAY 2 PAGE -->
+            <div class="feature-card" onclick="openChhathPage('kharna.html')">
+                <div class="card-icon">🔥</div>
+                <h3>Day 2: Kharna</h3>
+                <p>A day of inner silence and fasting, ending with the sacred offering of Rasiya & Roti.</p>
+                <span class="card-btn">Enter Day 2 →</span>
+            </div>
+
+            <!-- DEDICATED DAY 3 PAGE (Virtual Setting Sun Arghya) -->
+            <div class="feature-card" onclick="openChhathPage('sandhya-arghya.html')">
+                <div class="card-icon">🌇</div>
+                <h3>Day 3: Sandhya Arghya</h3>
+                <p>As the sun sets over the sacred waters, devotees gather with prayers and offerings to express their
+                    gratitude to Surya Dev.</p>
+                <span class="card-btn">Offer Sandhya Arghya →</span>
+            </div>
+
+            <!-- DEDICATED DAY 4 PAGE (Virtual Rising Sun Arghya) -->
+            <div class="feature-card" onclick="openChhathPage('bhor-arghya.html')">
+                <div class="card-icon">🌄</div>
+                <h3>Day 4: Bhor Arghya</h3>
+                <p>Welcome the rising sun with prayers of gratitude. The final offering marks the completion of this
+                    beautiful journey of faith and devotion.</p>
+                <span class="card-btn">Offer Bhor Arghya →</span>
+            </div>
+        </section>
+
+        <!-- EXACT MAGICAL SHARE SECTION -->
+        <section class="share-section" id="share-section">
+            <div class="share-glass-box">
+                <div class="share-sparkle">✨</div>
+                <h2 class="share-title">Share the Blessings</h2>
+                <p class="share-subtitle">Let the spirit of Chhath reach the people you hold close.
+                    Share this little celebration of faith, gratitude and devotion
+                    with your family and friends.
+                </p>
+
+                <div class="share-buttons">
+                    <button class="share-btn btn-wa" onclick="shareToWhatsApp()" title="Share on WhatsApp">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <path
+                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                        </svg>
+                    </button>
+                    <button class="share-btn btn-sys" onclick="shareSystem()" title="More Options">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <path
+                                d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z" />
+                        </svg>
+                    </button>
+                    <button class="share-btn btn-copy" onclick="copyWebsiteLink()" title="Copy Link">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <path
+                                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="toast-msg" class="toast-hidden">The link is yours. Pass it along ✨</div>
+            </div>
+        </section>
+
+        <!-- EXACT CONSTANT FOOTER -->
+        <a href="https://www.instagram.com/_kr._shubham" target="_blank" class="creator-badge">
+            Crafted with love & devotion by<span class="signature">Shubham</span>
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+            </svg>
+        </a>
+    </div>
+
+
+    <div id="seamless-portal">
+        <iframe id="portal-frame" src="about:blank"></iframe>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        const API_BASE = 'https://diwali-fun.onrender.com/api/v1';
+
+
+        
+const blessingsList = [
+    // Hindi Blessings
+    "छठी मईया की कृपा आपके घर-परिवार पर सदा बनी रहे। आपके घर में अपनों का साथ, मन में सुकून और जीवन में सुख-शांति बनी रहे।",
+    "हे छठी मईया, हर घर की खुशियाँ सलामत रखना। माँ-बाप को स्वस्थ रखना, बच्चों पर अपनी ममता बनाए रखना और सबके जीवन में मंगल करना।",
+    "सूर्य देव की पहली किरण के साथ आपके जीवन में नई आशाएँ जागें। छठी मईया आपके हर दिन को अपनी कृपा और आशीर्वाद से संवारती रहें।",
+    "जो श्रद्धा और विश्वास से छठी मईया के चरणों में अपना शीश झुकाते हैं, उनकी प्रार्थनाएँ स्वीकार हों। हर परिवार में प्रेम, अपनापन और खुशहाली बनी रहे।",
+    "छठी मईया, सबके आँगन में खुशियों की धूप बनी रहे। किसी अपने का साथ न छूटे, हर घर में हँसी गूँजे और सबके मन को आपका आशीर्वाद मिलता रहे।",
+    // English Blessings
+    "May Chhathi Maiya keep her loving grace upon your family. May your home always have the warmth of togetherness, the comfort of peace and the happiness of being with your loved ones.",
+    "May every prayer offered with a sincere heart find its way to Chhathi Maiya. May she bless your family with good health, togetherness and countless moments of peace.",
+    "As the first rays of Surya Dev touch the earth, may Chhathi Maiya bring gentle new beginnings into your life and keep your loved ones under her loving care.",
+    "May the devotion of this sacred festival bring peace to your heart, strength to your faith and blessings to every member of your family.",
+    "May Chhathi Maiya's blessings reach every home, bring comfort to every heart and keep the bonds of love and togetherness strong among those we hold dear."
+];
+
+
+
+        const bgm = document.getElementById('bgm');
+        const soundBtn = document.getElementById('sound-btn');
+
+
+        function playMasterAudio() {
+            const savedTime = parseFloat(sessionStorage.getItem('chhath_bgm_time') || '0');
+            const isMuted = sessionStorage.getItem('chhath_bgm_muted') === 'true';
+
+            bgm.volume = 0.55;
+            bgm.muted = isMuted;
+            soundBtn.textContent = isMuted ? '🔇' : '🔊';
+
+            if (savedTime > 0 && bgm.currentTime === 0) {
+                try { bgm.currentTime = savedTime; } catch (e) { }
+            }
+
+            bgm.play().catch(() => {
+                const unlockOnTouch = () => {
+                    const latestSaved = parseFloat(sessionStorage.getItem('chhath_bgm_time') || '0');
+                    if (latestSaved > 0 && Math.abs(bgm.currentTime - latestSaved) > 2) {
+                        try { bgm.currentTime = latestSaved; } catch (e) { }
+                    }
+                    bgm.play().catch(() => { });
+                    document.removeEventListener('click', unlockOnTouch);
+                    document.removeEventListener('touchstart', unlockOnTouch);
+                };
+                document.addEventListener('click', unlockOnTouch);
+                document.addEventListener('touchstart', unlockOnTouch);
+            });
+        }
+
+        function toggleMasterAudio() {
+            if (bgm.paused) {
+                bgm.muted = false;
+                bgm.play();
+                sessionStorage.setItem('chhath_bgm_muted', 'false');
+                soundBtn.textContent = '🔊';
+            } else {
+                bgm.muted = !bgm.muted;
+                sessionStorage.setItem('chhath_bgm_muted', bgm.muted);
+                soundBtn.textContent = bgm.muted ? '🔇' : '🔊';
+            }
+        }
+
+        setInterval(() => {
+            if (!bgm.paused) {
+                sessionStorage.setItem('chhath_bgm_time', bgm.currentTime);
+                sessionStorage.setItem('chhath_bgm_timestamp', Date.now());
+            }
+        }, 250);
+
+
+        const portal = document.getElementById('seamless-portal');
+        const portalFrame = document.getElementById('portal-frame');
+
+        function openChhathPage(pageUrl) {
+            if (bgm.paused && sessionStorage.getItem('chhath_bgm_muted') !== 'true') {
+                bgm.play().catch(() => { });
+            }
+
+            portalFrame.src = pageUrl;
+            portal.style.display = 'block';
+            gsap.to(portal, { opacity: 1, duration: 0.45, ease: "power2.out" });
+            history.pushState({ chhathPortal: true, url: pageUrl }, "", `#${pageUrl.replace('.html', '')}`);
+
+            portalFrame.onload = () => {
+                try {
+                    const childDoc = portalFrame.contentDocument || portalFrame.contentWindow.document;
+                    // Silence any duplicate audio inside child page so master bgm plays with zero cut
+                    const childAudios = childDoc.querySelectorAll('audio');
+                    childAudios.forEach(a => { a.pause(); a.muted = true; a.removeAttribute('src'); });
+
+                    // Intercept Back / Ghat / Home links inside child page
+                    const links = childDoc.querySelectorAll('a');
+                    links.forEach(link => {
+                        const href = link.getAttribute('href') || '';
+                        if (href.includes('chhath.html')) {
+                            link.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                closeChhathPortal();
+                            });
+                        } else if (href.includes('index.html') || href.includes('diwali.html')) {
+                            link.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                window.location.href = href;
+                            });
+                        }
+                    });
+                } catch (err) { }
+            };
+        }
+
+        function closeChhathPortal() {
+            gsap.to(portal, {
+                opacity: 0,
+                duration: 0.35,
+                onComplete: () => {
+                    portal.style.display = 'none';
+                    portalFrame.src = 'about:blank';
+                    if (location.hash) {
+                        history.replaceState(null, "", window.location.pathname);
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('popstate', () => {
+            if (portal.style.display === 'block') {
+                closeChhathPortal();
+            }
+        });
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            sessionStorage.setItem('lastFestivalSection', 'chhath.html');
+
+            const savedName = localStorage.getItem("visitor_name") || sessionStorage.getItem("visitorName");
+            if (savedName && savedName.trim() !== "") {
+                document.getElementById('user-display-name').textContent = `✨${savedName}✨`;
+            } else {
+                document.getElementById('user-display-name').textContent = "";
+            }
+
+            let sessionBlessing = sessionStorage.getItem("chhathBlessing");
+            if (!sessionBlessing) {
+                sessionBlessing = blessingsList[Math.floor(Math.random() * blessingsList.length)];
+                sessionStorage.setItem("chhathBlessing", sessionBlessing);
+            }
+            document.getElementById('constant-blessing').textContent = `"${sessionBlessing}"`;
+
+            createDivineParticles();
+        });
+
+        const introOverlay = document.getElementById('sunrise-intro');
+        const mainApp = document.getElementById('main-app');
+        const hasSeenIntro = sessionStorage.getItem('chhathIntroSeen');
+
+        if (hasSeenIntro) {
+            introOverlay.style.display = 'none';
+            mainApp.style.opacity = 1;
+            mainApp.style.pointerEvents = 'auto';
+            playMasterAudio();
+        } else {
+            const introDiyasContainer = document.getElementById('intro-diyas-container');
+            for (let i = 0; i < 8; i++) {
+                let d = document.createElement('div');
+                d.className = 'intro-diya';
+                d.style.left = Math.random() * 100 + 'vw';
+                d.style.top = Math.random() * 100 + '%';
+                introDiyasContainer.appendChild(d);
+                gsap.to(d, {
+                    x: `+=${Math.random() * 50 - 25}`,
+                    y: '-=20',
+                    opacity: 0.8,
+                    duration: 2 + Math.random() * 2,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'sine.inOut'
+                });
+            }
+
+            function startCinematicSunrise() {
+                playMasterAudio();
+                document.getElementById('tap-box').style.display = 'none';
+
+                const tl = gsap.timeline();
+
+                tl.to("#sky", { background: "linear-gradient(to top, #4a0c00 0%, #010002 100%)", duration: 3.5 })
+                    .to("#sun-box", { y: "-12vh", duration: 4.5, ease: "power2.out" }, "-=2.5")
+                    .to("#s-rays", { opacity: 1, duration: 3 }, "-=3")
+                    .to("#s-reflect", { opacity: 1, duration: 3 }, "-=3")
+                    .to(mainApp, {
+                        opacity: 1,
+                        duration: 3.5,
+                        ease: "power2.inOut",
+                        onStart: () => { mainApp.style.pointerEvents = 'auto'; }
+                    }, "+=0.5")
+                    .to(introOverlay, { opacity: 0, duration: 3.5, ease: "power2.inOut" }, "<")
+                    .call(() => {
+                        introOverlay.style.display = 'none';
+                        sessionStorage.setItem('chhathIntroSeen', 'true');
+                    });
+            }
+            window.startCinematicSunrise = startCinematicSunrise;
+        }
+
+        // ====================================================
+        // 4. DIVINE PARTICLES
+        // ====================================================
+        function createDivineParticles() {
+            const container = document.getElementById('divine-particles');
+            const items = ['✨', '✨', '⭐', ''];
+
+            for (let i = 0; i < 30; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                star.innerText = items[Math.floor(Math.random() * items.length)];
+
+                if (star.innerText === '') {
+                    star.style.width = '3px';
+                    star.style.height = '3px';
+                    star.style.background = '#ffea99';
+                    star.style.borderRadius = '50%';
+                }
+
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                container.appendChild(star);
+
+                gsap.to(star, {
+                    y: `-=${Math.random() * 100 + 50}`,
+                    x: `+=${Math.random() * 40 - 20}`,
+                    opacity: Math.random() * 0.5 + 0.2,
+                    duration: Math.random() * 10 + 10,
+                    repeat: -1,
+                    ease: "sine.inOut",
+                    yoyo: true,
+                    delay: Math.random() * 5
+                });
+            }
+        }
+
+
+        const siteLink = 'https://diwali-fun-seven.vercel.app';
+        const shareMessage = "Step into a magical world of devotion! ✨ Experience the beauty of Chhath Puja here: ";
+
+        async function trackMetric(key) {
+            try { await fetch(`${API_BASE}/metrics/increment`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: key }) }); } catch (err) { }
+        }
+        async function shareToWhatsApp() {
+            await trackMetric('whatsapp_shares'); window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage + siteLink)}`, '_blank');
+        }
+        async function shareSystem() {
+            await trackMetric('system_shares');
+            if (navigator.share) { navigator.share({ title: 'Chhath Mahaparv ✨', text: shareMessage, url: siteLink }).catch(e => console.log(e)); }
+            else { alert("System share is not supported on this browser. Use the Copy Link button!"); }
+        }
+        async function copyWebsiteLink() {
+            await trackMetric('system_shares');
+            navigator.clipboard.writeText(siteLink).then(() => {
+                const toast = document.getElementById('toast-msg'); toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            });
+        }
+    </script>
+</body>
+
+</html>

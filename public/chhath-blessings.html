@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chhathi Maiya's Blessings | A Little Prayer of Faith</title>
+    <!-- Exact Luxury Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500;600&family=Yatra+One&display=swap"
+        rel="stylesheet">
+
+    <!-- GSAP for Light-Wave Physics & Timeline Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <link rel="stylesheet" href="global.css">
+
+    <style>
+        :root {
+            --bg-void: #080201;
+            --gold-light: #ffea99;
+            --gold-deep: #ffb703;
+            --fire-orange: #fb8500;
+            --sindoor-red: #d90429;
+            --glass-bg: rgba(22, 10, 5, 0.78);
+            --glass-border: rgba(255, 215, 0, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 50% 18%, rgba(255, 183, 3, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 50% 60%, rgba(251, 133, 0, 0.14) 0%, transparent 70%),
+                radial-gradient(circle at 50% 95%, rgba(255, 234, 153, 0.1) 0%, transparent 60%);
+        }
+
+        .hindi-font {
+            font-family: 'Yatra One', system-ui;
+        }
+
+        /* === 1. INTERACTIVE LIGHT-WAVE & PRANA PARTICLE CANVAS === */
+        #blessing-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* === 2. BLENDED CHHATHI MAIYA SHRINE === */
+        .deity-shrine {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        .divine-aura-ring {
+            position: absolute;
+            top: 6%;
+            width: clamp(280px, 48vw, 520px);
+            height: clamp(280px, 48vw, 520px);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 234, 153, 0.42) 0%, rgba(251, 133, 0, 0.18) 55%, transparent 75%);
+            filter: blur(18px);
+            animation: pulseAura 4s ease-in-out infinite alternate;
+        }
+
+        .deity {
+            height: clamp(410px, 82vh, 920px);
+            width: auto;
+            max-width: 95vw;
+            object-fit: contain;
+            opacity: 0.65;
+            -webkit-mask-image: radial-gradient(ellipse 54% 64% at 50% 42%, rgba(0, 0, 0, 1) 28%, rgba(0, 0, 0, 0.55) 58%, transparent 80%);
+            mask-image: radial-gradient(ellipse 54% 64% at 50% 42%, rgba(0, 0, 0, 1) 28%, rgba(0, 0, 0, 0.55) 58%, transparent 80%);
+            filter: drop-shadow(0 0 45px rgba(255, 183, 3, 0.65)) brightness(1.15);
+            mix-blend-mode: lighten;
+            transition: all 1s ease;
+        }
+
+        @keyframes pulseAura {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.65;
+            }
+
+            100% {
+                transform: scale(1.12);
+                opacity: 1;
+            }
+        }
+
+        /* === 3. HEADER === */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(15px, 3vw, 25px) clamp(18px, 5vw, 50px);
+            position: relative;
+            z-index: 20;
+        }
+
+        .logo-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: clamp(14px, 3vw, 28px);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.78);
+            text-decoration: none;
+            font-size: clamp(0.82rem, 1.5vw, 1rem);
+            transition: 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-light);
+        }
+
+        /* === 4. SANCTUARY WRAPPER === */
+        .sanctuary-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100dvh - 90px);
+            padding: 10px 18px 115px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            margin-bottom: 2px;
+        }
+
+        .main-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.7rem, 5vw, 3.2rem);
+            background: linear-gradient(to bottom, #ffffff, #ffea99, #ffb703);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 22px rgba(255, 183, 3, 0.55));
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        .poetic-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 2.2vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+            max-width: 540px;
+            margin: 0 auto 28px;
+            line-height: 1.45;
+        }
+
+        /* === 5. DIRECT MAIYA LIGHT PORTAL === */
+        .divine-touch-zone {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px auto 35px;
+            cursor: pointer;
+        }
+
+        .aura-wave {
+            position: absolute;
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 234, 153, 0.65);
+            box-shadow: 0 0 30px rgba(255, 183, 3, 0.5), inset 0 0 20px rgba(255, 234, 153, 0.35);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .ambient-wave-1 {
+            animation: gentleRipple 3.2s ease-out infinite;
+        }
+
+        .ambient-wave-2 {
+            animation: gentleRipple 3.2s ease-out 1.6s infinite;
+        }
+
+        @keyframes gentleRipple {
+            0% {
+                transform: scale(0.6);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(2.4);
+                opacity: 0;
+            }
+        }
+
+        .sacred-jyoti-core {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffffff 0%, #ffea99 40%, rgba(255, 183, 3, 0.2) 75%, transparent 100%);
+            box-shadow: 0 0 40px 10px rgba(255, 183, 3, 0.65), 0 0 80px 25px rgba(251, 133, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Yatra One', system-ui;
+            font-size: 1.8rem;
+            color: #4a1500;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            z-index: 5;
+        }
+
+        .divine-touch-zone:hover .sacred-jyoti-core {
+            transform: scale(1.12);
+            box-shadow: 0 0 55px 18px rgba(255, 234, 153, 0.9), 0 0 100px 35px rgba(251, 133, 0, 0.65);
+        }
+
+        #blessing-light-beam {
+            position: fixed;
+            top: 22%;
+            left: 50%;
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top center;
+            width: clamp(240px, 55vw, 480px);
+            height: 72vh;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(255, 234, 153, 0.55) 30%, rgba(255, 183, 3, 0.2) 70%, transparent 100%);
+            clip-path: polygon(38% 0%, 62% 0%, 100% 100%, 0% 100%);
+            filter: blur(12px);
+            opacity: 0;
+            z-index: 8;
+            pointer-events: none;
+        }
+
+        .receive-btn {
+            background: linear-gradient(45deg, #ffea99, #ffb703, #fb8500);
+            border: none;
+            color: #000;
+            font-family: 'Cinzel Decorative', serif;
+            font-weight: 700;
+            font-size: clamp(0.82rem, 2.5vw, 0.96rem);
+            letter-spacing: 1.4px;
+            padding: 16px 36px;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 10px 35px rgba(255, 183, 3, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.65);
+            text-transform: uppercase;
+            position: relative;
+            z-index: 12;
+        }
+
+        .receive-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 15px 45px rgba(255, 234, 153, 0.85);
+        }
+
+        /* === 6. THE REVEALED SACRED AASHIRWAD PATRA === */
+        #aashirwad-card {
+            display: none;
+            opacity: 0;
+            background: linear-gradient(145deg, rgba(32, 14, 6, 0.88), rgba(10, 4, 2, 0.96));
+            border: 1.5px solid var(--gold-light);
+            border-radius: 28px;
+            padding: clamp(26px, 5vw, 42px) clamp(20px, 4vw, 36px);
+            max-width: 560px;
+            width: 100%;
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            box-shadow: 0 25px 80px rgba(255, 183, 3, 0.4), inset 0 0 40px rgba(255, 215, 0, 0.15);
+            position: relative;
+            z-index: 15;
+            margin-top: 5px;
+        }
+
+        .corner-ornament {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border: 1.5px solid var(--gold-deep);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .tl {
+            top: 12px;
+            left: 12px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 8px;
+        }
+
+        .tr {
+            top: 12px;
+            right: 12px;
+            border-left: none;
+            border-bottom: none;
+            border-top-right-radius: 8px;
+        }
+
+        .bl {
+            bottom: 12px;
+            left: 12px;
+            border-right: none;
+            border-top: none;
+            border-bottom-left-radius: 8px;
+        }
+
+        .br {
+            bottom: 12px;
+            right: 12px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: 8px;
+        }
+
+        .tilak-seal {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 234, 153, 0.2), rgba(217, 4, 41, 0.15));
+            border: 1px dashed var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            margin: 0 auto 14px;
+            box-shadow: 0 0 25px rgba(255, 183, 3, 0.45);
+        }
+
+        .blessing-recipient {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+            color: var(--gold-light);
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+            margin-bottom: 4px;
+        }
+
+        .sanskrit-verse {
+            font-size: clamp(1.1rem, 2.8vw, 1.45rem);
+            color: var(--gold-deep);
+            margin: 12px 0;
+            line-height: 1.5;
+            text-shadow: 0 0 15px rgba(251, 133, 0, 0.5);
+        }
+
+        .english-blessing {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.12rem, 2.6vw, 1.4rem);
+            color: #fff;
+            font-style: italic;
+            line-height: 1.6;
+            padding: 16px 18px;
+            background: rgba(255, 215, 0, 0.06);
+            border-left: 2px solid var(--gold-deep);
+            border-right: 2px solid var(--gold-deep);
+            border-radius: 14px;
+            margin: 16px 0 20px;
+        }
+
+        .blessing-pillars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .b-pillar {
+            background: rgba(255, 183, 3, 0.12);
+            border: 1px solid rgba(255, 234, 153, 0.35);
+            color: var(--gold-light);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.73rem;
+            letter-spacing: 0.6px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .outline-btn {
+            background: transparent;
+            border: 1px solid var(--gold-deep);
+            color: var(--gold-light);
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .outline-btn:hover {
+            background: var(--gold-deep);
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 0 18px var(--gold-deep);
+        }
+
+        /* === 7. CONSTANT FOOTER === */
+        .creator-badge {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.68rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.65);
+            padding: 7px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .creator-badge:hover {
+            color: #fff;
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .creator-badge .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.15rem, 3.5vw, 1.5rem);
+            color: var(--gold-light);
+            margin-left: 4px;
+        }
+
+        .creator-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: rgba(255, 255, 255, 0.5);
+            transition: 0.4s;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- FALLBACK CONTINUOUS AUDIO -->
+    <audio id="bgm" loop preload="auto">
+        <source src="assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="/assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="../public/assets/tunes/tune.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 1. INTERACTIVE GOLDEN LIGHT-WAVE & PRANA CANVAS -->
+    <canvas id="blessing-canvas"></canvas>
+
+    <!-- 2. BLENDED CHHATHI MAIYA SHRINE -->
+    <div class="deity-shrine">
+        <div class="divine-aura-ring" id="maiya-aura"></div>
+        <img src="assets/images/chathi-maiya.jpeg"
+            onerror="this.onerror=null; this.src='../public/assets/images/chathi-maiya.jpeg';" alt="Chhathi Maiya"
+            class="deity" id="deity-img">
+    </div>
+
+    <!-- 3. DESCENDING VOLUMETRIC LIGHT BEAM -->
+    <div id="blessing-light-beam"></div>
+
+    <!-- 4. HEADER -->
+    <header>
+        <a href="chhath.html" class="logo-text">The Chhath Edit</a>
+        <nav class="nav-links">
+            <a href="chhath.html">← Back to Ghat</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <!-- 5. MAIN SANCTUARY -->
+    <main class="sanctuary-wrapper">
+
+        <div id="invocation-stage">
+            <h2 class="subtitle">A Moment of Faith & Devotion</h2>
+            <h1 class="main-title">Seek the Blessings of Chhathi Maiya</h1>
+            <p class="poetic-desc">Close your eyes for a quiet moment. Touch the sacred golden light below and feel
+                Chhathi Maiya's wave of grace flow directly into your heart.</p>
+
+            <!-- PURE DIVINE LIGHT PORTAL -->
+            <div class="divine-touch-zone" id="touch-stage" onclick="invokeDivineLightWave()">
+                <div class="aura-wave ambient-wave-1"></div>
+                <div class="aura-wave ambient-wave-2"></div>
+                <div class="sacred-jyoti-core" id="jyoti-core">ॐ</div>
+            </div>
+
+            <button class="receive-btn" id="invoke-btn" onclick="invokeDivineLightWave()">
+                🙏 Fold Your Hands & Receive Blessings
+            </button>
+        </div>
+
+        <!-- REVEALED AASHIRWAD SCROLL CARD -->
+        <div id="aashirwad-card">
+            <div class="corner-ornament tl"></div>
+            <div class="corner-ornament tr"></div>
+            <div class="corner-ornament bl"></div>
+            <div class="corner-ornament br"></div>
+
+            <div class="tilak-seal">🪔✨</div>
+            <div class="blessing-recipient" id="recipient-title">Blessed Soul</div>
+
+            <div class="hindi-font sanskrit-verse" id="hindi-blessing">
+                "छठी मईया की दिव्य ज्योति आपके जीवन के हर पथ को आलोकित करे।"
+            </div>
+
+            <div class="english-blessing" id="english-blessing">
+                "A wave of sacred light from Chhathi Maiya now rests upon you. May your heart remain unshaken, your home
+                overflow with warmth, and every silent effort of yours bloom into grace."
+            </div>
+
+            <div class="blessing-pillars" id="blessing-pillars">
+                <span class="b-pillar">🛡️ Akhand Raksha (Protection)</span>
+                <span class="b-pillar">🌿 Arogya (Vibrant Health)</span>
+                <span class="b-pillar">✨ Sukh-Samriddhi (Prosperity)</span>
+            </div>
+
+            <div class="card-actions">
+                <button class="outline-btn" onclick="replayLightWave()">Receive Another Wave of Light ✨</button>
+                <a href="chhath-wishes.html" class="outline-btn">Whisper a Wish 🌅</a>
+                <a href="chhath.html" class="outline-btn">Return to Ghat →</a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 7. CONSTANT FOOTER -->
+    <a href="https://www.instagram.com/_kr._shubham" target="_blank" class="creator-badge">
+        Crafted with devotion by <span class="signature">Shubham</span>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+    </a>
+
+    <!-- SCRIPTS -->
+    <script>
+        const API_BASE = 'https://diwali-fun.onrender.com/api/v1';
+
+        const bgm = document.getElementById('bgm');
+
+        document.addEventListener("DOMContentLoaded", () => {
+            sessionStorage.setItem('lastFestivalSection', 'chhath.html');
+
+            const savedName = (localStorage.getItem("visitor_name") || sessionStorage.getItem("visitorName") || "").trim();
+            if (savedName !== "") {
+                document.getElementById('recipient-title').textContent = `Blessings for ${savedName} 🙏`;
+            } else {
+                document.getElementById('recipient-title').textContent = `A Prayer for You 🙏`;
+            }
+
+            if (window.self !== window.top) {
+                bgm.pause();
+                bgm.muted = true;
+            } else {
+                const savedTime = parseFloat(sessionStorage.getItem('chhath_bgm_time') || '0');
+                const isMuted = sessionStorage.getItem('chhath_bgm_muted') === 'true';
+                bgm.volume = 0.55;
+                bgm.muted = isMuted;
+                if (savedTime > 0) {
+                    try { bgm.currentTime = savedTime; } catch (e) { }
+                }
+                bgm.play().catch(() => {
+                    document.addEventListener('click', () => bgm.play().catch(() => { }), { once: true });
+                });
+                setInterval(() => {
+                    if (!bgm.paused) sessionStorage.setItem('chhath_bgm_time', bgm.currentTime);
+                }, 300);
+            }
+        });
+
+
+
+        const maiyaBlessings = [
+            {
+                hindi: "\"छठी मईया की ममता भरी छाँव आपके और आपके परिवार के सिर पर सदा बनी रहे। आपके घर में अपनों का साथ, चेहरे पर मुस्कान और हर दिन जीने की एक नई खुशी बनी रहे।\"",
+                english: "\"May Chhathi Maiya's loving grace always surround you and your family. May your home be filled with the warmth of togetherness, smiles that come from the heart, and little moments that make life beautiful.\"",
+                pillars: ["🙏 Maiya Ki Kripa", "🏡 Parivar Ka Saath", "🌸 Khushiyon Bhare Pal"]
+            },
+            {
+                hindi: "\"छठी मईया का आशीर्वाद आपके जीवन के हर मोड़ पर आपके साथ रहे। जब कभी मन घबराए, आपको हिम्मत मिले; जब कभी राह कठिन लगे, उम्मीद की एक किरण आपका रास्ता रोशन करे।\"",
+                english: "\"May Chhathi Maiya's blessings walk beside you through every season of life. May you find courage in difficult moments, hope when the path feels uncertain, and peace in knowing that brighter days are ahead.\"",
+                pillars: ["✨ Aasha Ki Kiran", "🕊️ Man Ka Sukoon", "💛 Himmat Aur Vishwas"]
+            },
+            {
+                hindi: "\"सूर्य देव की सुनहरी किरणों की तरह छठी मईया की कृपा आपके जीवन में उजाला करती रहे। आपकी हर सुबह नई उम्मीद लेकर आए और आपके अपनों के जीवन में हमेशा खुशियों की रोशनी बनी रहे।\"",
+                english: "\"Like the gentle golden rays of the rising sun, may Chhathi Maiya's grace bring light into your life. May every morning bring a fresh reason to smile, and may your loved ones always remain surrounded by warmth and happiness.\"",
+                pillars: ["🌅 Nayi Subah", "☀️ Ujjwal Jeevan", "🌼 Shubh Din"]
+            },
+            {
+                hindi: "\"छठी मईया की असीम कृपा से आपके मन की सच्ची इच्छाएँ पूरी हों। आपकी मेहनत सफल हो, आपके रिश्तों में प्रेम बना रहे और जीवन के छोटे-छोटे पलों में भी आपको ढेर सारा सुकून मिलता रहे।\"",
+                english: "\"May Chhathi Maiya bless your sincere wishes, bring sweetness to your relationships, and grace your efforts with success. May you always find happiness in the little things and feel grateful for the love that surrounds you.\"",
+                pillars: ["🙏 Manokamna", "🌿 Safalta", "💐 Prem Aur Kritagyata"]
+            }
+        ];
+
+
+
+        let isBlessingActive = false;
+
+        async function logBlessingToOracle(chosenBlessing) {
+            const visitorName = (
+                sessionStorage.getItem("visitorName") ||
+                localStorage.getItem("visitor_name") ||
+                localStorage.getItem("visitorName") ||
+                sessionStorage.getItem("visitor_name") ||
+                "Anonymous Devotee"
+            ).trim();
+
+            const finalMsg = `${chosenBlessing.hindi} — ${chosenBlessing.english}`;
+            const payload = {
+                name: `${visitorName} (From Chhath 🌅)`,
+                oracle: finalMsg
+            };
+
+            try {
+                // 1. Send to Render Backend
+                const res = await fetch(`${API_BASE}/oracle-log`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                console.log("Oracle Log Response:", res.status);
+            } catch (err) {
+                console.error("Render Oracle Log Error:", err);
+                // Fallback to relative path if running on local backend
+                try {
+                    await fetch(`/api/v1/oracle-log`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                } catch (e) { }
+            }
+        }
+
+        function invokeDivineLightWave() {
+            if (isBlessingActive) return;
+            isBlessingActive = true;
+
+            // Pick the blessing immediately & send to Oracle Log right away!
+            const chosen = maiyaBlessings[Math.floor(Math.random() * maiyaBlessings.length)];
+            logBlessingToOracle(chosen);
+
+            const originX = window.innerWidth / 2;
+            const originY = window.innerHeight * 0.28;
+
+            const btn = document.getElementById('invoke-btn');
+            btn.textContent = "✨ 🙏 Receiving Chhathi Maiya's Blessings... ✨";
+            btn.disabled = true;
+
+            triggerCanvasLightWaves(originX, originY);
+
+            const tl = gsap.timeline();
+
+            tl.to("#jyoti-core", {
+                scale: 1.8,
+                boxShadow: "0 0 90px 40px rgba(255, 255, 255, 0.95), 0 0 140px 60px rgba(255, 183, 3, 0.9)",
+                duration: 0.7,
+                ease: "power2.out"
+            })
+                .to("#deity-img", {
+                    opacity: 0.88,
+                    filter: "drop-shadow(0 0 85px rgba(255, 234, 153, 1)) brightness(1.38)",
+                    duration: 0.9
+                }, "<")
+                .to("#maiya-aura", { scale: 1.5, opacity: 1, duration: 0.9 }, "<")
+                .to("#blessing-light-beam", {
+                    opacity: 1,
+                    scaleY: 1,
+                    duration: 1.1,
+                    ease: "power3.out"
+                }, "-=0.4")
+                .to("#invocation-stage", {
+                    opacity: 0,
+                    scale: 0.9,
+                    filter: "blur(10px)",
+                    duration: 0.8,
+                    ease: "power2.in"
+                }, "+=0.35")
+                .call(() => {
+                    document.getElementById('invocation-stage').style.display = 'none';
+
+                    document.getElementById('hindi-blessing').textContent = chosen.hindi;
+                    document.getElementById('english-blessing').textContent = chosen.english;
+                    document.getElementById('blessing-pillars').innerHTML = chosen.pillars
+                        .map(p => `<span class="b-pillar">${p}</span>`).join('');
+
+                    const card = document.getElementById('aashirwad-card');
+                    card.style.display = 'block';
+
+                    spawnPranaStream(originX, originY, 95);
+                })
+                .fromTo("#aashirwad-card",
+                    { opacity: 0, y: 45, scale: 0.88 },
+                    { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: "back.out(1.2)" }
+                )
+                .to("#blessing-light-beam", { opacity: 0.35, duration: 1.2 }, "<");
+        }
+
+        function replayLightWave() {
+            isBlessingActive = false;
+            const btn = document.getElementById('invoke-btn');
+            btn.disabled = false;
+            btn.textContent = "🙏 Fold Your Hands & Receive Blessings";
+
+            gsap.to("#aashirwad-card", {
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.4,
+                onComplete: () => {
+                    document.getElementById('aashirwad-card').style.display = 'none';
+                    const invStage = document.getElementById('invocation-stage');
+                    invStage.style.display = 'block';
+                    gsap.set("#jyoti-core", {
+                        scale: 1,
+                        boxShadow: "0 0 40px 10px rgba(255, 183, 3, 0.65), 0 0 80px 25px rgba(251, 133, 0, 0.4)"
+                    });
+                    gsap.to(invStage, {
+                        opacity: 1,
+                        scale: 1,
+                        filter: "blur(0px)",
+                        duration: 0.5,
+                        onComplete: () => invokeDivineLightWave()
+                    });
+                }
+            });
+        }
+
+
+        const canvas = document.getElementById('blessing-canvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+        let particles = [];
+        let lightWaves = [];
+
+        for (let i = 0; i < 45; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 0.35,
+                vy: -(Math.random() * 0.45 + 0.15),
+                size: Math.random() * 2.4 + 0.6,
+                alpha: Math.random() * 0.65 + 0.2,
+                color: i % 2 === 0 ? '#ffea99' : '#ffb703',
+                ambient: true
+            });
+        }
+
+        function triggerCanvasLightWaves(originX, originY) {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    lightWaves.push({
+                        x: originX,
+                        y: originY,
+                        radius: 20,
+                        maxRadius: Math.max(w, h) * 0.95,
+                        alpha: 0.9,
+                        lineWidth: 6 - i * 0.8
+                    });
+                    spawnPranaStream(originX, originY, 45);
+                }, i * 240);
+            }
+        }
+
+        function spawnPranaStream(originX, originY, count) {
+            for (let i = 0; i < count; i++) {
+                const angle = (Math.PI * 0.15) + (Math.random() * Math.PI * 0.7);
+                const speed = Math.random() * 6.5 + 1.5;
+                particles.push({
+                    x: originX + (Math.random() - 0.5) * 30,
+                    y: originY + (Math.random() - 0.5) * 20,
+                    vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1),
+                    vy: Math.sin(angle) * speed,
+                    size: Math.random() * 4.2 + 1.5,
+                    alpha: 1,
+                    decay: Math.random() * 0.014 + 0.008,
+                    color: ['#ffffff', '#ffea99', '#ffb703', '#fb8500'][Math.floor(Math.random() * 4)],
+                    ambient: false
+                });
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, w, h);
+
+            for (let i = lightWaves.length - 1; i >= 0; i--) {
+                const lw = lightWaves[i];
+                lw.radius += 11;
+                lw.alpha *= 0.965;
+
+                if (lw.alpha <= 0.02 || lw.radius > lw.maxRadius) {
+                    lightWaves.splice(i, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(lw.x, lw.y, lw.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255, 234, 153, ${lw.alpha})`;
+                ctx.lineWidth = lw.lineWidth;
+                ctx.shadowBlur = 25;
+                ctx.shadowColor = '#ffb703';
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.ambient) {
+                    if (p.y < 0) p.y = h;
+                    if (p.x < 0) p.x = w;
+                    if (p.x > w) p.x = 0;
+                } else {
+                    p.alpha -= p.decay;
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+                }
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        animateCanvas();
+    </script>
+</body>
+
+</html>

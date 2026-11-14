@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Whisper to the Creator - A Little World Of Happiness</title>
 
     <link
@@ -23,6 +23,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -32,14 +33,21 @@
             min-height: 100dvh;
             overflow-x: hidden;
             overflow-y: auto;
-            /* Fixes overlap on small screens by allowing scroll if needed */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: background 0.8s ease;
         }
 
-        /* === 1. TOP NAV === */
+        /* Subtle warm dawn tint when visited from Chhath section */
+        body.chhath-mode {
+            --bg-deep: #070201;
+            --bg-space: #1c0802;
+            --orb-glow: #ffb703;
+        }
+
+        
         .top-nav {
             position: absolute;
             top: clamp(15px, 4vw, 30px);
@@ -48,8 +56,8 @@
         }
 
         .back-btn {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 215, 0, 0.25);
             color: var(--gold-light);
             padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 25px);
             border-radius: 30px;
@@ -60,6 +68,8 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             backdrop-filter: blur(10px);
+            text-decoration: none;
+            display: inline-block;
         }
 
         .back-btn:hover {
@@ -91,9 +101,7 @@
             align-items: center;
             transition: opacity 0.5s;
             margin-top: 100px;
-            /* Space from top */
             margin-bottom: 120px;
-            /* Safe space to prevent button & footer overlap */
         }
 
         .header-text {
@@ -132,6 +140,10 @@
             transition: all 0.5s ease;
         }
 
+        body.chhath-mode .message-box-wrapper {
+            background: rgba(25, 10, 5, 0.65);
+        }
+
         .message-input {
             width: 100%;
             height: 150px;
@@ -166,7 +178,8 @@
             padding-top: 20px;
             margin-top: 10px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
+            font-size: 16px;
+            /* Prevents mobile auto-zoom */
             text-align: center;
             outline: none;
             text-transform: uppercase;
@@ -175,6 +188,7 @@
 
         .sender-input::placeholder {
             color: rgba(255, 215, 0, 0.4);
+            font-size: 0.88rem;
         }
 
         .btn-send {
@@ -210,7 +224,8 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            width: 100%;
+            width: 90%;
+            max-width: 650px;
             z-index: 20;
             pointer-events: none;
             opacity: 0;
@@ -291,11 +306,17 @@
 
 <body>
 
+    <audio id="bgm" loop preload="auto">
+        <source src="assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="/assets/tunes/tune.mp3" type="audio/mpeg">
+        <source src="../public/assets/tunes/tune.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Magic 3D Canvas -->
     <canvas id="magic-canvas"></canvas>
 
     <div class="top-nav">
-        <button class="back-btn" onclick="window.location.href='diwali.html'">← Back to the Little World</button>
+        <button class="back-btn" id="smart-back-btn" onclick="goBackSmart(event)">← Back to the Little World</button>
     </div>
 
     <!-- UI LAYER: The Whisper Form -->
@@ -326,11 +347,10 @@
                 You just made it a little more special. ❤️
             </span>
         </p>
-        <button class="btn-send" style="margin-top: 30px;" onclick="window.location.href='diwali.html'">Return to
+        <button class="btn-send" id="smart-return-btn" style="margin-top: 30px;" onclick="goBackSmart(event)">Return to
             Earth</button>
     </div>
 
-    <!-- CONSTANT FOOTER -->
     <a href="https://www.instagram.com/_kr._shubham?rpxt=b3JxZTRkeGRmb2Nj" target="_blank" class="creator-badge">
         Crafted with magic by <span class="signature">Shubham</span>
         <svg viewBox="0 0 24 24">
@@ -340,15 +360,89 @@
     </a>
 
     <script>
-        // --- Pre-fill name from session if available ---
+        
+        let isFromChhath = false;
+        const bgm = document.getElementById('bgm');
+
+        function detectFestivalOrigin() {
+            const ref = (document.referrer || "").toLowerCase();
+            const insidePortal = (window.self !== window.top);
+            const lastFestival = sessionStorage.getItem('lastFestivalSection') || "";
+
+            // Priority 1: Opened inside chhath.html's seamless portal
+            if (insidePortal) {
+                isFromChhath = true;
+            }
+            // Priority 2: Direct browser referrer check
+            else if (ref.includes('chhath')) {
+                isFromChhath = true;
+                sessionStorage.setItem('lastFestivalSection', 'chhath.html');
+            } else if (ref.includes('diwali')) {
+                isFromChhath = false;
+                sessionStorage.setItem('lastFestivalSection', 'diwali.html');
+            }
+            // Priority 3: Session storage fallback
+            else if (lastFestival.includes('chhath')) {
+                isFromChhath = true;
+            }
+
+            // Update UI & Audio if user came from Chhath
+            if (isFromChhath) {
+                document.body.classList.add('chhath-mode');
+                document.getElementById('smart-back-btn').textContent = '← Back to the Sacred Ghat';
+                document.getElementById('smart-return-btn').textContent = 'Return to the Ghat';
+
+                // Audio Handling:
+                // If inside chhath.html portal, parent is already playing the tune with 0 cut!
+                if (insidePortal) {
+                    bgm.pause();
+                    bgm.muted = true;
+                } else {
+                    // Standalone page navigation from Chhath: resume exact song second!
+                    const savedTime = parseFloat(sessionStorage.getItem('chhath_bgm_time') || '0');
+                    const isMuted = sessionStorage.getItem('chhath_bgm_muted') === 'true';
+                    bgm.volume = 0.5;
+                    bgm.muted = isMuted;
+                    if (savedTime > 0) {
+                        try { bgm.currentTime = savedTime; } catch (e) { }
+                    }
+                    bgm.play().catch(() => {
+                        document.addEventListener('click', () => bgm.play().catch(() => { }), { once: true });
+                    });
+                    setInterval(() => {
+                        if (!bgm.paused) sessionStorage.setItem('chhath_bgm_time', bgm.currentTime);
+                    }, 300);
+                }
+            } else {
+                // Came from Diwali: keep cosmic theme & keep Chhath audio off
+                bgm.pause();
+                bgm.muted = true;
+            }
+        }
+
+        // Smart Navigation Handler (Handles Portal Close OR Page Redirect)
+        function goBackSmart(e) {
+            if (e) e.preventDefault();
+
+            // If opened inside chhath.html's seamless portal, close portal smoothly with zero music interruption!
+            if (window.self !== window.top && window.parent && typeof window.parent.closeChhathPortal === 'function') {
+                window.parent.closeChhathPortal();
+                return;
+            }
+
+            // Otherwise navigate to the exact festival page the user came from
+            if (isFromChhath) {
+                window.location.href = 'chhath.html';
+            } else {
+                window.location.href = 'diwali.html';
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
-            const savedName = sessionStorage.getItem("visitorName");
-            if (savedName) document.getElementById('sender-name').value = savedName;
+            detectFestivalOrigin();
         });
 
-        // ==========================================
-        // THE COSMIC CANVAS ENGINE (Orb & Floating Stars)
-        // ==========================================
+        
         const canvas = document.getElementById('magic-canvas');
         const ctx = canvas.getContext('2d');
         let w = canvas.width = window.innerWidth;
@@ -358,7 +452,6 @@
         let ripples = [];
         let lightDust = [];
 
-        // The Central Energy Orb
         let orb = {
             x: w / 2,
             y: h / 2 + 50,
@@ -368,14 +461,12 @@
             vy: 0
         };
 
-        // Create Glowing & Moving Background Stars
         for (let i = 0; i < 150; i++) {
             bgStars.push({
                 x: Math.random() * w, y: Math.random() * h,
                 size: Math.random() * 2 + 0.2,
                 alpha: Math.random(),
                 speed: Math.random() * 0.015 + 0.005,
-                // Add velocity for floating movement
                 vx: (Math.random() - 0.5) * 0.4,
                 vy: (Math.random() - 0.5) * 0.4,
                 color: Math.random() > 0.5 ? '#ffea99' : '#00f5d4'
@@ -395,7 +486,7 @@
         });
 
         function animateCanvas() {
-            ctx.fillStyle = '#030108';
+            ctx.fillStyle = isFromChhath ? '#070201' : '#030108';
             ctx.fillRect(0, 0, w, h);
 
             // 1. Draw Floating Stars
@@ -403,25 +494,23 @@
                 s.alpha += s.speed;
                 if (s.alpha > 1 || s.alpha < 0.1) s.speed *= -1;
 
-                // Float Movement
                 s.x += s.vx;
                 s.y += s.vy;
 
-                // Wrap around edges
                 if (s.x < 0) s.x = w;
                 if (s.x > w) s.x = 0;
                 if (s.y < 0) s.y = h;
                 if (s.y > h) s.y = 0;
 
                 ctx.globalAlpha = Math.max(0, Math.min(1, s.alpha));
-                ctx.fillStyle = s.color;
+                const starColor = (isFromChhath && s.color === '#00f5d4') ? '#ffb703' : s.color;
+                ctx.fillStyle = starColor;
 
-                // Add soft glow to tiny stars
                 ctx.shadowBlur = 8;
-                ctx.shadowColor = s.color;
+                ctx.shadowColor = starColor;
 
                 ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill();
-                ctx.shadowBlur = 0; // reset
+                ctx.shadowBlur = 0;
             });
             ctx.globalAlpha = 1;
 
@@ -432,7 +521,9 @@
                 if (rip.alpha <= 0) { ripples.splice(i, 1); continue; }
 
                 ctx.beginPath(); ctx.arc(orb.x, orb.y, rip.r, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(0, 245, 212, ${rip.alpha})`;
+                ctx.strokeStyle = isFromChhath
+                    ? `rgba(255, 183, 3, ${rip.alpha})`
+                    : `rgba(0, 245, 212, ${rip.alpha})`;
                 ctx.lineWidth = 2; ctx.stroke();
             }
 
@@ -453,7 +544,7 @@
             ctx.beginPath(); ctx.arc(orb.x, orb.y, orb.radius, 0, Math.PI * 2);
             ctx.fillStyle = '#fff';
             ctx.shadowBlur = orb.glow + (orb.isFlying ? 50 : 0);
-            ctx.shadowColor = orb.isFlying ? '#ffea99' : '#00f5d4';
+            ctx.shadowColor = (orb.isFlying || isFromChhath) ? '#ffea99' : '#00f5d4';
             ctx.fill(); ctx.shadowBlur = 0;
 
             // 4. Draw Light Dust (The Shatter Effect)
@@ -484,7 +575,6 @@
 
         const API_BASE = 'https://diwali-fun.onrender.com/api/v1';
 
-
         async function transmitMessage() {
             const msgInput = document.getElementById('user-msg').value.trim();
             const senderInput = document.getElementById('sender-name').value.trim();
@@ -494,8 +584,10 @@
             const msgBox = document.getElementById('msg-box');
             const boxRect = msgBox.getBoundingClientRect();
 
-            const finalSenderName = senderInput || sessionStorage.getItem("visitorName") || localStorage.getItem("visitor_name") || "Anonymous Friend";
-
+            const storedVisitor = sessionStorage.getItem("visitorName") || localStorage.getItem("visitor_name") || "Anonymous Friend";
+            const baseSender = senderInput || `${storedVisitor}`;
+            const festivalTag = isFromChhath ? " (from Chhath 🌅)" : " (from Diwali 🪔)";
+            const finalSenderName = `${baseSender}${festivalTag}`;
 
             try {
                 await fetch(`${API_BASE}/admin-notes`, {
@@ -517,7 +609,9 @@
             document.getElementById('form-container').style.pointerEvents = 'none';
 
             // 2. Generate Light Dust 
-            const colors = ['#ffea99', '#d4af37', '#00f5d4', '#ffffff'];
+            const colors = isFromChhath
+                ? ['#ffea99', '#ffb703', '#fb8500', '#ffffff']
+                : ['#ffea99', '#d4af37', '#00f5d4', '#ffffff'];
             for (let i = 0; i < 300; i++) {
                 lightDust.push({
                     x: boxRect.left + Math.random() * boxRect.width,

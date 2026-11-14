@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>A Little World Of Happiness</title>
 
     <link
@@ -21,17 +21,16 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg-void);
             color: #fff;
             font-family: 'Montserrat', sans-serif;
-            /* Changed to 100dvh for perfect mobile browser fitting */
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
-            /* Allowed Y-scroll for very small landscape screens, hid X-scroll */
             overflow-x: hidden;
             overflow-y: auto;
             position: relative;
@@ -39,7 +38,7 @@
 
         /* Ambient Glow */
         .ambient-glow {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -66,12 +65,12 @@
 
         #bg-canvas {
             position: fixed;
-            /* Fixed so it covers background even on scroll */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -2;
+            pointer-events: none;
         }
 
         /* Main Container */
@@ -84,28 +83,28 @@
             z-index: 1;
             width: 100%;
             min-height: 100dvh;
-            padding-bottom: 80px;
-            /* Space for footer */
+            padding-bottom: 85px;
+            position: relative;
         }
 
         .screen-state {
             position: absolute;
             text-align: center;
             width: 100%;
-            max-width: 700px;
+            max-width: 720px;
             padding: 20px;
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* === FLUID TYPOGRAPHY (Perfect for All Devices) === */
+        /* === FLUID TYPOGRAPHY === */
         .cursive-whisper {
             font-family: 'Great Vibes', cursive;
             color: var(--gold-light);
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            /* Scales smoothly */
-            opacity: 0.9;
-            margin-bottom: -10px;
+            font-size: clamp(2.3rem, 7vw, 3.8rem);
+            opacity: 0.95;
+            margin-bottom: 4px;
             text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+            line-height: 1.2;
         }
 
         .grand-title {
@@ -123,8 +122,8 @@
 
         .aesthetic-subtitle {
             font-family: 'Great Vibes', cursive;
-            font-size: clamp(1.4rem, 4vw, 2.2rem);
-            color: rgba(255, 234, 153, 0.8);
+            font-size: clamp(1.4rem, 4vw, 2.1rem);
+            color: rgba(255, 234, 153, 0.85);
             letter-spacing: 1px;
             margin-bottom: 30px;
             text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
@@ -189,19 +188,17 @@
             gap: clamp(20px, 4vw, 50px);
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
+            margin-top: 15px;
             flex-wrap: wrap;
-            /* Allows stacking on mobile */
         }
 
         .portal {
             position: relative;
-            /* Fluid sizes for portals */
-            width: clamp(200px, 40vw, 260px);
-            height: clamp(280px, 50vw, 380px);
-            border-radius: 130px 130px 15px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(0, 0, 0, 0.5);
+            width: clamp(200px, 40vw, 255px);
+            height: clamp(275px, 48vw, 370px);
+            border-radius: 130px 130px 18px 18px;
+            border: 1px solid rgba(255, 215, 0, 0.22);
+            background: rgba(0, 0, 0, 0.55);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -209,7 +206,7 @@
             cursor: pointer;
             overflow: hidden;
             transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
             flex-shrink: 0;
         }
 
@@ -220,7 +217,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 10%, rgba(0, 0, 0, 0.2) 60%, transparent 100%);
             z-index: 1;
         }
 
@@ -232,7 +229,7 @@
             height: 100%;
             background-size: cover;
             background-position: center;
-            opacity: 0.5;
+            opacity: 0.62;
             transition: 0.8s;
             z-index: 0;
             background-image: repeating-linear-gradient(45deg, #111 0, #111 1px, transparent 1px, transparent 10px);
@@ -247,46 +244,51 @@
         .portal:hover {
             transform: translateY(-10px);
             border-color: var(--gold-light);
-            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 18px 45px rgba(255, 215, 0, 0.32);
         }
 
         .portal:hover .portal-gif {
             opacity: 1;
-            transform: scale(1.1);
-        }
-
-        .portal.locked {
-            pointer-events: none;
-            filter: grayscale(80%);
-            border-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .timer-text {
-            font-size: clamp(0.7rem, 2vw, 0.8rem);
-            color: #ff8c00;
-            font-weight: bold;
-            margin-bottom: 8px;
-            display: block;
-            letter-spacing: 1px;
+            transform: scale(1.08);
         }
 
         .portal h3 {
             font-family: 'Cinzel Decorative', serif;
             color: var(--gold-light);
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-size: clamp(1.25rem, 3vw, 1.55rem);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
         }
 
         .portal p {
-            font-size: clamp(0.7rem, 2vw, 0.8rem);
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 5px;
+            font-size: clamp(0.72rem, 2vw, 0.82rem);
+            color: rgba(255, 255, 255, 0.78);
+            margin-top: 6px;
             font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .change-name-link {
+            display: inline-block;
+            margin-top: 22px;
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.45);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.25);
+            padding-bottom: 2px;
+        }
+
+        .change-name-link:hover {
+            color: var(--gold-light);
+            border-bottom-color: var(--gold-light);
         }
 
         /* === RESPONSIVE CREATOR BADGE === */
         .creator-badge {
-            position: absolute;
-            bottom: 20px;
+            position: fixed;
+            bottom: 18px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -300,10 +302,16 @@
             transition: 0.4s;
             z-index: 10;
             white-space: nowrap;
+            background: rgba(0, 0, 0, 0.55);
+            padding: 6px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
         }
 
         .creator-badge:hover {
             color: #fff;
+            border-color: var(--gold-light);
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
@@ -371,16 +379,22 @@
             </form>
         </div>
 
-        <!-- STATE 2: Portals -->
+        <!-- STATE 2: Portals (Both Diwali & Chhath Unlocked!) -->
         <div id="state-festival" class="screen-state hidden">
-            <h2 class="cursive-whisper">Well, hello <span id="display-name" style="color:#fff;"> — we're glad you found your way here.</span></h2>
-            <p class="aesthetic-subtitle" style="font-size: clamp(1.2rem, 3.5vw, 1.8rem);">Two celebrations, countless little feelings. Where shall we begin?</p>
+            <h2 class="cursive-whisper">
+                Well, hello <span id="display-name" style="color:#fff;">Friend</span> — we're glad you found your way here.
+            </h2>
+            <p class="aesthetic-subtitle" style="font-size: clamp(1.2rem, 3.5vw, 1.8rem); margin-bottom: 20px;">
+                Two celebrations, countless little feelings. Where shall we begin?
+            </p>
 
             <div class="portal-grid">
 
+                <!-- DIWALI PORTAL -->
                 <div class="portal" onclick="selectFestival('diwali')">
                     <div class="portal-gif">
                         <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
+                            <source src="assets/videos/Diwali.mp4" type="video/mp4">
                             <source src="/assets/videos/Diwali.mp4" type="video/mp4">
                         </video>
                     </div>
@@ -390,20 +404,23 @@
                     </div>
                 </div>
 
-                <div class="portal locked" id="chhath-portal" onclick="selectFestival('chhath')">
+                <!-- CHHATH PORTAL (Unlocked & Active!) -->
+                <div class="portal" id="chhath-portal" onclick="selectFestival('chhath')">
                     <div class="portal-gif">
                         <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
+                            <source src="assets/videos/Chhath.mp4" type="video/mp4">
                             <source src="/assets/videos/Chhath.mp4" type="video/mp4">
                         </video>
                     </div>
                     <div class="portal-content">
-                        <span class="timer-text" id="chhath-timer">OPENS IN: 24:00:00</span>
                         <h3>Chhath</h3>
                         <p>Where faith meets the first light of a new day.</p>
                     </div>
                 </div>
 
             </div>
+
+            <span class="change-name-link" onclick="resetVisitorName()">Not <span id="small-name">you</span>? Change Name</span>
         </div>
     </main>
 
@@ -417,45 +434,75 @@
     </a>
 
     <script>
-        const API_BASE = 'https://diwali-fun.onrender.com/api/v1'; // Ensure your active backend port
+        const API_BASE = 'https://diwali-fun.onrender.com/api/v1';
 
-        document.getElementById("name-form").addEventListener("submit", async (e) => {
+        const stateName = document.getElementById("state-name");
+        const stateFest = document.getElementById("state-festival");
+
+        // If visitor already entered name in this session (e.g., clicked "Home" from Diwali/Chhath), show Portals directly
+        document.addEventListener("DOMContentLoaded", () => {
+            const existingName = sessionStorage.getItem('visitorName') || localStorage.getItem('visitor_name');
+            if (existingName && sessionStorage.getItem('hasEnteredWorld') === 'true') {
+                document.getElementById("display-name").textContent = existingName;
+                document.getElementById("small-name").textContent = existingName;
+                stateName.style.display = "none";
+                stateName.classList.remove("active");
+                stateFest.classList.remove("hidden");
+                stateFest.classList.add("active");
+            }
+        });
+
+        document.getElementById("name-form").addEventListener("submit", (e) => {
             e.preventDefault();
             const name = document.getElementById("visitor-name").value.trim();
             if (!name) return;
 
-            // 1. Save visitor name locally for next pages
+            // Save visitor name in both localStorage & sessionStorage so every page reads it seamlessly
             localStorage.setItem('visitor_name', name);
-
-            // 2. Log visitor to MongoDB Backend real-time
-            try {
-                await fetch(`${API_BASE}/visitor`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name, festival: 'diwali' })
-                });
-            } catch (err) {
-                console.error("Failed to log visitor:", err);
-            }
+            localStorage.setItem('visitorName', name);
+            sessionStorage.setItem('visitorName', name);
+            sessionStorage.setItem('visitor_name', name);
+            sessionStorage.setItem('hasEnteredWorld', 'true');
 
             document.getElementById("display-name").textContent = name;
-
-            const stateName = document.getElementById("state-name");
-            const stateFest = document.getElementById("state-festival");
+            document.getElementById("small-name").textContent = name;
 
             stateName.classList.remove("active");
             stateName.classList.add("hidden");
 
             setTimeout(() => {
                 stateName.style.display = "none";
+                stateFest.style.display = "block";
                 stateFest.classList.remove("hidden");
                 setTimeout(() => stateFest.classList.add("active"), 50);
             }, 800);
         });
 
+        function resetVisitorName() {
+            sessionStorage.removeItem('hasEnteredWorld');
+            stateFest.classList.remove("active");
+            stateFest.classList.add("hidden");
+            setTimeout(() => {
+                stateFest.style.display = "none";
+                stateName.style.display = "block";
+                document.getElementById("visitor-name").value = "";
+                setTimeout(() => {
+                    stateName.classList.remove("hidden");
+                    stateName.classList.add("active");
+                    document.getElementById("visitor-name").focus();
+                }, 50);
+            }, 600);
+        }
+
+        let isNavigating = false;
         async function selectFestival(festival) {
-            // Update festival choice in backend if needed or just navigate
-            const name = localStorage.getItem('visitor_name') || 'Anonymous';
+            if (isNavigating) return;
+            isNavigating = true;
+
+            const name = localStorage.getItem('visitor_name') || sessionStorage.getItem('visitorName') || 'Anonymous';
+            sessionStorage.setItem('lastFestivalSection', `${festival}.html`);
+
+            // Log exact festival choice once when the user clicks Diwali or Chhath
             try {
                 await fetch(`${API_BASE}/visitor`, {
                     method: 'POST',
@@ -465,37 +512,9 @@
             } catch (e) {
                 console.error("Festival selection log error:", e);
             }
-            window.location.href = festival + ".html";
+
+            window.location.href = `${festival}.html`;
         }
-
-        const chhathDate = new Date(2026, 10, 15, 0, 0, 0);
-
-        function updateChhathCountdown() {
-            const now = new Date();
-            const timer = document.getElementById("chhath-timer");
-            const portal = document.getElementById("chhath-portal");
-
-            const difference = chhathDate.getTime() - now.getTime();
-
-            if (difference <= 0) {
-                timer.textContent = "✨ OPEN NOW";
-                portal.classList.remove("locked");
-                return;
-            }
-
-            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((difference / (1000 * 60)) % 60);
-            const seconds = Math.floor((difference / 1000) % 60);
-
-            timer.textContent =
-                `OPENS IN: ${days}d ${String(hours).padStart(2, '0')}:` +
-                `${String(minutes).padStart(2, '0')}:` +
-                `${String(seconds).padStart(2, '0')}`;
-        }
-
-        updateChhathCountdown();
-        setInterval(updateChhathCountdown, 1000);
     </script>
     <script src="scripts/background-fx.js"></script>
 </body>

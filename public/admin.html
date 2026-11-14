@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Supreme Nexus - Admin Dashboard</title>
 
     <!-- Premium Fonts & Icons -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cinzel+Decorative:wght@700&family=Caveat:wght@500;700&family=Space+Mono&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Caveat:wght@500;700&family=Space+Mono&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -19,12 +19,12 @@
     <style>
         :root {
             --bg-void: #030108;
-            --panel-bg: rgba(15, 8, 25, 0.7);
-            --border-glow: rgba(0, 245, 212, 0.15);
+            --panel-bg: rgba(15, 8, 25, 0.78);
+            --border-glow: rgba(0, 245, 212, 0.18);
             --accent-cyan: #00f5d4;
             --accent-gold: #ffea99;
             --accent-pink: #ff0055;
-            --text-muted: rgba(255, 255, 255, 0.5);
+            --text-muted: rgba(255, 255, 255, 0.55);
             --danger: #ff3366;
             --success: #00e676;
         }
@@ -33,6 +33,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -40,21 +41,27 @@
             color: #fff;
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
+            min-height: 100dvh;
         }
 
-        /* Custom Scrollbar */
+        /* Custom Scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--bg-void);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--accent-cyan);
+            background: rgba(0, 245, 212, 0.45);
             border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
         }
 
         /* === 1. AUTH GATEWAY === */
@@ -67,50 +74,50 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 1s ease, transform 1s ease;
+            padding: 20px;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
         .auth-box {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.55);
             border: 1px solid var(--border-glow);
-            padding: 50px 30px;
-            border-radius: 20px;
+            padding: clamp(32px, 6vw, 50px) clamp(22px, 5vw, 30px);
+            border-radius: 22px;
             backdrop-filter: blur(20px);
             text-align: center;
-            box-shadow: 0 0 50px rgba(0, 245, 212, 0.1);
-            width: 90%;
+            box-shadow: 0 0 50px rgba(0, 245, 212, 0.12);
+            width: 100%;
             max-width: 400px;
         }
 
         .auth-icon {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             color: var(--accent-cyan);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             filter: drop-shadow(0 0 15px var(--accent-cyan));
         }
 
         .auth-title {
             font-family: 'Cinzel Decorative', serif;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             color: var(--accent-gold);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .auth-input {
             width: 100%;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: #fff;
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-family: 'Space Mono', monospace;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             letter-spacing: 5px;
             outline: none;
             transition: 0.3s;
-            margin-bottom: 25px;
-            margin-top: 20px;
+            margin: 20px 0 22px;
         }
 
         .auth-input:focus {
@@ -129,7 +136,7 @@
             border: none;
             width: 100%;
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -137,24 +144,16 @@
             transition: 0.4s;
         }
 
+        .btn-login:hover {
+            box-shadow: 0 0 25px rgba(0, 245, 212, 0.5);
+            transform: translateY(-2px);
+        }
+
         @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-10px);
-            }
-
-            50% {
-                transform: translateX(10px);
-            }
-
-            75% {
-                transform: translateX(-10px);
-            }
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
         }
 
         .auth-loader {
@@ -169,37 +168,32 @@
         }
 
         @keyframes pulse {
-            from {
-                opacity: 0.5;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0.5; }
+            to { opacity: 1; }
         }
 
         /* === 2. DASHBOARD LAYOUT === */
         #dashboard {
             display: none;
             opacity: 0;
-            min-height: 100vh;
-            transition: opacity 1s;
+            min-height: 100dvh;
+            transition: opacity 0.8s;
         }
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: 100vh;
+            grid-template-columns: 250px 1fr;
+            min-height: 100dvh;
         }
 
-        /* --- NAVIGATION --- */
+        /* --- SIDEBAR / MOBILE BOTTOM NAV --- */
         .sidebar {
-            background: rgba(10, 5, 20, 0.95);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 30px 15px;
+            background: rgba(10, 5, 20, 0.96);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 28px 14px;
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(18px);
             z-index: 100;
         }
 
@@ -207,7 +201,7 @@
             font-family: 'Cinzel Decorative', serif;
             font-size: 1.3rem;
             color: var(--accent-gold);
-            margin-bottom: 40px;
+            margin-bottom: 35px;
             text-align: center;
             line-height: 1.2;
         }
@@ -225,26 +219,40 @@
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 14px;
             padding: 12px 15px;
-            margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 6px;
+            color: rgba(255, 255, 255, 0.55);
             text-decoration: none;
             border-radius: 10px;
             transition: 0.3s;
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             font-weight: 500;
             cursor: pointer;
+            border-left: 4px solid transparent;
+            white-space: nowrap;
         }
 
         .nav-item:hover,
         .nav-item.active {
             background: rgba(0, 245, 212, 0.1);
             color: var(--accent-cyan);
-            border-left: 4px solid var(--accent-cyan);
+            border-left-color: var(--accent-cyan);
         }
 
-        /* Mobile Bottom Nav (Optimized for 5 items) */
+        .nav-logout {
+            margin-top: auto;
+            color: var(--danger) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+        }
+
+        .nav-logout:hover {
+            background: rgba(255, 51, 102, 0.12) !important;
+            border-left-color: var(--danger) !important;
+        }
+
+        /* Mobile Bottom Navigation (Scrollable & Clean for all 7 tabs!) */
         @media (max-width: 900px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -256,66 +264,66 @@
                 left: 0;
                 width: 100%;
                 border-right: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                padding: 5px;
+                border-top: 1px solid rgba(0, 245, 212, 0.2);
+                padding: 6px 10px;
                 flex-direction: row;
-                justify-content: space-around;
+                justify-content: flex-start;
                 align-items: center;
-                height: 75px;
-                box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+                height: 72px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                gap: 6px;
+                box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.8);
+                -webkit-overflow-scrolling: touch;
             }
 
-            .brand {
-                display: none;
+            .sidebar::-webkit-scrollbar {
+                height: 0px;
+            }
+
+            .brand,
+            .nav-logout {
+                display: none !important;
             }
 
             .nav-item {
                 flex-direction: column;
-                gap: 5px;
-                padding: 8px 0;
+                justify-content: center;
+                gap: 4px;
+                padding: 8px 12px;
                 margin: 0;
-                font-size: 0.6rem;
+                font-size: 0.62rem;
                 border-left: none;
                 border-bottom: 3px solid transparent;
-                border-radius: 0;
-                flex: 1;
+                border-radius: 10px;
+                flex: 0 0 auto;
+                min-width: 74px;
                 text-align: center;
             }
 
             .nav-item.active {
                 border-left: none;
                 border-bottom: 3px solid var(--accent-cyan);
-                background: transparent;
+                background: rgba(0, 245, 212, 0.08);
             }
 
             .nav-item i {
-                font-size: 1.3rem;
-            }
-
-            .nav-logout {
-                display: none;
+                font-size: 1.15rem;
             }
         }
 
-        /* --- MAIN CONTENT --- */
+        /* --- MAIN CONTENT AREA --- */
         .main-content {
-            padding: 40px;
+            padding: clamp(18px, 4vw, 38px);
             position: relative;
-            height: 100vh;
+            height: 100dvh;
             overflow-y: auto;
             padding-bottom: 120px;
         }
 
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 20px;
-                padding-bottom: 100px;
-            }
-        }
-
         .admin-section {
             display: none;
-            animation: fadeIn 0.4s;
+            animation: fadeIn 0.35s ease;
         }
 
         .admin-section.active {
@@ -323,55 +331,109 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
+        /* TOP HEADER WITH ALWAYS-VISIBLE REFRESH & LOGOUT BUTTONS */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .page-title {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            font-weight: 300;
+            font-size: clamp(1.25rem, 3.5vw, 1.8rem);
+            font-weight: 400;
+            color: #fff;
         }
 
         .admin-profile {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+        }
+
+        .creator-info {
+            text-align: right;
+            display: none;
+        }
+
+        @media (min-width: 600px) {
+            .creator-info {
+                display: block;
+            }
         }
 
         .admin-avatar {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             background: var(--accent-cyan);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #000;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 0 15px rgba(0, 245, 212, 0.5);
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.45);
+        }
+
+        .header-icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--accent-cyan);
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .header-icon-btn:hover {
+            background: rgba(0, 245, 212, 0.15);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(0, 245, 212, 0.3);
+        }
+
+        .header-logout-btn {
+            background: rgba(255, 51, 102, 0.12);
+            border: 1px solid rgba(255, 51, 102, 0.4);
+            color: var(--danger);
+            padding: 0 14px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .header-logout-btn:hover {
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.5);
         }
 
         /* STAT CARDS */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .stat-card {
@@ -403,41 +465,41 @@
         }
 
         .stat-title {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: clamp(1.5rem, 3vw, 1.9rem);
             font-weight: 600;
             color: #fff;
         }
 
         .stat-icon {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
+            top: 18px;
+            right: 18px;
+            font-size: 1.4rem;
             color: rgba(255, 255, 255, 0.1);
         }
 
         /* CHARTS */
         .chart-container {
             background: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
             width: 100%;
-            height: 350px;
+            height: 340px;
         }
 
         .section-header {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
             margin-bottom: 15px;
             color: var(--accent-gold);
@@ -448,43 +510,129 @@
             align-items: center;
         }
 
-        /* DATA TABLES (Fully Mobile Responsive) */
+        /* === TOOLBAR (SEARCH BAR + TOTAL COUNT PILL) === */
+        .section-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .count-pill {
+            background: rgba(0, 245, 212, 0.12);
+            border: 1px solid rgba(0, 245, 212, 0.35);
+            color: var(--accent-cyan);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+            min-width: 200px;
+        }
+
+        @media (max-width: 600px) {
+            .search-box {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 8px 14px 8px 34px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* === SCROLLABLE DATA TABLES (Vertical + Horizontal + Sticky Header!) === */
         .table-container {
             background: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.07);
             border-radius: 16px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             margin-bottom: 30px;
+            max-height: 68vh; /* Makes long lists 100% scrollable inside the box! */
+            overflow-y: auto;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            /* Smooth scroll on mobile */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            min-width: 700px;
         }
 
         th,
         td {
-            padding: 15px 20px;
+            padding: 15px 18px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
         }
 
         th {
-            background: rgba(0, 0, 0, 0.4);
-            font-size: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #0d0618;
+            font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--text-muted);
-            font-weight: 500;
+            color: var(--accent-gold);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        tbody tr {
+            transition: background 0.25s;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
         }
 
         td {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: rgba(255, 255, 255, 0.9);
+            word-break: break-word;
         }
 
         .name-tag {
@@ -494,21 +642,43 @@
 
         .cursive-msg {
             font-family: 'Caveat', cursive;
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             color: #fff;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
         }
 
-        /* Time Badge */
         .time-badge {
             background: rgba(0, 245, 212, 0.1);
             color: var(--accent-cyan);
             padding: 4px 8px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             white-space: nowrap;
             border: 1px solid rgba(0, 245, 212, 0.3);
+            display: inline-block;
+        }
+
+        .festival-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .festival-chhath {
+            background: rgba(251, 133, 0, 0.18);
+            border: 1px solid rgba(255, 183, 3, 0.5);
+            color: #ffea99;
+        }
+
+        .festival-diwali {
+            background: rgba(0, 245, 212, 0.12);
+            border: 1px solid rgba(0, 245, 212, 0.35);
+            color: var(--accent-cyan);
         }
 
         .action-btn {
@@ -516,11 +686,12 @@
             border: 1px solid var(--danger);
             color: var(--danger);
             padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
             cursor: pointer;
             transition: 0.3s;
             font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
         }
 
         .action-btn:hover {
@@ -528,23 +699,82 @@
             color: #fff;
         }
 
+        /* === MOBILE CARD-VIEW FOR TABLES (No Horizontal Squishing on Phones!) === */
+        @media (max-width: 700px) {
+            .table-container {
+                max-height: 70vh;
+                padding: 10px;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tbody tr {
+                background: var(--panel-bg);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 14px;
+                margin-bottom: 12px;
+                padding: 14px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            }
+
+            td {
+                border: none;
+                border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+                position: relative;
+                padding: 8px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 12px;
+                text-align: right;
+            }
+
+            td:last-child {
+                border-bottom: none;
+                padding-bottom: 2px;
+            }
+
+            td::before {
+                content: attr(data-label);
+                font-size: 0.68rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--text-muted);
+                font-weight: 600;
+                text-align: left;
+                flex-shrink: 0;
+            }
+        }
+
         /* Toast */
         #admin-toast {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(0, 245, 212, 0.2);
+            background: rgba(10, 5, 20, 0.92);
             border: 1px solid var(--accent-cyan);
             color: var(--accent-cyan);
-            padding: 12px 25px;
+            padding: 12px 22px;
             border-radius: 10px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             opacity: 0;
             pointer-events: none;
             transition: 0.4s ease;
             z-index: 2000;
             backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
 
         #admin-toast.show {
@@ -556,66 +786,70 @@
 
 <body>
 
-    <!-- === AUTH GATEWAY === -->
+    <!-- === 1. AUTH GATEWAY === -->
     <div id="auth-gateway">
         <div class="auth-box">
             <i class="fa-solid fa-fingerprint auth-icon"></i>
             <h1 class="auth-title">System Nexus</h1>
             <input type="password" id="auth-pwd" class="auth-input" placeholder="ACCESS KEY" autocomplete="off">
-            <button class="btn-login" onclick="handleAuth()">Authenticate</button>
+            <button class="btn-login" id="login-btn" onclick="handleAuth()">Authenticate</button>
             <div class="auth-loader" id="auth-loader">Authenticating Identity...</div>
         </div>
     </div>
 
-    <!-- === ADMIN DASHBOARD === -->
+    <!-- === 2. ADMIN DASHBOARD === -->
     <div id="dashboard">
         <div class="dashboard-grid">
 
-            <!-- Navigation Sidebar / Mobile Bottom Nav -->
+            <!-- Navigation Sidebar / Mobile Scrollable Bottom Nav -->
             <nav class="sidebar">
-                <div class="brand">Creator's Space<span>System v4.0</span></div>
+                <div class="brand">Creator's Space<span>System v4.5</span></div>
 
                 <a class="nav-item active" onclick="switchSection('sec-overview', this)">
                     <i class="fa-solid fa-chart-pie"></i> <span>Overview</span>
                 </a>
+                <a class="nav-item" onclick="switchSection('sec-visitors', this)">
+                    <i class="fa-solid fa-users-viewfinder"></i> <span>Visitors</span>
+                </a>
                 <a class="nav-item" onclick="switchSection('sec-wishtree', this)">
                     <i class="fa-solid fa-leaf"></i> <span>Wish Tree</span>
                 </a>
-                <!-- Renamed & Updated Icons for Clarity -->
                 <a class="nav-item" onclick="switchSection('sec-universe-to-user', this)">
                     <i class="fa-solid fa-meteor"></i> <span>Oracle Logs</span>
                 </a>
                 <a class="nav-item" onclick="switchSection('sec-user-to-universe', this)">
-                    <i class="fa-solid fa-bahai"></i> <span>Cosmic Whispers</span>
+                    <i class="fa-solid fa-bahai"></i> <span>Whispers</span>
                 </a>
-                <a class="nav-item" onclick="switchSection('sec-metrics', this)">
-                    <i class="fa-solid fa-share-nodes"></i> <span>Cards/Shares</span>
-                </a>
-                <a class="nav-item" onclick="switchSection('sec-visitors', this)">
-                    <i class="fa-solid fa-users-viewfinder"></i> <span>Visitors Log</span>
-                </a>
-                <!-- NEW: ADMIN NOTES TAB -->
                 <a class="nav-item" onclick="switchSection('sec-admin-notes', this)">
                     <i class="fa-solid fa-envelope-open-text"></i> <span>Admin Notes</span>
                 </a>
+                <a class="nav-item" onclick="switchSection('sec-metrics', this)">
+                    <i class="fa-solid fa-share-nodes"></i> <span>Shares</span>
+                </a>
 
-                <a href="admin.html" class="nav-item nav-logout" style="margin-top: auto; color: var(--danger);">
-                    <i class="fa-solid fa-power-off"></i> <span>Exit</span>
+                <a class="nav-item nav-logout" onclick="logoutAdmin()">
+                    <i class="fa-solid fa-power-off"></i> <span>Logout</span>
                 </a>
             </nav>
 
             <!-- Main Content Area -->
             <main class="main-content">
 
+                <!-- Top Header (With Mobile-Visible Refresh & Logout!) -->
                 <div class="header">
                     <h2 class="page-title" id="active-title">Nexus Analytics</h2>
                     <div class="admin-profile">
-                        <div style="text-align: right; display: none; @media(min-width: 600px){ display: block; }">
+                        <button class="header-icon-btn" onclick="refreshDashboard()" title="Sync Latest Data">
+                            <i class="fa-solid fa-arrows-rotate" id="sync-icon"></i>
+                        </button>
+                        <div class="creator-info">
                             <div style="font-weight: 600; font-size: 0.8rem;">Shubham</div>
-                            <div style="font-size: 0.65rem; color: var(--accent-cyan); letter-spacing: 1px;">CREATOR
-                            </div>
+                            <div style="font-size: 0.62rem; color: var(--accent-cyan); letter-spacing: 1px;">CREATOR</div>
                         </div>
                         <div class="admin-avatar">S</div>
+                        <button class="header-logout-btn" onclick="logoutAdmin()" title="Logout of Admin">
+                            <i class="fa-solid fa-power-off"></i> <span>Exit</span>
+                        </button>
                     </div>
                 </div>
 
@@ -637,37 +871,72 @@
                             <div class="stat-title">Cosmic Whispers</div>
                             <div class="stat-value" id="val-whispers">0</div>
                         </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fa-solid fa-book-open stat-icon"></i>
-                        <div class="stat-title">Scrapbook Downloads</div>
-                        <div class="stat-value" id="val-scrapbook-downloads">0</div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-book-open stat-icon"></i>
+                            <div class="stat-title">Scrapbook Downloads</div>
+                            <div class="stat-value" id="val-scrapbook-downloads">0</div>
+                        </div>
                     </div>
 
                     <div class="chart-container">
                         <div class="section-header">
                             <span>Ecosystem Activity Trajectory</span>
-                            <span
-                                style="font-size: 0.7rem; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 10px;">LIVE
-                                SYNC</span>
+                            <span style="font-size: 0.68rem; background: rgba(0,245,212,0.12); color: var(--accent-cyan); padding: 4px 10px; border-radius: 10px;">LIVE SYNC</span>
                         </div>
                         <canvas id="premiumChart"></canvas>
                     </div>
                 </div>
 
-                <!-- SECTION 2: WISH TREE LOGS -->
-                <div id="sec-wishtree" class="admin-section">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                        <i class="fa-solid fa-tree"></i> Public wishes planted on the tree. You can remove inappropriate
-                        content here.
-                    </p>
+                <!-- SECTION 2: VISITORS LOG (Full Scrollable List + Search) -->
+                <div id="sec-visitors" class="admin-section">
+                    <div class="section-toolbar">
+                        <div class="toolbar-info">
+                            <i class="fa-solid fa-users"></i> Complete Visitors Directory
+                            <span class="count-pill" id="count-visitors">0 Records</span>
+                        </div>
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" class="search-input" placeholder="Search visitor or festival..." oninput="filterTable('visitors-body', this.value)">
+                        </div>
+                    </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
+                                    <th>#</th>
+                                    <th>Timestamp</th>
+                                    <th>Visitor Name</th>
+                                    <th>Festival Choice</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="visitors-body">
+                                <!-- JS Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: WISH TREE LOGS (Diwali + Chhath Wishes) -->
+                <div id="sec-wishtree" class="admin-section">
+                    <div class="section-toolbar">
+                        <div class="toolbar-info">
+                            <i class="fa-solid fa-tree"></i> Public & Chhath Ghat Wishes
+                            <span class="count-pill" id="count-wishes">0 Wishes</span>
+                        </div>
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" class="search-input" placeholder="Search name, wish or Chhath..." oninput="filterTable('wishtree-body', this.value)">
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
                                     <th>Date & Time</th>
                                     <th>Visitor Name</th>
-                                    <th>Planted Wish</th>
+                                    <th>Planted / Offered Wish</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -678,19 +947,26 @@
                     </div>
                 </div>
 
-                <!-- SECTION 3: ORACLE LOGS (Universe -> User) -->
+                <!-- SECTION 4: ORACLE LOGS (Diwali Oracle + Chhath Blessings) -->
                 <div id="sec-universe-to-user" class="admin-section">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                        <i class="fa-solid fa-meteor"></i> Track which Destiny Message (Oracle) was given to which
-                        visitor by the Universe.
-                    </p>
+                    <div class="section-toolbar">
+                        <div class="toolbar-info">
+                            <i class="fa-solid fa-meteor"></i> Oracle & Maiya's Blessings Log
+                            <span class="count-pill" id="count-oracle">0 Logs</span>
+                        </div>
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" class="search-input" placeholder="Search visitor or blessing..." oninput="filterTable('universe-body', this.value)">
+                        </div>
+                    </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Date & Time</th>
                                     <th>Visitor Name</th>
-                                    <th>Oracle Message Received</th>
+                                    <th>Oracle / Blessing Received</th>
                                 </tr>
                             </thead>
                             <tbody id="universe-body">
@@ -700,16 +976,23 @@
                     </div>
                 </div>
 
-                <!-- SECTION 4: COSMIC WHISPERS (User -> Universe/Admin) -->
+                <!-- SECTION 5: COSMIC WHISPERS -->
                 <div id="sec-user-to-universe" class="admin-section">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                        <i class="fa-solid fa-user-secret"></i> Extremely personal wishes and notes whispered to the
-                        Universe/Admin via the Cosmic Orb.
-                    </p>
+                    <div class="section-toolbar">
+                        <div class="toolbar-info">
+                            <i class="fa-solid fa-user-secret"></i> Cosmic Orb Whispers
+                            <span class="count-pill" id="count-whispers">0 Whispers</span>
+                        </div>
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" class="search-input" placeholder="Search sender or whisper..." oninput="filterTable('whispers-body', this.value)">
+                        </div>
+                    </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Date & Time</th>
                                     <th>Sender Name</th>
                                     <th>Whisper / Manifestation</th>
@@ -721,16 +1004,24 @@
                         </table>
                     </div>
                 </div>
-                <!-- SECTION 4.5: ADMIN NOTES (Visitor -> Admin) -->
+
+                <!-- SECTION 6: ADMIN NOTES (Diwali + Chhath Notes) -->
                 <div id="sec-admin-notes" class="admin-section">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                        <i class="fa-solid fa-envelope"></i> Direct messages, feedback, and special notes left
-                        exclusively for the Creator.
-                    </p>
+                    <div class="section-toolbar">
+                        <div class="toolbar-info">
+                            <i class="fa-solid fa-envelope"></i> Direct Creator Notes
+                            <span class="count-pill" id="count-notes">0 Notes</span>
+                        </div>
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" class="search-input" placeholder="Search sender or note..." oninput="filterTable('admin-notes-body', this.value)">
+                        </div>
+                    </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Date & Time</th>
                                     <th>Sender Name</th>
                                     <th>Direct Note</th>
@@ -743,7 +1034,7 @@
                     </div>
                 </div>
 
-                <!-- SECTION 5: CARD & SHARE METRICS -->
+                <!-- SECTION 7: CARD & SHARE METRICS -->
                 <div id="sec-metrics" class="admin-section">
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -756,8 +1047,6 @@
                             <div class="stat-title">"Craft Your Own" Downloads</div>
                             <div class="stat-value" id="val-craft-downloads">0</div>
                         </div>
-                    </div>
-                    <div class="stats-grid">
                         <div class="stat-card pink">
                             <i class="fa-brands fa-whatsapp stat-icon"></i>
                             <div class="stat-title">WhatsApp Shares</div>
@@ -768,28 +1057,6 @@
                             <div class="stat-title">System Share / Copied</div>
                             <div class="stat-value" id="val-system-shares">0</div>
                         </div>
-                    </div>
-                </div>
-                <!-- SECTION: VISITORS LOG -->
-                <div id="sec-visitors" class="admin-section">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                        <i class="fa-solid fa-users"></i> Complete directory of every visitor who entered A Little World
-                        Of Happiness.
-                    </p>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Timestamp</th>
-                                    <th>Visitor Name</th>
-                                    <th>Festival Choice</th>
-                                    <th>IP Address</th>
-                                </tr>
-                            </thead>
-                            <tbody id="visitors-body">
-                                <!-- JS Injected -->
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 
@@ -804,7 +1071,18 @@
         const API_BASE = 'https://diwali-fun.onrender.com/api/v1/admin';
         let authToken = localStorage.getItem('nexus_token') || '';
 
-        // === 1. AUTHENTICATION ===
+        // Auto-login if valid session token already exists
+        document.addEventListener("DOMContentLoaded", () => {
+            if (authToken) {
+                document.getElementById('auth-gateway').style.display = 'none';
+                const dash = document.getElementById('dashboard');
+                dash.style.display = 'block';
+                dash.style.opacity = '1';
+                fetchDashboardData();
+            }
+        });
+
+        // === 1. AUTHENTICATION & LOGOUT ===
         async function handleAuth() {
             const pwd = document.getElementById('auth-pwd').value;
             const loader = document.getElementById('auth-loader');
@@ -823,7 +1101,7 @@
                     localStorage.setItem('nexus_token', authToken);
 
                     input.style.display = 'none';
-                    document.querySelector('.btn-login').style.display = 'none';
+                    document.getElementById('login-btn').style.display = 'none';
                     loader.style.display = 'block';
 
                     setTimeout(() => {
@@ -831,13 +1109,14 @@
                         gateway.style.opacity = '0';
                         setTimeout(() => {
                             gateway.style.display = 'none';
-                            document.getElementById('dashboard').style.display = 'block';
+                            const dash = document.getElementById('dashboard');
+                            dash.style.display = 'block';
                             setTimeout(() => {
-                                document.getElementById('dashboard').style.opacity = '1';
-                                fetchDashboardData(); // FIXED: Properly triggered on login success
+                                dash.style.opacity = '1';
+                                fetchDashboardData();
                             }, 50);
-                        }, 1000);
-                    }, 1200);
+                        }, 600);
+                    }, 800);
                 } else {
                     triggerAuthError(input);
                 }
@@ -847,6 +1126,12 @@
             }
         }
 
+        function logoutAdmin() {
+            localStorage.removeItem('nexus_token');
+            authToken = '';
+            window.location.reload();
+        }
+
         function triggerAuthError(input) {
             input.classList.add('error');
             input.value = '';
@@ -854,14 +1139,16 @@
             setTimeout(() => { input.classList.remove('error'); }, 400);
         }
 
-        document.getElementById('auth-pwd').addEventListener('keypress', function (e) { if (e.key === 'Enter') handleAuth(); });
+        document.getElementById('auth-pwd').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleAuth();
+        });
 
-        // === 2. NAVIGATION LOGIC ===
+        // === 2. NAVIGATION & SEARCH FILTER ===
         const sectionTitles = {
             'sec-overview': 'Nexus Analytics',
             'sec-visitors': 'Visitors Directory',
             'sec-wishtree': 'Wish Tree Logs',
-            'sec-universe-to-user': 'Oracle Transmissions',
+            'sec-universe-to-user': 'Oracle & Blessings',
             'sec-user-to-universe': 'Cosmic Whispers',
             'sec-admin-notes': 'Direct Admin Notes',
             'sec-metrics': 'Engagement Metrics'
@@ -876,6 +1163,23 @@
             document.getElementById('active-title').innerText = sectionTitles[secId];
         }
 
+        function filterTable(tbodyId, query) {
+            const q = query.toLowerCase().trim();
+            const rows = document.querySelectorAll(`#${tbodyId} tr`);
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(q) ? '' : 'none';
+            });
+        }
+
+        async function refreshDashboard() {
+            const icon = document.getElementById('sync-icon');
+            icon.classList.add('fa-spin');
+            await fetchDashboardData();
+            setTimeout(() => icon.classList.remove('fa-spin'), 600);
+            showToast("Nexus data synced ✨");
+        }
+
         // === 3. FETCH LIVE DATA FROM MONGODB ===
         let chartInstance = null;
 
@@ -884,25 +1188,36 @@
                 const response = await fetch(`${API_BASE}/dashboard-data`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                const result = await response.json();
 
+                if (response.status === 401 || response.status === 403) {
+                    logoutAdmin();
+                    return;
+                }
+
+                const result = await response.json();
                 console.log("📥 Dashboard API Response:", result);
 
                 if (result.success) {
-                    // Update Stats Cards
-                    animateValue("val-visitors", 0, result.stats.visitors, 1200);
-                    animateValue("val-tree", 0, result.stats.treeWishes, 1200);
-                    animateValue("val-whispers", 0, result.stats.whispers, 1200);
+                    const totalVisitors = result.visitors ? result.visitors.length : (result.stats?.visitors || 0);
+                    const totalWishes = result.wishes ? result.wishes.length : (result.stats?.treeWishes || 0);
+                    const totalWhispers = result.whispers ? result.whispers.length : (result.stats?.whispers || 0);
 
-                    // Populate Tables
-                    populateVisitors(result.visitors);
-                    populateWishTree(result.wishes);
-                    populateUniverseLogs(result.oracleLogs);
-                    populateWhispers(result.whispers);
-                    populateAdminNotes(result.adminNotes);
+                    animateValue("val-visitors", 0, result.stats?.visitors || totalVisitors, 1000);
+                    animateValue("val-tree", 0, result.stats?.treeWishes || totalWishes, 1000);
+                    animateValue("val-whispers", 0, result.stats?.whispers || totalWhispers, 1000);
 
+                    // Populate Full Scrollable Lists
+                    populateVisitors(result.visitors || []);
+                    populateWishTree(result.wishes || []);
+                    populateUniverseLogs(result.oracleLogs || []);
+                    populateWhispers(result.whispers || []);
+                    populateAdminNotes(result.adminNotes || []);
 
-                    renderPremiumChart(result.chartData || { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'], visitors: [0, 0, 0, 0, 0, 0, 0], interactions: [0, 0, 0, 0, 0, 0, 0] });
+                    renderPremiumChart(result.chartData || {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'],
+                        visitors: [0, 0, 0, 0, 0, 0, 0],
+                        interactions: [0, 0, 0, 0, 0, 0, 0]
+                    });
                 }
 
                 if (result.metrics) {
@@ -917,24 +1232,7 @@
                 showToast("Error syncing with Nexus core.");
             }
         }
-        function populateAdminNotes(notes) {
-            const tbody = document.getElementById('admin-notes-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            if (!notes || notes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No special notes received yet.</td></tr>`;
-                return;
-            }
-            notes.forEach(note => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><span class="time-badge" style="border-color: rgba(255, 234, 153, 0.4); color: var(--accent-gold); background: rgba(255, 234, 153, 0.1);">${formatLocalDate(note.createdAt)}</span></td>
-                    <td class="name-tag" style="color: var(--magic-cyan);">${note.sender}</td>
-                    <td style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; color: #fff; line-height: 1.5; font-style: italic;">"${note.message}"</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+
         function animateValue(id, start, end, duration) {
             let obj = document.getElementById(id);
             if (!obj) return;
@@ -971,7 +1269,7 @@
                     labels: chartData.labels || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'],
                     datasets: [
                         {
-                            label: 'Daily Visitors (Real)',
+                            label: 'Daily Visitors',
                             data: chartData.visitors || [0, 0, 0, 0, 0, 0, 0],
                             borderColor: '#00f5d4',
                             backgroundColor: gradCyan,
@@ -982,7 +1280,7 @@
                             tension: 0.4
                         },
                         {
-                            label: 'Daily Wishes (Real)',
+                            label: 'Daily Wishes',
                             data: chartData.interactions || [0, 0, 0, 0, 0, 0, 0],
                             borderColor: '#ffea99',
                             backgroundColor: gradGold,
@@ -996,7 +1294,8 @@
                     ]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     plugins: { legend: { position: 'top', labels: { color: 'rgba(255,255,255,0.7)', usePointStyle: true } } },
                     scales: {
@@ -1007,29 +1306,36 @@
             });
         }
 
-        // === 5. POPULATING TABLES FROM DB ===
+        // === 5. POPULATING FULL SCROLLABLE TABLES ===
         function formatLocalDate(isoString) {
+            if (!isoString) return 'Just now';
             const d = new Date(isoString);
-            return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }) + ', ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }) + ', ' +
+                   d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
         }
 
         function populateVisitors(visitors) {
             const tbody = document.getElementById('visitors-body');
+            const countEl = document.getElementById('count-visitors');
             if (!tbody) return;
             tbody.innerHTML = '';
+            if (countEl) countEl.textContent = `${visitors.length} Visitors`;
 
-            if (!visitors || visitors.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No visitors recorded yet.</td></tr>`;
+            if (visitors.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No visitors recorded yet.</td></tr>`;
                 return;
             }
 
-            visitors.forEach(v => {
+            visitors.forEach((v, idx) => {
+                const fest = (v.festival || 'Diwali');
+                const isChhath = fest.toLowerCase().includes('chhath');
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><span class="time-badge">${v.createdAt ? formatLocalDate(v.createdAt) : 'Just now'}</span></td>
-                    <td class="name-tag">${v.name || 'Anonymous'}</td>
-                    <td><span style="color: var(--accent-gold); text-transform: uppercase; font-size: 0.8rem;">${v.festival || 'Diwali'}</span></td>
-                    <td style="font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">${v.ipAddress || 'Local'}</td>
+                    <td data-label="#">${idx + 1}</td>
+                    <td data-label="Time"><span class="time-badge">${formatLocalDate(v.createdAt)}</span></td>
+                    <td data-label="Visitor" class="name-tag">${v.name || 'Anonymous'}</td>
+                    <td data-label="Festival"><span class="festival-badge ${isChhath ? 'festival-chhath' : 'festival-diwali'}">${fest}</span></td>
+                    <td data-label="IP" style="font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--text-muted);">${v.ipAddress || 'Local'}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1037,20 +1343,26 @@
 
         function populateWishTree(wishes) {
             const tbody = document.getElementById('wishtree-body');
+            const countEl = document.getElementById('count-wishes');
             if (!tbody) return;
             tbody.innerHTML = '';
-            if (!wishes || wishes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No wishes planted yet.</td></tr>`;
+            if (countEl) countEl.textContent = `${wishes.length} Wishes`;
+
+            if (wishes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No wishes planted yet.</td></tr>`;
                 return;
             }
-            wishes.forEach((wish) => {
+
+            wishes.forEach((wish, idx) => {
+                const wishContent = wish.text || wish.message || wish.wish || '';
                 let tr = document.createElement('tr');
                 tr.id = `wishrow-${wish._id}`;
                 tr.innerHTML = `
-                    <td><span class="time-badge">${formatLocalDate(wish.createdAt)}</span></td>
-                    <td class="name-tag">${wish.name}</td>
-                    <td style="font-style: italic; color: rgba(255,255,255,0.8);">"${wish.text}"</td>
-                    <td><button class="action-btn" onclick="deleteWish('${wish._id}')"><i class="fa-solid fa-trash"></i> Drop</button></td>
+                    <td data-label="#">${idx + 1}</td>
+                    <td data-label="Date"><span class="time-badge">${formatLocalDate(wish.createdAt)}</span></td>
+                    <td data-label="Visitor" class="name-tag">${wish.name || 'Anonymous'}</td>
+                    <td data-label="Wish" style="font-style: italic; color: rgba(255,255,255,0.9);">"${wishContent}"</td>
+                    <td data-label="Action"><button class="action-btn" onclick="deleteWish('${wish._id}')"><i class="fa-solid fa-trash"></i> Drop</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1059,7 +1371,10 @@
         async function deleteWish(id) {
             if (confirm("Permanently erase this wish from database?")) {
                 try {
-                    const res = await fetch(`${API_BASE}/wish/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } });
+                    const res = await fetch(`${API_BASE}/wish/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
                     const data = await res.json();
                     if (data.success) {
                         const row = document.getElementById(`wishrow-${id}`);
@@ -1076,19 +1391,24 @@
 
         function populateUniverseLogs(logs) {
             const tbody = document.getElementById('universe-body');
+            const countEl = document.getElementById('count-oracle');
             if (!tbody) return;
             tbody.innerHTML = '';
-            if (!logs || logs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No oracle logs recorded.</td></tr>`;
+            if (countEl) countEl.textContent = `${logs.length} Logs`;
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No oracle logs recorded.</td></tr>`;
                 return;
             }
-            // FIXED: logs is an array directly
-            logs.forEach(log => {
+
+            logs.forEach((log, idx) => {
+                const msg = log.oracle || log.blessing || log.fortune || log.message || '';
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><span class="time-badge">${formatLocalDate(log.createdAt)}</span></td>
-                    <td class="name-tag" style="color: var(--accent-cyan);">${log.name}</td>
-                    <td style="font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: #fff;">"${log.oracle}"</td>
+                    <td data-label="#">${idx + 1}</td>
+                    <td data-label="Date"><span class="time-badge">${formatLocalDate(log.createdAt)}</span></td>
+                    <td data-label="Visitor" class="name-tag" style="color: var(--accent-cyan);">${log.name || 'Visitor'}</td>
+                    <td data-label="Blessing" style="font-family: 'Cormorant Garamond', serif; font-size: 1.08rem; color: #fff;">"${msg}"</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1096,18 +1416,47 @@
 
         function populateWhispers(whispers) {
             const tbody = document.getElementById('whispers-body');
+            const countEl = document.getElementById('count-whispers');
             if (!tbody) return;
             tbody.innerHTML = '';
-            if (!whispers || whispers.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No cosmic whispers recorded.</td></tr>`;
+            if (countEl) countEl.textContent = `${whispers.length} Whispers`;
+
+            if (whispers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No cosmic whispers recorded.</td></tr>`;
                 return;
             }
-            whispers.forEach(whisper => {
+
+            whispers.forEach((whisper, idx) => {
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><span class="time-badge" style="border-color: rgba(255, 51, 102, 0.4); color: var(--accent-pink); background: rgba(255, 51, 102, 0.1);">${formatLocalDate(whisper.createdAt)}</span></td>
-                    <td class="name-tag">${whisper.sender}</td>
-                    <td class="cursive-msg">"${whisper.msg}"</td>
+                    <td data-label="#">${idx + 1}</td>
+                    <td data-label="Date"><span class="time-badge" style="border-color: rgba(255, 51, 102, 0.4); color: var(--accent-pink); background: rgba(255, 51, 102, 0.1);">${formatLocalDate(whisper.createdAt)}</span></td>
+                    <td data-label="Sender" class="name-tag">${whisper.sender || 'Anonymous'}</td>
+                    <td data-label="Whisper" class="cursive-msg">"${whisper.msg || whisper.message || ''}"</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function populateAdminNotes(notes) {
+            const tbody = document.getElementById('admin-notes-body');
+            const countEl = document.getElementById('count-notes');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (countEl) countEl.textContent = `${notes.length} Notes`;
+
+            if (notes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No special notes received yet.</td></tr>`;
+                return;
+            }
+
+            notes.forEach((note, idx) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td data-label="#">${idx + 1}</td>
+                    <td data-label="Date"><span class="time-badge" style="border-color: rgba(255, 234, 153, 0.4); color: var(--accent-gold); background: rgba(255, 234, 153, 0.1);">${formatLocalDate(note.createdAt)}</span></td>
+                    <td data-label="Sender" class="name-tag" style="color: var(--accent-cyan);">${note.sender || 'Anonymous'}</td>
+                    <td data-label="Note" style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; color: #fff; line-height: 1.5; font-style: italic;">"${note.message || ''}"</td>
                 `;
                 tbody.appendChild(tr);
             });
